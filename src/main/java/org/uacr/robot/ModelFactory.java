@@ -9,18 +9,18 @@ import org.uacr.models.inputs.vector.InputVector;
 import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
 import org.uacr.models.state.*;
-import org.uacr.shared.abstractions.InputValues;
-import org.uacr.shared.abstractions.ObjectsDirectory;
-import org.uacr.shared.abstractions.OutputValues;
-import org.uacr.shared.abstractions.RobotConfiguration;
+import org.uacr.shared.abstractions.*;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Inject;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Handles the creation of states
+ * Handles the creation of objects
  */
 
 public abstract class ModelFactory {
@@ -30,6 +30,7 @@ public abstract class ModelFactory {
 	protected final OutputValues fSharedOutputValues;
 	protected final RobotConfiguration fRobotConfiguration;
 	protected final ObjectsDirectory fSharedObjectDirectory;
+	private final List<ModelFactory> fModelFactories;
 
 	@Inject
 	public ModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
@@ -37,28 +38,65 @@ public abstract class ModelFactory {
 		fSharedOutputValues = outputValues;
 		fRobotConfiguration = robotConfiguration;
 		fSharedObjectDirectory = objectsDirectory;
+		fModelFactories = new ArrayList<>();
+	}
+
+	public OutputNumeric createOutputNumeric(Object name, Config config, YamlConfigParser parser) {
+		for(ModelFactory modelFactory : fModelFactories) {
+			try {
+				return modelFactory.createOutputNumeric(name, config, parser);
+			} catch (ConfigurationTypeDoesNotExistException e) {}
+		}
+		throw new ConfigurationTypeDoesNotExistException(config.getType());
+	}
+
+	public OutputBoolean createOutputBoolean(Object name, Config config, YamlConfigParser parser) {
+		for(ModelFactory modelFactory : fModelFactories) {
+			try {
+				return modelFactory.createOutputBoolean(name, config, parser);
+			} catch (ConfigurationTypeDoesNotExistException e) {}
+		}
+		throw new ConfigurationTypeDoesNotExistException(config.getType());
 	}
 
 	public InputBoolean createInputBoolean(Object name, Config config) {
+		for(ModelFactory modelFactory : fModelFactories) {
+			try {
+				return modelFactory.createInputBoolean(name, config);
+			} catch (ConfigurationTypeDoesNotExistException e) {}
+		}
 		throw new ConfigurationTypeDoesNotExistException(config.getType());
 	}
 
 	public InputNumeric createInputNumeric(Object name, Config config) {
+		for(ModelFactory modelFactory : fModelFactories) {
+			try {
+				return modelFactory.createInputNumeric(name, config);
+			} catch (ConfigurationTypeDoesNotExistException e) {}
+		}
 		throw new ConfigurationTypeDoesNotExistException(config.getType());
 	}
 
 	public InputVector createInputVector(Object name, Config config) {
+		for(ModelFactory modelFactory : fModelFactories) {
+			try {
+				return modelFactory.createInputVector(name, config);
+			} catch (ConfigurationTypeDoesNotExistException e) {}
+		}
 		throw new ConfigurationTypeDoesNotExistException(config.getType());
 	}
 
 	public Behavior createBehavior(String name, Config config) {
+		for(ModelFactory modelFactory : fModelFactories) {
+			try {
+				return modelFactory.createBehavior(name, config);
+			} catch (ConfigurationTypeDoesNotExistException e) {}
+		}
 		throw new ConfigurationTypeDoesNotExistException(config.getType());
 	}
 
 	public State createState(String name, YamlConfigParser parser, Config config) {
 		sLogger.trace("Creating state '{}' of type '{}' with config '{}'", name, config.getType(), config.getData());
-
-		//todo - is there a better way to handle nullable
 
 		//Only create one instance of each state
 		State state = fSharedObjectDirectory.getStateObject(name);
@@ -88,11 +126,7 @@ public abstract class ModelFactory {
 		return state;
 	}
 
-	public OutputNumeric createOutputNumeric(Object name, Config config, YamlConfigParser parser) {
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
-	}
-
-	public OutputBoolean createOutputBoolean(Object name, Config config, YamlConfigParser parser) {
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
+	public void registerModelFactory(ModelFactory modelFactory) {
+		fModelFactories.add(modelFactory);
 	}
 }
