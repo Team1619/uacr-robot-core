@@ -5,9 +5,9 @@ package org.uacr.robot;
  */
 
 public enum ControlMode {
-	AUTONOMOUS,
-	TELEOP,
-	ENDGAME,
-	MANUAL_TELEOP,
-	MANUAL_ENDGAME;
+    AUTONOMOUS,
+    TELEOP,
+    ENDGAME,
+    MANUAL_TELEOP,
+    MANUAL_ENDGAME
 }

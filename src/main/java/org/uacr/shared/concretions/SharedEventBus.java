@@ -11,34 +11,32 @@ import java.util.concurrent.Executors;
 @Singleton
 public class SharedEventBus implements EventBus {
 
-	private static final Logger sLogger = LogManager.getLogger(SharedEventBus.class);
+    private static final Logger sLogger = LogManager.getLogger(SharedEventBus.class);
 
-	private org.uacr.utilities.eventbus.EventBus fEventBus;
+    private org.uacr.utilities.eventbus.EventBus fEventBus;
 
-	public SharedEventBus() {
-		fEventBus = new AsyncEventBus(Executors.newFixedThreadPool(4));
-	}
+    public SharedEventBus() {
+        fEventBus = new AsyncEventBus(Executors.newFixedThreadPool(4));
+    }
 
-	@Override
-	public void register(Object object) {
-		sLogger.trace("Registering object '{}'", object);
+    @Override
+    public void register(Object object) {
+        sLogger.trace("Registering object '{}'", object);
 
-		fEventBus.register(object);
-	}
+        fEventBus.register(object);
+    }
 
-	@Override
-	public void post(Object object) {
-		sLogger.trace("Posting object '{}'", object);
+    @Override
+    public void post(Object object) {
+        sLogger.trace("Posting object '{}'", object);
 
-		fEventBus.post(object);
-	}
+        fEventBus.post(object);
+    }
 
-	@Override
-	public void unregister(Object object) {
-		sLogger.debug("Unregistering object '{}'", object);
+    @Override
+    public void unregister(Object object) {
+        sLogger.debug("Unregistering object '{}'", object);
 
-		fEventBus.unregister(object);
-	}
-
-
+        fEventBus.unregister(object);
+    }
 }

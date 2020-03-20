@@ -6,5 +6,5 @@ package org.uacr.utilities.services;
 
 public interface ScheduledService extends Service {
 
-	Scheduler scheduler();
+    Scheduler scheduler();
 }

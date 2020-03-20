@@ -14,53 +14,53 @@ import javax.annotation.Nullable;
 
 public interface ObjectsDirectory {
 
-	// Inputs
-	void registerAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser);
+    // Inputs
+    void registerAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser);
 
-	void registerInputBoolean(String name, Config config);
+    void registerInputBoolean(String name, Config config);
 
-	void registerInputNumeric(String name, Config config);
+    void registerInputNumeric(String name, Config config);
 
-	void registerInputVector(String name, Config config);
+    void registerInputVector(String name, Config config);
 
-	InputBoolean getInputBooleanObject(String name);
+    InputBoolean getInputBooleanObject(String name);
 
-	InputNumeric getInputNumericObject(String name);
+    InputNumeric getInputNumericObject(String name);
 
-	InputVector getInputVectorObject(String name);
-
-
-	// Behaviors
-	void setBehaviorObject(String name, Behavior behavior);
-
-	Behavior getBehaviorObject(String name);
+    InputVector getInputVectorObject(String name);
 
 
-	// States
-	void registerAllStates(YamlConfigParser parser);
+    // Behaviors
+    void setBehaviorObject(String name, Behavior behavior);
 
-	void registerStates(String name, YamlConfigParser statesParser, Config config);
-
-	State getStateObject(String name);
-
-	void setStateObject(String name, State state);
+    Behavior getBehaviorObject(String name);
 
 
-	// Outputs
-	void registerAllOutputs(YamlConfigParser outputNumericsParser, YamlConfigParser outputBooleansParser);
+    // States
+    void registerAllStates(YamlConfigParser parser);
 
-	void registerOutputNumeric(String name, Config config, YamlConfigParser parser);
+    void registerStates(String name, YamlConfigParser statesParser, Config config);
 
-	void registerOutputBoolean(String name, Config config, YamlConfigParser parser);
+    State getStateObject(String name);
 
-	OutputBoolean getOutputBooleanObject(String name);
-
-	OutputNumeric getOutputNumericObject(String name);
+    void setStateObject(String name, State state);
 
 
-	// Hardware Objects
-	void setHardwareObject(Object deviceNumber, Object hardwareObject);
+    // Outputs
+    void registerAllOutputs(YamlConfigParser outputNumericsParser, YamlConfigParser outputBooleansParser);
 
-	@Nullable
-	Object getHardwareObject(Object deviceNumber);
+    void registerOutputNumeric(String name, Config config, YamlConfigParser parser);
+
+    void registerOutputBoolean(String name, Config config, YamlConfigParser parser);
+
+    OutputBoolean getOutputBooleanObject(String name);
+
+    OutputNumeric getOutputNumericObject(String name);
+
+
+    // Hardware Objects
+    void setHardwareObject(Object deviceNumber, Object hardwareObject);
+
+    @Nullable
+    Object getHardwareObject(Object deviceNumber);
 }

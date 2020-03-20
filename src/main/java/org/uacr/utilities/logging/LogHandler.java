@@ -6,11 +6,11 @@ package org.uacr.utilities.logging;
 
 public interface LogHandler {
 
-	void trace(String message);
+    void trace(String message);
 
-	void debug(String message);
+    void debug(String message);
 
-	void info(String message);
+    void info(String message);
 
-	void error(String message);
+    void error(String message);
 }

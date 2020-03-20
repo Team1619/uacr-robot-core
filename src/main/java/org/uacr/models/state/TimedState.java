@@ -16,60 +16,60 @@ import java.util.Set;
 
 public class TimedState implements State {
 
-	private static final Logger sLogger = LogManager.getLogger(TimedState.class);
+    private static final Logger sLogger = LogManager.getLogger(TimedState.class);
 
-	private final String fStateName;
-	private final State fSubState;
-	private final String fSubStateName;
-	private final Timer fTimer = new Timer();
-	private final int fTimeout;
+    private final String fStateName;
+    private final State fSubState;
+    private final String fSubStateName;
+    private final Timer fTimer = new Timer();
+    private final int fTimeout;
 
-	public TimedState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
-		fStateName = name;
+    public TimedState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+        fStateName = name;
 
-		fSubStateName = config.getString("state");
-		fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fStateName));
-		fTimeout = config.getInt("timeout");
-	}
+        fSubStateName = config.getString("state");
+        fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fStateName));
+        fTimeout = config.getInt("timeout");
+    }
 
-	@Override
-	public Set<State> getSubStates() {
-		return Set.of(fSubState);
-	}
+    @Override
+    public Set<State> getSubStates() {
+        return Set.of(fSubState);
+    }
 
-	@Override
-	public void initialize() {
-		sLogger.debug("Entering Timed State {}", fStateName);
-		fTimer.start(fTimeout);
-	}
+    @Override
+    public void initialize() {
+        sLogger.debug("Entering Timed State {}", fStateName);
+        fTimer.start(fTimeout);
+    }
 
-	@Override
-	public void update() {
-	}
+    @Override
+    public void update() {
+    }
 
-	@Override
-	public void dispose() {
-		sLogger.trace("Leaving Timed State {}", fStateName);
-		fTimer.reset();
-	}
+    @Override
+    public void dispose() {
+        sLogger.trace("Leaving Timed State {}", fStateName);
+        fTimer.reset();
+    }
 
-	@Override
-	public boolean isDone() {
-		return fSubState.isDone() || fTimer.isDone();
-	}
+    @Override
+    public boolean isDone() {
+        return fSubState.isDone() || fTimer.isDone();
+    }
 
-	@Override
-	public Set<String> getSubsystems() {
-		return fSubState.getSubsystems();
-	}
+    @Override
+    public Set<String> getSubsystems() {
+        return fSubState.getSubsystems();
+    }
 
-	@Override
-	public String getName() {
-		return fStateName;
-	}
+    @Override
+    public String getName() {
+        return fStateName;
+    }
 
-	@Override
-	public String toString() {
-		return getName();
-	}
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

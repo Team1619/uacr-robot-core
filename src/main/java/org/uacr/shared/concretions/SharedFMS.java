@@ -11,19 +11,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class SharedFMS implements FMS {
 
-	private static final Logger sLogger = LogManager.getLogger(SharedFMS.class);
+    private static final Logger sLogger = LogManager.getLogger(SharedFMS.class);
 
-	private Map<String, Mode> fData = new ConcurrentHashMap<>();
+    private Map<String, Mode> fData = new ConcurrentHashMap<>();
 
-	@Override
-	public Mode getMode() {
-		return fData.getOrDefault("mode", Mode.DISABLED);
-	}
+    @Override
+    public Mode getMode() {
+        return fData.getOrDefault("mode", Mode.DISABLED);
+    }
 
-	@Override
-	public void setMode(Mode mode) {
-		fData.put("mode", mode);
+    @Override
+    public void setMode(Mode mode) {
+        fData.put("mode", mode);
 
-		sLogger.debug("FMS mode set to '{}'", mode);
-	}
+        sLogger.debug("FMS mode set to '{}'", mode);
+    }
 }

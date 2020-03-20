@@ -9,34 +9,34 @@ package org.uacr.utilities.purepursuit;
 
 public class Point {
 
-	protected final double fX, fY;
+    protected final double fX, fY;
 
-	public Point(double x, double y) {
-		fX = x;
-		fY = y;
-	}
+    public Point(double x, double y) {
+        fX = x;
+        fY = y;
+    }
 
-	public double getX() {
-		return fX;
-	}
+    public double getX() {
+        return fX;
+    }
 
-	public double getY() {
-		return fY;
-	}
+    public double getY() {
+        return fY;
+    }
 
-	public Point add(Point point) {
-		return new Point(fX + point.getX(), fY + point.getY());
-	}
+    public Point add(Point point) {
+        return new Point(fX + point.getX(), fY + point.getY());
+    }
 
-	public Point subtract(Point point) {
-		return new Point(fX - point.getX(), fY - point.getY());
-	}
+    public Point subtract(Point point) {
+        return new Point(fX - point.getX(), fY - point.getY());
+    }
 
-	public double distance(Point point) {
-		return Math.sqrt(Math.pow(point.fX - fX, 2) + Math.pow(point.fY - fY, 2));
-	}
+    public double distance(Point point) {
+        return Math.sqrt(Math.pow(point.fX - fX, 2) + Math.pow(point.fY - fY, 2));
+    }
 
-	public String toString() {
-		return "(" + String.format("%.4f", fX) + "," + String.format("%.4f", fY) + ")";
-	}
+    public String toString() {
+        return "(" + String.format("%.4f", fX) + "," + String.format("%.4f", fY) + ")";
+    }
 }

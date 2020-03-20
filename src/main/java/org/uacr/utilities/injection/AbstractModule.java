@@ -8,19 +8,19 @@ import java.util.HashMap;
 
 public abstract class AbstractModule {
 
-	private HashMap<Class, Class> bindings = new HashMap<>();
+    private HashMap<Class, Class> bindings = new HashMap<>();
 
-	protected abstract void configure();
+    protected abstract void configure();
 
-	public void bind(Class parent, Class child) {
-		if (!parent.isAssignableFrom(child)) {
-			throw new RuntimeException("Cannot bind " + child + " to " + parent);
-		}
+    public void bind(Class parent, Class child) {
+        if (!parent.isAssignableFrom(child)) {
+            throw new RuntimeException("Cannot bind " + child + " to " + parent);
+        }
 
-		bindings.put(parent, child);
-	}
+        bindings.put(parent, child);
+    }
 
-	public HashMap<Class, Class> getBindings() {
-		return (HashMap<Class, Class>) bindings.clone();
-	}
+    public HashMap<Class, Class> getBindings() {
+        return (HashMap<Class, Class>) bindings.clone();
+    }
 }

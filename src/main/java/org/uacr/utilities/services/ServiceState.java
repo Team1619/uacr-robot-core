@@ -5,9 +5,9 @@ package org.uacr.utilities.services;
  */
 
 public enum ServiceState {
-	AWAITING_START,
-	STARTING,
-	RUNNING,
-	STOPPING,
-	STOPPED
+    AWAITING_START,
+    STARTING,
+    RUNNING,
+    STOPPING,
+    STOPPED
 }
