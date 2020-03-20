@@ -16,89 +16,90 @@ import java.util.Set;
 
 public class ParallelState implements State {
 
-	private static final Logger sLogger = LogManager.getLogger(ParallelState.class);
+    private static final Logger sLogger = LogManager.getLogger(ParallelState.class);
 
-	private final ModelFactory fModelFactory;
-	private final String fStateName;
+    private final ModelFactory fModelFactory;
+    private final String fStateName;
 
-	private Set<State> fForegroundStates = new HashSet<>();
-	private Set<State> fBackgroundStates = new HashSet<>();
+    private Set<State> fForegroundStates = new HashSet<>();
+    private Set<State> fBackgroundStates = new HashSet<>();
 
-	public ParallelState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
-		fModelFactory = modelFactory;
-		fStateName = name;
+    public ParallelState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+        fModelFactory = modelFactory;
+        fStateName = name;
 
-		for (Object foregroundStateName : config.getList("foreground_states")) {
-			fForegroundStates.add(fModelFactory.createState((String) foregroundStateName, parser, parser.getConfig(foregroundStateName)));
-		}
+        for (Object foregroundStateName : config.getList("foreground_states")) {
+            fForegroundStates.add(fModelFactory.createState((String) foregroundStateName, parser, parser.getConfig(foregroundStateName)));
+        }
 
-		if (config.contains("background_states")) {
-			for (Object backgroundStateName : config.getList("background_states")) {
-				fBackgroundStates.add(fModelFactory.createState((String) backgroundStateName, parser, parser.getConfig(backgroundStateName)));
-			}
-		}
-	}
+        if (config.contains("background_states")) {
+            for (Object backgroundStateName : config.getList("background_states")) {
+                fBackgroundStates.add(fModelFactory.createState((String) backgroundStateName, parser, parser.getConfig(backgroundStateName)));
+            }
+        }
+    }
 
-	@Override
-	public Set<State> getSubStates() {
-		// Returns a list of all the states it is currently running
-		Set<State> states = new HashSet<>();
-		states.addAll(fForegroundStates);
-		states.addAll(fBackgroundStates);
-		for (State foregroundState : fForegroundStates) {
-			states.addAll(foregroundState.getSubStates());
-		}
-		for (State backgroundState : fBackgroundStates) {
-			states.addAll(backgroundState.getSubStates());
-		}
-		return states;
-	}
+    @Override
+    public Set<State> getSubStates() {
+        // Returns a list of all the states it is currently running
+        Set<State> states = new HashSet<>();
+        states.addAll(fForegroundStates);
+        states.addAll(fBackgroundStates);
+        for (State foregroundState : fForegroundStates) {
+            states.addAll(foregroundState.getSubStates());
+        }
+        for (State backgroundState : fBackgroundStates) {
+            states.addAll(backgroundState.getSubStates());
+        }
+        return states;
+    }
 
-	@Override
-	public void initialize() {
-		sLogger.debug("Entering Parallel State {}", fStateName);
-	}
+    @Override
+    public void initialize() {
+        sLogger.debug("Entering Parallel State {}", fStateName);
+    }
 
-	@Override
-	public void update() {
-	}
+    @Override
+    public void update() {
 
-	@Override
-	public void dispose() {
-		sLogger.trace("Leaving Parallel State {}", fStateName);
-	}
+    }
 
-	@Override
-	public boolean isDone() {
-		for (State foregroundState : fForegroundStates) {
-			if (!foregroundState.isDone()) {
-				return false;
-			}
-		}
+    @Override
+    public void dispose() {
+        sLogger.trace("Leaving Parallel State {}", fStateName);
+    }
 
-		return true;
-	}
+    @Override
+    public boolean isDone() {
+        for (State foregroundState : fForegroundStates) {
+            if (!foregroundState.isDone()) {
+                return false;
+            }
+        }
 
-	@Override
-	public Set<String> getSubsystems() {
-		// Returns a list of all the subsystems required by all the states it is running
-		Set<String> subsystems = new HashSet<>();
-		for (State state : fForegroundStates) {
-			subsystems.addAll(state.getSubsystems());
-		}
-		for (State state : fBackgroundStates) {
-			subsystems.addAll(state.getSubsystems());
-		}
-		return subsystems;
-	}
+        return true;
+    }
 
-	@Override
-	public String getName() {
-		return fStateName;
-	}
+    @Override
+    public Set<String> getSubsystems() {
+        // Returns a list of all the subsystems required by all the states it is running
+        Set<String> subsystems = new HashSet<>();
+        for (State state : fForegroundStates) {
+            subsystems.addAll(state.getSubsystems());
+        }
+        for (State state : fBackgroundStates) {
+            subsystems.addAll(state.getSubsystems());
+        }
+        return subsystems;
+    }
 
-	@Override
-	public String toString() {
-		return getName();
-	}
+    @Override
+    public String getName() {
+        return fStateName;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

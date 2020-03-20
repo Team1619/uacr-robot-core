@@ -12,35 +12,35 @@ import java.util.List;
 
 public class ScheduledLinearServiceManager extends LinearServiceManager {
 
-	private final Scheduler fScheduler;
+    private final Scheduler fScheduler;
 
-	public ScheduledLinearServiceManager(Scheduler scheduler, Service... services) {
-		this(scheduler, List.of(services));
-	}
+    public ScheduledLinearServiceManager(Scheduler scheduler, Service... services) {
+        this(scheduler, List.of(services));
+    }
 
-	public ScheduledLinearServiceManager(Scheduler scheduler, List<Service> services) {
-		super(services);
+    public ScheduledLinearServiceManager(Scheduler scheduler, List<Service> services) {
+        super(services);
 
-		fScheduler = scheduler;
-	}
+        fScheduler = scheduler;
+    }
 
-	// States the services
-	@Override
-	public void start() {
-		getExecutor().submit(() -> {
-			fScheduler.start();
-			super.startUp();
+    // States the services
+    @Override
+    public void start() {
+        getExecutor().submit(() -> {
+            fScheduler.start();
+            super.startUp();
 
-			while (getCurrentState() == ServiceState.RUNNING) {
-				try {
-					Thread.sleep(fScheduler.nanosecondsUntilNextRun());
-				} catch (InterruptedException e) {
-				}
-				fScheduler.run();
-				super.runUpdate();
-			}
+            while (getCurrentState() == ServiceState.RUNNING) {
+                try {
+                    Thread.sleep(fScheduler.nanosecondsUntilNextRun());
+                } catch (InterruptedException e) {
+                }
+                fScheduler.run();
+                super.runUpdate();
+            }
 
-			super.shutDown();
-		});
-	}
+            super.shutDown();
+        });
+    }
 }

@@ -9,7 +9,10 @@ import org.uacr.models.inputs.vector.InputVector;
 import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
 import org.uacr.models.state.*;
-import org.uacr.shared.abstractions.*;
+import org.uacr.shared.abstractions.InputValues;
+import org.uacr.shared.abstractions.ObjectsDirectory;
+import org.uacr.shared.abstractions.OutputValues;
+import org.uacr.shared.abstractions.RobotConfiguration;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Inject;
@@ -24,109 +27,116 @@ import java.util.List;
  */
 
 public abstract class ModelFactory {
-	private static final Logger sLogger = LogManager.getLogger(ModelFactory.class);
 
-	protected final InputValues fSharedInputValues;
-	protected final OutputValues fSharedOutputValues;
-	protected final RobotConfiguration fRobotConfiguration;
-	protected final ObjectsDirectory fSharedObjectDirectory;
-	private final List<ModelFactory> fModelFactories;
+    private static final Logger sLogger = LogManager.getLogger(ModelFactory.class);
 
-	@Inject
-	public ModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
-		fSharedInputValues = inputValues;
-		fSharedOutputValues = outputValues;
-		fRobotConfiguration = robotConfiguration;
-		fSharedObjectDirectory = objectsDirectory;
-		fModelFactories = new ArrayList<>();
-	}
+    protected final InputValues fSharedInputValues;
+    protected final OutputValues fSharedOutputValues;
+    protected final RobotConfiguration fRobotConfiguration;
+    protected final ObjectsDirectory fSharedObjectDirectory;
+    private final List<ModelFactory> fModelFactories;
 
-	public OutputNumeric createOutputNumeric(Object name, Config config, YamlConfigParser parser) {
-		for(ModelFactory modelFactory : fModelFactories) {
-			try {
-				return modelFactory.createOutputNumeric(name, config, parser);
-			} catch (ConfigurationTypeDoesNotExistException e) {}
-		}
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
-	}
+    @Inject
+    public ModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+        fSharedInputValues = inputValues;
+        fSharedOutputValues = outputValues;
+        fRobotConfiguration = robotConfiguration;
+        fSharedObjectDirectory = objectsDirectory;
+        fModelFactories = new ArrayList<>();
+    }
 
-	public OutputBoolean createOutputBoolean(Object name, Config config, YamlConfigParser parser) {
-		for(ModelFactory modelFactory : fModelFactories) {
-			try {
-				return modelFactory.createOutputBoolean(name, config, parser);
-			} catch (ConfigurationTypeDoesNotExistException e) {}
-		}
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
-	}
+    public OutputNumeric createOutputNumeric(Object name, Config config, YamlConfigParser parser) {
+        for (ModelFactory modelFactory : fModelFactories) {
+            try {
+                return modelFactory.createOutputNumeric(name, config, parser);
+            } catch (ConfigurationTypeDoesNotExistException e) {
+            }
+        }
+        throw new ConfigurationTypeDoesNotExistException(config.getType());
+    }
 
-	public InputBoolean createInputBoolean(Object name, Config config) {
-		for(ModelFactory modelFactory : fModelFactories) {
-			try {
-				return modelFactory.createInputBoolean(name, config);
-			} catch (ConfigurationTypeDoesNotExistException e) {}
-		}
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
-	}
+    public OutputBoolean createOutputBoolean(Object name, Config config, YamlConfigParser parser) {
+        for (ModelFactory modelFactory : fModelFactories) {
+            try {
+                return modelFactory.createOutputBoolean(name, config, parser);
+            } catch (ConfigurationTypeDoesNotExistException e) {
+            }
+        }
+        throw new ConfigurationTypeDoesNotExistException(config.getType());
+    }
 
-	public InputNumeric createInputNumeric(Object name, Config config) {
-		for(ModelFactory modelFactory : fModelFactories) {
-			try {
-				return modelFactory.createInputNumeric(name, config);
-			} catch (ConfigurationTypeDoesNotExistException e) {}
-		}
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
-	}
+    public InputBoolean createInputBoolean(Object name, Config config) {
+        for (ModelFactory modelFactory : fModelFactories) {
+            try {
+                return modelFactory.createInputBoolean(name, config);
+            } catch (ConfigurationTypeDoesNotExistException e) {
+            }
+        }
+        throw new ConfigurationTypeDoesNotExistException(config.getType());
+    }
 
-	public InputVector createInputVector(Object name, Config config) {
-		for(ModelFactory modelFactory : fModelFactories) {
-			try {
-				return modelFactory.createInputVector(name, config);
-			} catch (ConfigurationTypeDoesNotExistException e) {}
-		}
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
-	}
+    public InputNumeric createInputNumeric(Object name, Config config) {
+        for (ModelFactory modelFactory : fModelFactories) {
+            try {
+                return modelFactory.createInputNumeric(name, config);
+            } catch (ConfigurationTypeDoesNotExistException e) {
+            }
+        }
+        throw new ConfigurationTypeDoesNotExistException(config.getType());
+    }
 
-	public Behavior createBehavior(String name, Config config) {
-		for(ModelFactory modelFactory : fModelFactories) {
-			try {
-				return modelFactory.createBehavior(name, config);
-			} catch (ConfigurationTypeDoesNotExistException e) {}
-		}
-		throw new ConfigurationTypeDoesNotExistException(config.getType());
-	}
+    public InputVector createInputVector(Object name, Config config) {
+        for (ModelFactory modelFactory : fModelFactories) {
+            try {
+                return modelFactory.createInputVector(name, config);
+            } catch (ConfigurationTypeDoesNotExistException e) {
+            }
+        }
+        throw new ConfigurationTypeDoesNotExistException(config.getType());
+    }
 
-	public State createState(String name, YamlConfigParser parser, Config config) {
-		sLogger.trace("Creating state '{}' of type '{}' with config '{}'", name, config.getType(), config.getData());
+    public Behavior createBehavior(String name, Config config) {
+        for (ModelFactory modelFactory : fModelFactories) {
+            try {
+                return modelFactory.createBehavior(name, config);
+            } catch (ConfigurationTypeDoesNotExistException e) {
+            }
+        }
+        throw new ConfigurationTypeDoesNotExistException(config.getType());
+    }
 
-		//Only create one instance of each state
-		State state = fSharedObjectDirectory.getStateObject(name);
-		//noinspection ConstantConditions
-		if (state == null) {
-			switch (config.getType()) {
-				case "single_state":
-					state = new SingleState(this, name, config, fSharedObjectDirectory);
-					break;
-				case "parallel_state":
-					state = new ParallelState(this, name, parser, config);
-					break;
-				case "sequencer_state":
-					state = new SequencerState(this, name, parser, config);
-					break;
-				case "timed_state":
-					state = new TimedState(this, name, parser, config);
-					break;
-				case "done_for_time_state":
-					state = new DoneForTimeState(this, name, parser, config);
-					break;
-				default:
-					throw new ConfigurationException("State of name " + name + " does not exist.");
-			}
-			fSharedObjectDirectory.setStateObject(name, state);
-		}
-		return state;
-	}
+    public State createState(String name, YamlConfigParser parser, Config config) {
+        sLogger.trace("Creating state '{}' of type '{}' with config '{}'", name, config.getType(), config.getData());
 
-	public void registerModelFactory(ModelFactory modelFactory) {
-		fModelFactories.add(modelFactory);
-	}
+        //Only create one instance of each state
+        State state = fSharedObjectDirectory.getStateObject(name);
+        //noinspection ConstantConditions
+        if (state == null) {
+            switch (config.getType()) {
+                case "single_state":
+                    state = new SingleState(this, name, config, fSharedObjectDirectory);
+                    break;
+                case "parallel_state":
+                    state = new ParallelState(this, name, parser, config);
+                    break;
+                case "sequencer_state":
+                    state = new SequencerState(this, name, parser, config);
+                    break;
+                case "timed_state":
+                    state = new TimedState(this, name, parser, config);
+                    break;
+                case "done_for_time_state":
+                    state = new DoneForTimeState(this, name, parser, config);
+                    break;
+                default:
+                    throw new ConfigurationException("State of name " + name + " does not exist.");
+            }
+            fSharedObjectDirectory.setStateObject(name, state);
+        }
+        return state;
+    }
+
+    public void registerModelFactory(ModelFactory modelFactory) {
+        fModelFactories.add(modelFactory);
+    }
 }

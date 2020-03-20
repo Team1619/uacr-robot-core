@@ -7,19 +7,19 @@ import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
 public abstract class Module extends AbstractModule {
-	private static final Logger sLogger = LogManager.getLogger(Module.class);
+    private static final Logger sLogger = LogManager.getLogger(Module.class);
 
-	protected void configure() {
-		bind(EventBus.class, SharedEventBus.class);
-		bind(InputValues.class, SharedInputValues.class);
-		bind(OutputValues.class, SharedOutputValues.class);
-		bind(FMS.class, SharedFMS.class);
-		bind(RobotConfiguration.class, SharedRobotConfiguration.class);
-		bind(ObjectsDirectory.class, SharedObjectsDirectory.class);
+    protected void configure() {
+        bind(EventBus.class, SharedEventBus.class);
+        bind(InputValues.class, SharedInputValues.class);
+        bind(OutputValues.class, SharedOutputValues.class);
+        bind(FMS.class, SharedFMS.class);
+        bind(RobotConfiguration.class, SharedRobotConfiguration.class);
+        bind(ObjectsDirectory.class, SharedObjectsDirectory.class);
 
-		configureModeSpecificConcretions();
-	}
+        configureModeSpecificConcretions();
+    }
 
-	public abstract void configureModeSpecificConcretions();
+    public abstract void configureModeSpecificConcretions();
 }
 

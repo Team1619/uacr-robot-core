@@ -2,14 +2,14 @@ package org.uacr.shared.abstractions;
 
 public interface FMS {
 
-	Mode getMode();
+    Mode getMode();
 
-	void setMode(Mode mode);
+    void setMode(Mode mode);
 
-	enum Mode {
-		AUTONOMOUS,
-		TELEOP,
-		DISABLED,
-		TEST
-	}
+    enum Mode {
+        AUTONOMOUS,
+        TELEOP,
+        DISABLED,
+        TEST
+    }
 }

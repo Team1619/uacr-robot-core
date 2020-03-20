@@ -4,39 +4,39 @@ import java.util.Map;
 
 public interface InputValues {
 
-	boolean getBoolean(String name);
+    boolean getBoolean(String name);
 
-	boolean getBooleanRisingEdge(String name);
+    boolean getBooleanRisingEdge(String name);
 
-	boolean getBooleanFallingEdge(String name);
+    boolean getBooleanFallingEdge(String name);
 
-	Map<String, Boolean> getAllBooleans();
+    Map<String, Boolean> getAllBooleans();
 
-	double getNumeric(String name);
+    double getNumeric(String name);
 
-	Map<String, Double> getAllNumerics();
+    Map<String, Double> getAllNumerics();
 
-	Map<String, Double> getVector(String name);
+    Map<String, Double> getVector(String name);
 
-	void setInputFlag(String name, String flag);
+    void setInputFlag(String name, String flag);
 
-	String getInputFlag(String name);
+    String getInputFlag(String name);
 
-	Map<String, Map<String, Double>> getAllVectors();
+    Map<String, Map<String, Double>> getAllVectors();
 
-	String getString(String name);
+    String getString(String name);
 
-	Map<String, String> getAllStrings();
+    Map<String, String> getAllStrings();
 
-	boolean setBoolean(String name, boolean value);
+    boolean setBoolean(String name, boolean value);
 
-	void setBooleanRisingEdge(String name, boolean value);
+    void setBooleanRisingEdge(String name, boolean value);
 
-	void setBooleanFallingEdge(String name, boolean value);
+    void setBooleanFallingEdge(String name, boolean value);
 
-	void setNumeric(String name, double value);
+    void setNumeric(String name, double value);
 
-	void setVector(String name, Map<String, Double> values);
+    void setVector(String name, Map<String, Double> values);
 
-	void setString(String name, String value);
+    void setString(String name, String value);
 }

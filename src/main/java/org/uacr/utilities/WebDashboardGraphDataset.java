@@ -12,13 +12,13 @@ import java.util.HashMap;
 
 public class WebDashboardGraphDataset extends HashMap<String, Double> {
 
-	int fNumPoints = 0;
+    int fNumPoints = 0;
 
-	public WebDashboardGraphDataset addPoint(double x, double y) {
-		put(fNumPoints + "x", x);
-		put(fNumPoints + "y", y);
-		fNumPoints++;
+    public WebDashboardGraphDataset addPoint(double x, double y) {
+        put(fNumPoints + "x", x);
+        put(fNumPoints + "y", y);
+        fNumPoints++;
 
-		return this;
-	}
+        return this;
+    }
 }

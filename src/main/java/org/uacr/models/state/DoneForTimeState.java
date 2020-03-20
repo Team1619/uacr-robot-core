@@ -16,83 +16,84 @@ import java.util.Set;
 
 public class DoneForTimeState implements State {
 
-	private static final Logger sLogger = LogManager.getLogger(DoneForTimeState.class);
+    private static final Logger sLogger = LogManager.getLogger(DoneForTimeState.class);
 
-	private final String fStateName;
-	private final State fSubState;
-	private final String fSubStateName;
+    private final String fStateName;
+    private final State fSubState;
+    private final String fSubStateName;
 
-	private final Timer fStateTimer = new Timer();
-	private final Timer fMaxTimer = new Timer();
+    private final Timer fStateTimer = new Timer();
+    private final Timer fMaxTimer = new Timer();
 
-	private final int fStateTimeout;
+    private final int fStateTimeout;
 
-	private int fMaxTimeout;
+    private int fMaxTimeout;
 
-	public DoneForTimeState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
-		fStateName = name;
+    public DoneForTimeState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+        fStateName = name;
 
-		fSubStateName = config.getString("state");
-		fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fSubStateName));
+        fSubStateName = config.getString("state");
+        fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fSubStateName));
 
-		fStateTimeout = config.getInt("state_timeout");
-		fMaxTimeout = config.getInt("max_timeout", -1);
-	}
+        fStateTimeout = config.getInt("state_timeout");
+        fMaxTimeout = config.getInt("max_timeout", -1);
+    }
 
-	@Override
-	public Set<State> getSubStates() {
-		// Returns a list of all the states it is currently running
-		Set<State> states = new HashSet<>();
-		states.add(fSubState);
-		states.addAll(fSubState.getSubStates());
-		return states;
-	}
+    @Override
+    public Set<State> getSubStates() {
+        // Returns a list of all the states it is currently running
+        Set<State> states = new HashSet<>();
+        states.add(fSubState);
+        states.addAll(fSubState.getSubStates());
+        return states;
+    }
 
-	@Override
-	public void initialize() {
-		sLogger.debug("Entering Done For Time State {}", fStateName);
-		if (fMaxTimeout != -1) {
-			fMaxTimer.start(fMaxTimeout);
-		}
-	}
+    @Override
+    public void initialize() {
+        sLogger.debug("Entering Done For Time State {}", fStateName);
+        if (fMaxTimeout != -1) {
+            fMaxTimer.start(fMaxTimeout);
+        }
+    }
 
-	@Override
-	public void update() {
-	}
+    @Override
+    public void update() {
 
-	@Override
-	public void dispose() {
-		sLogger.trace("Leaving Done For Time State {}", fStateName);
-		fStateTimer.reset();
-	}
+    }
 
-	@Override
-	public boolean isDone() {
-		//Start a timer when the state is done
-		if (fSubState.isDone()) {
-			if (!fStateTimer.isStarted()) {
-				fStateTimer.start(fStateTimeout);
-			}
+    @Override
+    public void dispose() {
+        sLogger.trace("Leaving Done For Time State {}", fStateName);
+        fStateTimer.reset();
+    }
 
-		} else if (fStateTimer.isStarted()) {
-			fStateTimer.reset();
-		}
+    @Override
+    public boolean isDone() {
+        //Start a timer when the state is done
+        if (fSubState.isDone()) {
+            if (!fStateTimer.isStarted()) {
+                fStateTimer.start(fStateTimeout);
+            }
 
-		return fStateTimer.isDone() || fMaxTimer.isDone();
-	}
+        } else if (fStateTimer.isStarted()) {
+            fStateTimer.reset();
+        }
 
-	@Override
-	public Set<String> getSubsystems() {
-		return fSubState.getSubsystems();
-	}
+        return fStateTimer.isDone() || fMaxTimer.isDone();
+    }
 
-	@Override
-	public String getName() {
-		return fStateName;
-	}
+    @Override
+    public Set<String> getSubsystems() {
+        return fSubState.getSubsystems();
+    }
 
-	@Override
-	public String toString() {
-		return getName();
-	}
+    @Override
+    public String getName() {
+        return fStateName;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

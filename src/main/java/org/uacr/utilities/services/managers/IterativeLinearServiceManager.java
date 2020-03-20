@@ -11,24 +11,24 @@ import java.util.List;
 
 public class IterativeLinearServiceManager extends LinearServiceManager {
 
-	public IterativeLinearServiceManager(Service... services) {
-		this(List.of(services));
-	}
+    public IterativeLinearServiceManager(Service... services) {
+        this(List.of(services));
+    }
 
-	public IterativeLinearServiceManager(List<Service> services) {
-		super(services);
-	}
+    public IterativeLinearServiceManager(List<Service> services) {
+        super(services);
+    }
 
-	@Override
-	public void start() {
-		getExecutor().submit(() -> {
-			super.startUp();
+    @Override
+    public void start() {
+        getExecutor().submit(() -> {
+            super.startUp();
 
-			while (getCurrentState() == ServiceState.RUNNING) {
-				runUpdate();
-			}
+            while (getCurrentState() == ServiceState.RUNNING) {
+                runUpdate();
+            }
 
-			super.shutDown();
-		});
-	}
+            super.shutDown();
+        });
+    }
 }
