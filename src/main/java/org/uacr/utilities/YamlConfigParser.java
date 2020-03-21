@@ -19,7 +19,6 @@ public class YamlConfigParser {
     private Map<String, Map<String, Object>> fData = new HashMap<>();
     private Map<String, String> fNameTypes = new HashMap<>();
 
-    private String fRobotName = "";
     private String fRobotVariation = "none";
 
     public void loadWithFolderName(String path) {
@@ -28,23 +27,8 @@ public class YamlConfigParser {
         parser.load("general.yaml");
         Config config = parser.getConfig("robot");
 
-        fRobotName = config.getString("robot_name", "");
         fRobotVariation = config.getString("robot_variation", "");
 
-        if (fRobotName.equals("")) {
-            sLogger.error("********************No robot name specified in general.yaml********************");
-        }
-
-        switch (fRobotName) {
-            case "competitionbot":
-                path = "comp_" + path;
-                break;
-            case "protobot1":
-                path = "pro1_" + path;
-                break;
-        }
-
-        path = fRobotName + "/" + path;
         load(path);
     }
 
