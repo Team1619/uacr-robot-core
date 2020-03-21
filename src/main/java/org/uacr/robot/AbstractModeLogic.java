@@ -8,12 +8,12 @@ import org.uacr.shared.abstractions.RobotConfiguration;
  * Base for handling isReady and isDone for states in a particular mode
  */
 
-public abstract class ModeLogic {
+public abstract class AbstractModeLogic {
 
     protected InputValues fSharedInputValues;
     protected RobotConfiguration fRobotConfiguration;
 
-    public ModeLogic(InputValues inputValues, RobotConfiguration robotConfiguration) {
+    public AbstractModeLogic(InputValues inputValues, RobotConfiguration robotConfiguration) {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
     }

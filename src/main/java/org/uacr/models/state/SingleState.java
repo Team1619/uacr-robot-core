@@ -1,7 +1,7 @@
 package org.uacr.models.state;
 
 import org.uacr.models.behavior.Behavior;
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.shared.abstractions.ObjectsDirectory;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.logging.LogManager;
@@ -21,7 +21,7 @@ public class SingleState implements State {
 
     private static final Logger sLogger = LogManager.getLogger(SingleState.class);
 
-    private final ModelFactory fModelFactory;
+    private final AbstractModelFactory fModelFactory;
     private final String fStateName;
     private final ObjectsDirectory fSharedObectsDirectory;
 
@@ -30,7 +30,7 @@ public class SingleState implements State {
     private String fBehaviorName;
     private Config fBehaviorConfig;
 
-    public SingleState(ModelFactory modelFactory, String name, Config config, ObjectsDirectory objectsDirectory) {
+    public SingleState(AbstractModelFactory modelFactory, String name, Config config, ObjectsDirectory objectsDirectory) {
         fModelFactory = modelFactory;
         fStateName = name;
         fSharedObectsDirectory = objectsDirectory;

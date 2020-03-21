@@ -26,18 +26,18 @@ import java.util.List;
  * Handles the creation of objects
  */
 
-public abstract class ModelFactory {
+public abstract class AbstractModelFactory {
 
-    private static final Logger sLogger = LogManager.getLogger(ModelFactory.class);
+    private static final Logger sLogger = LogManager.getLogger(AbstractModelFactory.class);
 
     protected final InputValues fSharedInputValues;
     protected final OutputValues fSharedOutputValues;
     protected final RobotConfiguration fRobotConfiguration;
     protected final ObjectsDirectory fSharedObjectDirectory;
-    private final List<ModelFactory> fModelFactories;
+    private final List<AbstractModelFactory> fModelFactories;
 
     @Inject
-    public ModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+    public AbstractModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
         fSharedInputValues = inputValues;
         fSharedOutputValues = outputValues;
         fRobotConfiguration = robotConfiguration;
@@ -46,7 +46,7 @@ public abstract class ModelFactory {
     }
 
     public OutputNumeric createOutputNumeric(Object name, Config config, YamlConfigParser parser) {
-        for (ModelFactory modelFactory : fModelFactories) {
+        for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
                 return modelFactory.createOutputNumeric(name, config, parser);
             } catch (ConfigurationTypeDoesNotExistException e) {
@@ -56,7 +56,7 @@ public abstract class ModelFactory {
     }
 
     public OutputBoolean createOutputBoolean(Object name, Config config, YamlConfigParser parser) {
-        for (ModelFactory modelFactory : fModelFactories) {
+        for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
                 return modelFactory.createOutputBoolean(name, config, parser);
             } catch (ConfigurationTypeDoesNotExistException e) {
@@ -66,7 +66,7 @@ public abstract class ModelFactory {
     }
 
     public InputBoolean createInputBoolean(Object name, Config config) {
-        for (ModelFactory modelFactory : fModelFactories) {
+        for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
                 return modelFactory.createInputBoolean(name, config);
             } catch (ConfigurationTypeDoesNotExistException e) {
@@ -76,7 +76,7 @@ public abstract class ModelFactory {
     }
 
     public InputNumeric createInputNumeric(Object name, Config config) {
-        for (ModelFactory modelFactory : fModelFactories) {
+        for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
                 return modelFactory.createInputNumeric(name, config);
             } catch (ConfigurationTypeDoesNotExistException e) {
@@ -86,7 +86,7 @@ public abstract class ModelFactory {
     }
 
     public InputVector createInputVector(Object name, Config config) {
-        for (ModelFactory modelFactory : fModelFactories) {
+        for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
                 return modelFactory.createInputVector(name, config);
             } catch (ConfigurationTypeDoesNotExistException e) {
@@ -96,7 +96,7 @@ public abstract class ModelFactory {
     }
 
     public Behavior createBehavior(String name, Config config) {
-        for (ModelFactory modelFactory : fModelFactories) {
+        for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
                 return modelFactory.createBehavior(name, config);
             } catch (ConfigurationTypeDoesNotExistException e) {
@@ -136,7 +136,7 @@ public abstract class ModelFactory {
         return state;
     }
 
-    public void registerModelFactory(ModelFactory modelFactory) {
+    public void registerModelFactory(AbstractModelFactory modelFactory) {
         fModelFactories.add(modelFactory);
     }
 }

@@ -8,12 +8,12 @@ import org.uacr.shared.abstractions.RobotConfiguration;
  * Concretions of this class should be used for setting flags and doing global math and logic
  */
 
-public abstract class RobotStatus {
+public abstract class AbstractRobotStatus {
 
     protected InputValues fSharedInputValues;
     protected RobotConfiguration fRobotConfiguration;
 
-    public RobotStatus(InputValues inputValues, RobotConfiguration robotConfiguration) {
+    public AbstractRobotStatus(InputValues inputValues, RobotConfiguration robotConfiguration) {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
     }

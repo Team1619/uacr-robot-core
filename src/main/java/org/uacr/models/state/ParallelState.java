@@ -1,6 +1,6 @@
 package org.uacr.models.state;
 
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.logging.LogManager;
@@ -18,13 +18,13 @@ public class ParallelState implements State {
 
     private static final Logger sLogger = LogManager.getLogger(ParallelState.class);
 
-    private final ModelFactory fModelFactory;
+    private final AbstractModelFactory fModelFactory;
     private final String fStateName;
 
     private Set<State> fForegroundStates = new HashSet<>();
     private Set<State> fBackgroundStates = new HashSet<>();
 
-    public ParallelState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+    public ParallelState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fModelFactory = modelFactory;
         fStateName = name;
 

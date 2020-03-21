@@ -14,19 +14,19 @@ import java.util.HashMap;
  * The base for all state control logic
  */
 
-public abstract class StateControls {
+public abstract class AbstractStateControls {
 
-    private static final Logger sLogger = LogManager.getLogger(StateControls.class);
+    private static final Logger sLogger = LogManager.getLogger(AbstractStateControls.class);
 
     protected final InputValues fSharedInputValues;
     protected final RobotConfiguration fRobotConfiguration;
-    private final HashMap<ControlMode, ModeLogic> fModeLogicMap;
+    private final HashMap<ControlMode, AbstractModeLogic> fModeLogicMap;
     protected FMS.Mode fFmsMode;
     private ControlMode fCurrentControlMode;
     @Nullable
-    private RobotStatus fRobotStatus;
+    private AbstractRobotStatus fRobotStatus;
 
-    public StateControls(InputValues inputValues, RobotConfiguration robotConfiguration) {
+    public AbstractStateControls(InputValues inputValues, RobotConfiguration robotConfiguration) {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
         fModeLogicMap = new HashMap<>();
@@ -57,7 +57,7 @@ public abstract class StateControls {
      * @param controlMode the ControlMode that is mode logic should be used for
      * @param modeLogic   the ModeLogic concretion to be used for the ControlMode
      */
-    public void registerModeLogic(ControlMode controlMode, ModeLogic modeLogic) {
+    public void registerModeLogic(ControlMode controlMode, AbstractModeLogic modeLogic) {
         fModeLogicMap.put(controlMode, modeLogic);
     }
 
@@ -66,7 +66,7 @@ public abstract class StateControls {
      *
      * @param robotStatus the RobotStatus concretion to be used for this robot
      */
-    public void registerRobotStatus(RobotStatus robotStatus) {
+    public void registerRobotStatus(AbstractRobotStatus robotStatus) {
         fRobotStatus = robotStatus;
     }
 
@@ -75,7 +75,7 @@ public abstract class StateControls {
      *
      * @return the current ModeLogic concretion
      */
-    public ModeLogic getCurrentModeLogic() {
+    public AbstractModeLogic getCurrentModeLogic() {
         return fModeLogicMap.get(getCurrentControlMode());
     }
 
@@ -84,7 +84,7 @@ public abstract class StateControls {
      *
      * @return the RobotStatus for this robot
      */
-    public RobotStatus getRobotStatus() {
+    public AbstractRobotStatus getRobotStatus() {
         if (fRobotStatus != null) {
             return fRobotStatus;
         }

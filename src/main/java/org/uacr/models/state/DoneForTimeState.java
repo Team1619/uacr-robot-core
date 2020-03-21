@@ -1,6 +1,6 @@
 package org.uacr.models.state;
 
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.Timer;
 import org.uacr.utilities.YamlConfigParser;
@@ -29,7 +29,7 @@ public class DoneForTimeState implements State {
 
     private int fMaxTimeout;
 
-    public DoneForTimeState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+    public DoneForTimeState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fStateName = name;
 
         fSubStateName = config.getString("state");

@@ -3,7 +3,7 @@ package org.uacr.services.input;
 import org.uacr.models.inputs.bool.InputBoolean;
 import org.uacr.models.inputs.numeric.InputNumeric;
 import org.uacr.models.inputs.vector.InputVector;
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.shared.abstractions.InputValues;
 import org.uacr.shared.abstractions.ObjectsDirectory;
 import org.uacr.shared.abstractions.RobotConfiguration;
@@ -39,7 +39,7 @@ public class InputService implements ScheduledService {
     private long FRAME_CYCLE_TIME_THRESHOLD;
 
     @Inject
-    public InputService(ModelFactory modelFactory, InputValues inputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+    public InputService(AbstractModelFactory modelFactory, InputValues inputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
         fSharedObjectsDirectory = objectsDirectory;
