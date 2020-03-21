@@ -29,7 +29,6 @@ public class StatesService implements ScheduledService {
     private long FRAME_TIME_THRESHOLD;
 
     private FMS.Mode fCurrentFmsMode;
-    private String fRobotName = "competitionbot";
     private StateMachine fStateMachine;
     private RobotManager fRobotManager;
 
@@ -63,15 +62,6 @@ public class StatesService implements ScheduledService {
         fSharedInputValues.setBoolean("ipb_robot_has_been_zeroed", false);
 
         sLogger.debug("StatesService started");
-    }
-
-    /**
-     * Sets the 'robot' we are currently running
-     *
-     * @param robotName the name of the robot specified in robotconfigruation.ymal
-     */
-    public void setRobotName(String robotName) {
-        fRobotName = robotName;
     }
 
     /**
