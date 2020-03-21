@@ -9,14 +9,15 @@ package org.uacr.utilities.purepursuit;
 
 public class PathPoint extends Point {
 
-    private final double distance, curvature;
-    private double velocity;
+    private final double fDistance;
+    private final double fCurvature;
+    private double mVelocity;
 
     public PathPoint(double x, double y, double distance, double curvature, double velocity) {
         super(x, y);
-        this.distance = distance;
-        this.curvature = curvature;
-        this.velocity = velocity;
+        this.fDistance = distance;
+        this.fCurvature = curvature;
+        this.mVelocity = velocity;
     }
 
     public PathPoint(Point point, double distance, double curvature, double velocity) {
@@ -24,18 +25,18 @@ public class PathPoint extends Point {
     }
 
     public double getDistance() {
-        return distance;
+        return fDistance;
     }
 
     public double getCurvature() {
-        return curvature;
+        return fCurvature;
     }
 
     public double getVelocity() {
-        return velocity;
+        return mVelocity;
     }
 
     public void setVelocity(double velocity) {
-        this.velocity = velocity;
+        this.mVelocity = velocity;
     }
 }

@@ -4,11 +4,11 @@ import java.util.Map;
 
 public class SimInputVectorSetEvent {
 
-    public final String name;
-    public final Map<String, Double> values;
+    public final String fName;
+    public final Map<String, Double> fValues;
 
     public SimInputVectorSetEvent(String name, Map<String, Double> values) {
-        this.name = name;
-        this.values = values;
+        this.fName = name;
+        this.fValues = values;
     }
 }

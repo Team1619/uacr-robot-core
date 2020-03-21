@@ -13,22 +13,22 @@ import java.util.HashMap;
 
 public class Injector {
 
-    private HashMap<Class, Class> fBindings;
-    private HashMap<Class, Object> fSingletons;
+    private HashMap<Class, Class> mBindings;
+    private final HashMap<Class, Object> fSingletons;
 
     /**
      * Configures bindings and creates singletons
      */
     public Injector(AbstractModule module) {
-        fBindings = new HashMap<>();
+        mBindings = new HashMap<>();
         fSingletons = new HashMap<>();
 
         module.configure();
 
-        fBindings = module.getBindings();
+        mBindings = module.getBindings();
 
         HashMap<Class, Class> bindings = new HashMap<>();
-        bindings.putAll(fBindings);
+        bindings.putAll(mBindings);
 
         HashMap<Class, Class> singletonMap = new HashMap<>();
 
@@ -37,7 +37,7 @@ public class Injector {
             for (Annotation annotation : binding.getValue().getDeclaredAnnotations()) {
                 if (annotation.annotationType().equals(Singleton.class)) {
                     singletonMap.put(binding.getKey(), binding.getValue());
-                    fBindings.remove(binding.getKey());
+                    mBindings.remove(binding.getKey());
                 }
             }
         }
@@ -100,7 +100,7 @@ public class Injector {
             Object parameter = fSingletons.get(parameterTypes[p]);
 
             if (parameter == null) {
-                Class parameterClass = fBindings.get(parameterTypes[p]);
+                Class parameterClass = mBindings.get(parameterTypes[p]);
 
                 if (parameterClass != null) {
                     parameter = getInstance(parameterClass);
@@ -144,7 +144,7 @@ public class Injector {
             Object parameter = fSingletons.get(parameterTypes[p]);
 
             if (parameter == null) {
-                Class parameterClass = fBindings.get(parameterTypes[p]);
+                Class parameterClass = mBindings.get(parameterTypes[p]);
 
                 //Creates a java proxy to handle circular dependencies
                 if (parameterClass == null && parameterTypes[p].isAssignableFrom(singletonClass)) {

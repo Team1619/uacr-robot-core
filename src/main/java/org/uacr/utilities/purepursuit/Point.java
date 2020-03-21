@@ -9,7 +9,8 @@ package org.uacr.utilities.purepursuit;
 
 public class Point {
 
-    protected final double fX, fY;
+    protected final double fX;
+    protected final double fY;
 
     public Point(double x, double y) {
         fX = x;

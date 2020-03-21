@@ -13,7 +13,7 @@ public class SharedEventBus implements EventBus {
 
     private static final Logger sLogger = LogManager.getLogger(SharedEventBus.class);
 
-    private org.uacr.utilities.eventbus.EventBus fEventBus;
+    private final org.uacr.utilities.eventbus.EventBus fEventBus;
 
     public SharedEventBus() {
         fEventBus = new AsyncEventBus(Executors.newFixedThreadPool(4));

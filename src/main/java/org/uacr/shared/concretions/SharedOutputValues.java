@@ -14,9 +14,15 @@ public class SharedOutputValues implements OutputValues {
 
     private static final Logger sLogger = LogManager.getLogger(SharedOutputValues.class);
 
-    private Map<String, Map<String, Object>> fOutputNumerics = new ConcurrentHashMap<>();
-    private Map<String, Boolean> fOutputBooleans = new ConcurrentHashMap<>();
-    private Map<String, String> fOutputFlags = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Object>> fOutputNumerics;
+    private Map<String, Boolean> fOutputBooleans;
+    private Map<String, String> fOutputFlags;
+
+    public SharedOutputValues() {
+        fOutputNumerics = new ConcurrentHashMap<>();
+        fOutputBooleans = new ConcurrentHashMap<>();
+        fOutputFlags = new ConcurrentHashMap<>();
+    }
 
     // All
     @Override

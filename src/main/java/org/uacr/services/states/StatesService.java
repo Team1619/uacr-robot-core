@@ -25,8 +25,8 @@ public class StatesService implements ScheduledService {
     private final FMS fFms;
     private final YamlConfigParser fParser;
     private final RobotConfiguration fRobotConfiguration;
-    private double fPreviousTime;
-    private long FRAME_TIME_THRESHOLD;
+    private double mPreviousTime;
+    private long mFrameTimeThreshold;
 
     private FMS.Mode fCurrentFmsMode;
     private StateMachine fStateMachine;
@@ -56,8 +56,8 @@ public class StatesService implements ScheduledService {
         fParser.loadWithFolderName("states.yaml");
         fSharedObjectsDirectory.registerAllStates(fParser);
 
-        fPreviousTime = System.currentTimeMillis();
-        FRAME_TIME_THRESHOLD = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_state_service");
+        mPreviousTime = System.currentTimeMillis();
+        mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_state_service");
 
         fSharedInputValues.setBoolean("ipb_robot_has_been_zeroed", false);
 
@@ -118,12 +118,12 @@ public class StatesService implements ScheduledService {
         // Check for delayed frames
         double currentTime = System.currentTimeMillis();
         double frameTime = currentTime - frameStartTime;
-        double totalCycleTime = currentTime - fPreviousTime;
+        double totalCycleTime = currentTime - mPreviousTime;
         fSharedInputValues.setNumeric("ipn_frame_time_states_service", frameTime);
-        if (frameTime > FRAME_TIME_THRESHOLD) {
+        if (frameTime > mFrameTimeThreshold) {
             sLogger.debug("********** States Service frame time = {}", frameTime);
         }
-        fPreviousTime = currentTime;
+        mPreviousTime = currentTime;
 
     }
 

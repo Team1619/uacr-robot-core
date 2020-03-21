@@ -25,10 +25,10 @@ public class SingleState implements State {
     private final String fStateName;
     private final ObjectsDirectory fSharedObectsDirectory;
 
-    private Behavior fBehavior;
+    private final Behavior fBehavior;
 
-    private String fBehaviorName;
-    private Config fBehaviorConfig;
+    private final String fBehaviorName;
+    private final Config fBehaviorConfig;
 
     public SingleState(AbstractModelFactory modelFactory, String name, Config config, ObjectsDirectory objectsDirectory) {
         fModelFactory = modelFactory;
@@ -45,13 +45,14 @@ public class SingleState implements State {
         // Only create a new behavior class instance if it has not already been created by another state
         // A single instance allows all states using this behvavior class to share member variable information inside the single instance
         // Behavior.Intialize() is called each time a new state is entered and Behavior.Dispose() is called when leaving the state
-        fBehavior = fSharedObectsDirectory.getBehaviorObject(fBehaviorName);
+        Behavior behavior = fSharedObectsDirectory.getBehaviorObject(fBehaviorName);
         //noinspection ConstantConditions
-        if (fBehavior == null) {
-            fBehavior = fModelFactory.createBehavior(fBehaviorName, fBehaviorConfig);
-            fSharedObectsDirectory.setBehaviorObject(fBehaviorName, fBehavior);
+        if (behavior == null) {
+            behavior = fModelFactory.createBehavior(fBehaviorName, fBehaviorConfig);
+            fSharedObectsDirectory.setBehaviorObject(fBehaviorName, behavior);
         }
 
+        fBehavior = behavior;
     }
 
     @Override

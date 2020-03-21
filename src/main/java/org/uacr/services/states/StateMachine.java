@@ -22,7 +22,7 @@ public class StateMachine {
     private final ObjectsDirectory fSharedObjectsDirectory;
     private final RobotConfiguration fRobotConfiguration;
     private final InputValues fSharedInputValues;
-    private RobotManager fRobotManager;
+    private final RobotManager fRobotManager;
     private Set<String> fAllSubsystemNames = new LinkedHashSet<>();
     private Set<String> fAllStateNames = new LinkedHashSet<>();
     private List<String> fPriorityKeys = new ArrayList<>();

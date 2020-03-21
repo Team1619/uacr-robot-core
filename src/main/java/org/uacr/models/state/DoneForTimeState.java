@@ -27,7 +27,7 @@ public class DoneForTimeState implements State {
 
     private final int fStateTimeout;
 
-    private int fMaxTimeout;
+    private int mMaxTimeout;
 
     public DoneForTimeState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fStateName = name;
@@ -36,7 +36,7 @@ public class DoneForTimeState implements State {
         fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fSubStateName));
 
         fStateTimeout = config.getInt("state_timeout");
-        fMaxTimeout = config.getInt("max_timeout", -1);
+        mMaxTimeout = config.getInt("max_timeout", -1);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class DoneForTimeState implements State {
     @Override
     public void initialize() {
         sLogger.debug("Entering Done For Time State {}", fStateName);
-        if (fMaxTimeout != -1) {
-            fMaxTimer.start(fMaxTimeout);
+        if (mMaxTimeout != -1) {
+            fMaxTimer.start(mMaxTimeout);
         }
     }
 

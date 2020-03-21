@@ -18,7 +18,7 @@ public abstract class ServiceManager {
 
     private final ExecutorService fExecutor;
     private final List<ServiceWrapper> fServices;
-    private ServiceState fCurrentState = ServiceState.AWAITING_START;
+    private ServiceState mCurrentState = ServiceState.AWAITING_START;
 
     //Create a new thread and serviceWrappers for each service that it is managing
     public ServiceManager(List<Service> services) {
@@ -32,15 +32,15 @@ public abstract class ServiceManager {
 
     // Gets the state of the service manager (same as the serviceStates)
     protected ServiceState getCurrentState() {
-        synchronized (fCurrentState) {
-            return fCurrentState;
+        synchronized (mCurrentState) {
+            return mCurrentState;
         }
     }
 
     // Sets the state of the service manager (same as the serviceStates)
     protected void setCurrentState(ServiceState currentState) {
-        synchronized (fCurrentState) {
-            fCurrentState = currentState;
+        synchronized (mCurrentState) {
+            mCurrentState = currentState;
         }
     }
 

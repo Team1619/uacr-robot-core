@@ -10,8 +10,8 @@ import org.uacr.shared.abstractions.RobotConfiguration;
 
 public abstract class AbstractRobotStatus {
 
-    protected InputValues fSharedInputValues;
-    protected RobotConfiguration fRobotConfiguration;
+    protected final InputValues fSharedInputValues;
+    protected final RobotConfiguration fRobotConfiguration;
 
     public AbstractRobotStatus(InputValues inputValues, RobotConfiguration robotConfiguration) {
         fSharedInputValues = inputValues;

@@ -21,10 +21,10 @@ public abstract class AbstractStateControls {
     protected final InputValues fSharedInputValues;
     protected final RobotConfiguration fRobotConfiguration;
     private final HashMap<ControlMode, AbstractModeLogic> fModeLogicMap;
-    protected FMS.Mode fFmsMode;
-    private ControlMode fCurrentControlMode;
+    protected final FMS.Mode fFmsMode;
+    private ControlMode mCurrentControlMode;
     @Nullable
-    private AbstractRobotStatus fRobotStatus;
+    private AbstractRobotStatus mRobotStatus;
 
     public AbstractStateControls(InputValues inputValues, RobotConfiguration robotConfiguration) {
         fSharedInputValues = inputValues;
@@ -67,7 +67,7 @@ public abstract class AbstractStateControls {
      * @param robotStatus the RobotStatus concretion to be used for this robot
      */
     public void registerRobotStatus(AbstractRobotStatus robotStatus) {
-        fRobotStatus = robotStatus;
+        mRobotStatus = robotStatus;
     }
 
     /**
@@ -85,8 +85,8 @@ public abstract class AbstractStateControls {
      * @return the RobotStatus for this robot
      */
     public AbstractRobotStatus getRobotStatus() {
-        if (fRobotStatus != null) {
-            return fRobotStatus;
+        if (mRobotStatus != null) {
+            return mRobotStatus;
         }
         throw new ConfigurationException("RobotStatus not registered. Call method registerRobotStatus() in the constructor of the concretion of StateControls");
     }
@@ -97,7 +97,7 @@ public abstract class AbstractStateControls {
      * @return the current control mode
      */
     public ControlMode getCurrentControlMode() {
-        return fCurrentControlMode;
+        return mCurrentControlMode;
     }
 
     /**
@@ -110,7 +110,7 @@ public abstract class AbstractStateControls {
         if (fModeLogicMap.get(currentControlMode) == null) {
             sLogger.error("******** No mode logic specified for " + currentControlMode + " ********");
         } else {
-            fCurrentControlMode = currentControlMode;
+            mCurrentControlMode = currentControlMode;
         }
     }
 }

@@ -21,12 +21,15 @@ public class ParallelState implements State {
     private final AbstractModelFactory fModelFactory;
     private final String fStateName;
 
-    private Set<State> fForegroundStates = new HashSet<>();
-    private Set<State> fBackgroundStates = new HashSet<>();
+    private final Set<State> fForegroundStates;
+    private final Set<State> fBackgroundStates;
 
     public ParallelState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fModelFactory = modelFactory;
         fStateName = name;
+
+        fForegroundStates = new HashSet<>();
+        fBackgroundStates = new HashSet<>();
 
         for (Object foregroundStateName : config.getList("foreground_states")) {
             fForegroundStates.add(fModelFactory.createState((String) foregroundStateName, parser, parser.getConfig(foregroundStateName)));

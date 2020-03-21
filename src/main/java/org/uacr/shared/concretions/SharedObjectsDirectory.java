@@ -34,20 +34,28 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     private final AbstractModelFactory fModelFactory;
     private final RobotConfiguration fRobotConfiguration;
     private final InputValues fSharedInputValues;
-    private final Map<String, InputBoolean> fInputBooleanObjects = new ConcurrentHashMap<>();
-    private final Map<String, InputNumeric> fInputNumericObjects = new ConcurrentHashMap<>();
-    private final Map<String, InputVector> fInputVectorObjects = new ConcurrentHashMap<>();
-    private final Map<String, OutputNumeric> fOutputNumericObjects = new ConcurrentHashMap<>();
-    private final Map<String, OutputBoolean> fOutputBooleanObjects = new ConcurrentHashMap<>();
-    private final Map<Object, State> fStateObjects = new ConcurrentHashMap<>();
-    private final Map<Object, Behavior> fBehaviorObjects = new ConcurrentHashMap<>();
-    private final Map<Object, Object> fHardwareObjects = new ConcurrentHashMap<>();
+    private final Map<String, InputBoolean> fInputBooleanObjects;
+    private final Map<String, InputNumeric> fInputNumericObjects;
+    private final Map<String, InputVector> fInputVectorObjects;
+    private final Map<String, OutputNumeric> fOutputNumericObjects;
+    private final Map<String, OutputBoolean> fOutputBooleanObjects;
+    private final Map<Object, State> fStateObjects;
+    private final Map<Object, Behavior> fBehaviorObjects;
+    private final Map<Object, Object> fHardwareObjects;
 
     @Inject
     public SharedObjectsDirectory(AbstractModelFactory modelFactory, RobotConfiguration robotConfiguration, InputValues inputValues) {
         fModelFactory = modelFactory;
         fRobotConfiguration = robotConfiguration;
         fSharedInputValues = inputValues;
+        fInputBooleanObjects = new ConcurrentHashMap<>();
+        fInputNumericObjects = new ConcurrentHashMap<>();
+        fInputVectorObjects = new ConcurrentHashMap<>();
+        fOutputNumericObjects = new ConcurrentHashMap<>();
+        fOutputBooleanObjects = new ConcurrentHashMap<>();
+        fStateObjects = new ConcurrentHashMap<>();
+        fBehaviorObjects = new ConcurrentHashMap<>();
+        fHardwareObjects = new ConcurrentHashMap<>();
     }
 
     //--------------------------- Inputs ----------------------------------------//

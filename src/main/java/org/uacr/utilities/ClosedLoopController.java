@@ -11,8 +11,9 @@ import java.util.Map;
 
 public class ClosedLoopController {
 
-    private static final Map<String, Double> sProfileDefaults = new HashMap<>();
     private static final Logger sLogger = LogManager.getLogger(ClosedLoopController.class);
+
+    private static final Map<String, Double> sProfileDefaults = new HashMap<>();
 
     static {
         sProfileDefaults.put("integral_range", -1.0);

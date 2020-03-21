@@ -17,84 +17,84 @@ public class Path {
     /**
      * Distance between each point (inches)
      */
-    private double fPointSpacing = 1;
+    private double mPointSpacing = 1;
 
     /**
      * The amount of smoothing to be done on the path (larger number = more smoothing)
      */
-    private double fPathSmoothing = 0.5;
+    private double mPathSmoothing = 0.5;
 
     /**
      * Speed reduction through turns (larger number = faster turns)
      */
-    private double fTurnSpeed = 1.0;
+    private double mTurnSpeed = 1.0;
 
     /**
      * Scales following speed based on tracking error (smaller number = better tracking, larger number = faster tracking)
      */
-    private double fTrackingErrorSpeed = 5.0;
+    private double mTrackingErrorSpeed = 5.0;
 
     /**
      * Scales how much turn error is added into total error
      */
-    private double fTurnErrorScalar = 0.125;
+    private double mTurnErrorScalar = 0.125;
 
     /**
      * The max acceleration (total output/point)
      */
-    private double fMaxAcceleration = 0.01;
+    private double mMaxAcceleration = 0.01;
 
     /**
      * The max deceleration (total output/point)
      */
-    private double fMaxDeceleration = 0.005;
+    private double mMaxDeceleration = 0.005;
 
     /**
      * Minimum follow speed
      */
-    private double fMinSpeed = 0.2;
+    private double mMinSpeed = 0.2;
 
     /**
      * Maximum follow speed
      */
-    private double fMaxSpeed = 1.5;
+    private double mMaxSpeed = 1.5;
 
     /**
      * Average look ahead distance
      */
-    private double fLookAheadDistance = 5;
+    private double mLookAheadDistance = 5;
 
     /**
      * Look ahead distance for velocity calculations
      */
-    private int fVelocityLookAheadPoints = 1;
+    private int mVelocityLookAheadPoints = 1;
 
     /**
      * Run specific data, gets reset with reset() method
      */
 
-    private int fLastPointIndex = 0;
-    private int fLastCurrentPointIndex = 0;
-    private double fTargetAngle = 0;
-    private double fDeltaAngle = 0;
-    private double fCurvature = 0.000001;
+    private int mLastPointIndex = 0;
+    private int mLastCurrentPointIndex = 0;
+    private double mTargetAngle = 0;
+    private double mDeltaAngle = 0;
+    private double mCurvature = 0.000001;
 
     /**
      * Waypoints along path specified by behavior
      */
-    private ArrayList<Point> fPoints;
+    private ArrayList<Point> mPoints;
 
     /**
      * All the points along the path, created from the waypoints (fPoints)
      */
     @Nullable
-    private ArrayList<PathPoint> fPath;
+    private ArrayList<PathPoint> mPath;
 
     /**
      * Pass in an ArrayList of waypoints
      */
     public Path(ArrayList<Point> points) {
-        fPoints = points;
+        mPoints = points;
     }
 
     /**
@@ -105,7 +105,7 @@ public class Path {
     }
 
     public void setTurnErrorScalar(double turnErrorScalar) {
-        fTurnErrorScalar = turnErrorScalar;
+        mTurnErrorScalar = turnErrorScalar;
     }
 
     /**
@@ -113,7 +113,7 @@ public class Path {
      */
 
     public double getPointSpacing() {
-        return fPointSpacing;
+        return mPointSpacing;
     }
 
     /**
@@ -121,83 +121,83 @@ public class Path {
      */
 
     public void setPointSpacing(double pointSpacing) {
-        fPointSpacing = pointSpacing;
+        mPointSpacing = pointSpacing;
     }
 
     public double getPathSmoothing() {
-        return fPathSmoothing;
+        return mPathSmoothing;
     }
 
     public void setPathSmoothing(double pathSmoothing) {
-        fPathSmoothing = pathSmoothing;
+        mPathSmoothing = pathSmoothing;
     }
 
     public double getTurnSpeed() {
-        return fTurnSpeed;
+        return mTurnSpeed;
     }
 
     public void setTurnSpeed(double turnSpeed) {
-        fTurnSpeed = turnSpeed;
+        mTurnSpeed = turnSpeed;
     }
 
     public double getTrackingErrorSpeed() {
-        return fTrackingErrorSpeed;
+        return mTrackingErrorSpeed;
     }
 
     public void setTrackingErrorSpeed(double trackingErrorSpeed) {
-        fTrackingErrorSpeed = trackingErrorSpeed;
+        mTrackingErrorSpeed = trackingErrorSpeed;
     }
 
     public double getTurnErrorScalar(double turnErrorScalar) {
-        return fTurnErrorScalar;
+        return mTurnErrorScalar;
     }
 
     public double getMaxAcceleration() {
-        return fMaxAcceleration;
+        return mMaxAcceleration;
     }
 
     public void setMaxAcceleration(double maxAcceleration) {
-        fMaxAcceleration = maxAcceleration;
+        mMaxAcceleration = maxAcceleration;
     }
 
     public double getMaxDeceleration() {
-        return fMaxDeceleration;
+        return mMaxDeceleration;
     }
 
     public void setMaxDeceleration(double maxDeceleration) {
-        fMaxDeceleration = maxDeceleration;
+        mMaxDeceleration = maxDeceleration;
     }
 
     public double getMinSpeed() {
-        return fMinSpeed;
+        return mMinSpeed;
     }
 
     public void setMinSpeed(double minSpeed) {
-        fMinSpeed = minSpeed;
+        mMinSpeed = minSpeed;
     }
 
     public double getMaxSpeed() {
-        return fMaxSpeed;
+        return mMaxSpeed;
     }
 
     public void setMaxSpeed(double maxSpeed) {
-        fMaxSpeed = maxSpeed;
+        mMaxSpeed = maxSpeed;
     }
 
     public double getLookAheadDistance() {
-        return fLookAheadDistance;
+        return mLookAheadDistance;
     }
 
     public void setLookAheadDistance(double lookAheadDistance) {
-        fLookAheadDistance = lookAheadDistance;
+        mLookAheadDistance = lookAheadDistance;
     }
 
     public int getVelocityLookAheadPoints() {
-        return fVelocityLookAheadPoints;
+        return mVelocityLookAheadPoints;
     }
 
     public void setVelocityLookAheadPoints(int lookAheadPoints) {
-        fVelocityLookAheadPoints = lookAheadPoints;
+        mVelocityLookAheadPoints = lookAheadPoints;
     }
 
     /**Methods for path following*/
@@ -218,8 +218,8 @@ public class Path {
      * @return a PathPoint ArrayList
      */
     public ArrayList<PathPoint> getPoints() {
-        if (fPath != null) {
-            return (ArrayList<PathPoint>) fPath.clone();
+        if (mPath != null) {
+            return (ArrayList<PathPoint>) mPath.clone();
         }
         build();
         return getPoints();
@@ -233,13 +233,13 @@ public class Path {
      * @return the angle in degrees
      */
     public double getAngleFromPathPoint(int index, Pose2d currentLocation) {
-        if (fPath == null || fPath.size() == 0) return 0.0;
+        if (mPath == null || mPath.size() == 0) return 0.0;
 
         Vector delta = new Vector(getPathPoint(index).subtract(currentLocation));
 
         double angle = Math.toDegrees(Math.atan2(delta.getY(), Math.abs(delta.getX()) > 0.3 ? delta.getX() : 0.3 * Math.signum(delta.getX())));
 
-        fTargetAngle = angle;
+        mTargetAngle = angle;
 
         return angle;
     }
@@ -254,23 +254,23 @@ public class Path {
      * @return the curvature represent as 1 / radius of the circle made by the amount of curvature
      */
     public double getCurvatureFromPathPoint(int index, Pose2d currentLocation) {
-        if (fPath == null || fPath.size() == 0) return 0.0;
+        if (mPath == null || mPath.size() == 0) return 0.0;
 
-        Vector delta = new Vector(index < getPath().size() - 1 ? getPathPoint(index).subtract(currentLocation) : getPathPoint(getPath().size() - 1).add(new Vector(getPathPoint(getPath().size() - 1).subtract(getPathPoint(getPath().size() - 2))).normalize().scale(fLookAheadDistance - currentLocation.distance(getPathPoint(getPath().size() - 1)))).subtract(currentLocation));
+        Vector delta = new Vector(index < getPath().size() - 1 ? getPathPoint(index).subtract(currentLocation) : getPathPoint(getPath().size() - 1).add(new Vector(getPathPoint(getPath().size() - 1).subtract(getPathPoint(getPath().size() - 2))).normalize().scale(mLookAheadDistance - currentLocation.distance(getPathPoint(getPath().size() - 1)))).subtract(currentLocation));
 
         double angle = Math.toDegrees(Math.atan2(delta.getY(), Math.abs(delta.getX()) > 0.3 ? delta.getX() : 0.3 * Math.signum(delta.getX())));
 
-        fTargetAngle = angle;
+        mTargetAngle = angle;
 
-        fDeltaAngle = currentLocation.getHeading() - angle;
+        mDeltaAngle = currentLocation.getHeading() - angle;
 
-        if (Math.abs(fDeltaAngle) > 180) fDeltaAngle = -Math.signum(fDeltaAngle) * (360 - Math.abs(fDeltaAngle));
+        if (Math.abs(mDeltaAngle) > 180) mDeltaAngle = -Math.signum(mDeltaAngle) * (360 - Math.abs(mDeltaAngle));
 
-        double curvature = (Math.abs(fDeltaAngle) > 90 ? Math.signum(fDeltaAngle) : Math.sin(Math.toRadians(fDeltaAngle))) / (delta.magnitude() / 2);
+        double curvature = (Math.abs(mDeltaAngle) > 90 ? Math.signum(mDeltaAngle) : Math.sin(Math.toRadians(mDeltaAngle))) / (delta.magnitude() / 2);
 
         if (Double.isInfinite(curvature) || Double.isNaN(curvature)) return 0.0;
 
-        fCurvature = curvature;
+        mCurvature = curvature;
 
         return curvature;
     }
@@ -283,7 +283,7 @@ public class Path {
      * @return the last target angle
      */
     public double getTargetAngle() {
-        return fTargetAngle;
+        return mTargetAngle;
     }
 
     /**
@@ -297,9 +297,9 @@ public class Path {
      * @return the velocity
      */
     public double getPathPointVelocity(int index, Pose2d currentLocation) {
-        double speed = fMaxSpeed;
-        for (int i = index; i < index + fVelocityLookAheadPoints && i < getPoints().size(); i++) {
-            speed = Math.min(speed, range(getPathPoint(i).getVelocity() / range(getTrackingError(currentLocation) / fTrackingErrorSpeed, 1, 3), fMinSpeed, fMaxSpeed));
+        double speed = mMaxSpeed;
+        for (int i = index; i < index + mVelocityLookAheadPoints && i < getPoints().size(); i++) {
+            speed = Math.min(speed, range(getPathPoint(i).getVelocity() / range(getTrackingError(currentLocation) / mTrackingErrorSpeed, 1, 3), mMinSpeed, mMaxSpeed));
         }
         return speed;
     }
@@ -312,22 +312,22 @@ public class Path {
      * @return the index of the closest point
      */
     public int getClosestPointIndex(Point currentPosition) {
-        if (fPath == null || fPath.size() == 0) return -1;
+        if (mPath == null || mPath.size() == 0) return -1;
 
         double distance = 1000000;
         int index = -1;
 
-        for (int i = fLastCurrentPointIndex; i < getPath().size(); i++) {
+        for (int i = mLastCurrentPointIndex; i < getPath().size(); i++) {
             if (currentPosition.distance(getPathPoint(i)) < distance) {
                 index = i;
                 distance = currentPosition.distance(getPathPoint(i));
             }
         }
 
-        fLastCurrentPointIndex = index;
+        mLastCurrentPointIndex = index;
 
-        if (fLastCurrentPointIndex < 0) {
-            fLastCurrentPointIndex = 0;
+        if (mLastCurrentPointIndex < 0) {
+            mLastCurrentPointIndex = 0;
         }
 
         return index;
@@ -341,14 +341,14 @@ public class Path {
      * @return the index of the look ahead point
      */
     public int getLookAheadPointIndex(Pose2d currentPosition) {
-        if (fPath == null || fPath.size() == 0) return -1;
+        if (mPath == null || mPath.size() == 0) return -1;
 
         int closest = getClosestPointIndex(currentPosition);
 
         for (int i = getClosestPointIndex(currentPosition); i < getPath().size(); i++) {
-            fCurvature = Math.abs(getCurvatureFromPathPoint(i, currentPosition));
+            mCurvature = Math.abs(getCurvatureFromPathPoint(i, currentPosition));
 
-            double correction = range(fCurvature, 1, 5);
+            double correction = range(mCurvature, 1, 5);
 
             double curvature = 0;
 
@@ -356,8 +356,8 @@ public class Path {
                 curvature += getPointCurvature(closest);
             }
 
-            if (getPointDistance(i) - getPointDistance(closest) > fLookAheadDistance / range(curvature / 3, 1, 2)) {
-                fLastPointIndex = i;
+            if (getPointDistance(i) - getPointDistance(closest) > mLookAheadDistance / range(curvature / 3, 1, 2)) {
+                mLastPointIndex = i;
                 return i;
             }
         }
@@ -375,7 +375,7 @@ public class Path {
      * @return the index of the look ahead point
      */
     public double getTrackingError(Point currentPosition) {
-        return getPathPoint(getClosestPointIndex(currentPosition)).distance(currentPosition) + Math.abs(fDeltaAngle * fTurnErrorScalar);
+        return getPathPoint(getClosestPointIndex(currentPosition)).distance(currentPosition) + Math.abs(mDeltaAngle * mTurnErrorScalar);
     }
 
     /**Methods creating and clearing the path*/
@@ -384,11 +384,11 @@ public class Path {
      * Resets all the run specific data, so a single path can be run more than once.
      */
     public void reset() {
-        fLastPointIndex = 0;
-        fLastCurrentPointIndex = 0;
-        fTargetAngle = 0;
-        fDeltaAngle = 0;
-        fCurvature = 0.000001;
+        mLastPointIndex = 0;
+        mLastCurrentPointIndex = 0;
+        mTargetAngle = 0;
+        mDeltaAngle = 0;
+        mCurvature = 0.000001;
     }
 
     /**
@@ -398,8 +398,8 @@ public class Path {
      * @return a PathPoint
      */
     private PathPoint getPathPoint(int point) {
-        if (fPath != null) {
-            return fPath.get(point);
+        if (mPath != null) {
+            return mPath.get(point);
         }
         build();
         return getPathPoint(point);
@@ -411,8 +411,8 @@ public class Path {
      * @return a PathPoint ArrayList
      */
     private ArrayList<PathPoint> getPath() {
-        if (fPath != null) {
-            return fPath;
+        if (mPath != null) {
+            return mPath;
         }
         build();
         return getPath();
@@ -423,12 +423,12 @@ public class Path {
      */
     public void build() {
 
-        if (fPath != null) {
+        if (mPath != null) {
             return;
         }
 
-        if (fPoints.size() == 0) {
-            fPath = new ArrayList<>();
+        if (mPoints.size() == 0) {
+            mPath = new ArrayList<>();
             return;
         }
 
@@ -445,21 +445,21 @@ public class Path {
     private void fill() {
         ArrayList<Point> newPoints = new ArrayList<>();
 
-        for (int s = 1; s < fPoints.size(); s++) {
-            Vector vector = new Vector(fPoints.get(s - 1), fPoints.get(s));
+        for (int s = 1; s < mPoints.size(); s++) {
+            Vector vector = new Vector(mPoints.get(s - 1), mPoints.get(s));
 
-            int numPointsFit = (int) Math.ceil(vector.magnitude() / fPointSpacing);
+            int numPointsFit = (int) Math.ceil(vector.magnitude() / mPointSpacing);
 
-            vector = vector.normalize().scale(fPointSpacing);
+            vector = vector.normalize().scale(mPointSpacing);
 
             for (int i = 0; i < numPointsFit; i++) {
-                newPoints.add(fPoints.get(s - 1).add(vector.scale(i)));
+                newPoints.add(mPoints.get(s - 1).add(vector.scale(i)));
             }
         }
 
-        newPoints.add(fPoints.get(fPoints.size() - 1));
+        newPoints.add(mPoints.get(mPoints.size() - 1));
 
-        fPoints = newPoints;
+        mPoints = newPoints;
     }
 
     /**
@@ -472,18 +472,18 @@ public class Path {
             change = 0;
             changedPoints = 0;
 
-            ArrayList<Point> newPoints = (ArrayList<Point>) fPoints.clone();
+            ArrayList<Point> newPoints = (ArrayList<Point>) mPoints.clone();
 
-            for (int i = 1; i < fPoints.size() - 1; i++) {
-                Point point = fPoints.get(i);
+            for (int i = 1; i < mPoints.size() - 1; i++) {
+                Point point = mPoints.get(i);
 
-                Vector middle = new Vector(fPoints.get(i + 1).subtract(fPoints.get(i - 1)));
+                Vector middle = new Vector(mPoints.get(i + 1).subtract(mPoints.get(i - 1)));
 
-                middle = new Vector(fPoints.get(i - 1).add(middle.normalize().scale(middle.magnitude() / 2)));
+                middle = new Vector(mPoints.get(i - 1).add(middle.normalize().scale(middle.magnitude() / 2)));
 
                 Vector delta = new Vector(middle.subtract(point));
 
-                Point newPoint = point.add(delta.normalize().scale(delta.magnitude() * fPathSmoothing));
+                Point newPoint = point.add(delta.normalize().scale(delta.magnitude() * mPathSmoothing));
 
                 if (!Double.isNaN(newPoint.getX()) && !Double.isNaN(newPoint.getY())) {
                     newPoints.set(i, newPoint);
@@ -492,7 +492,7 @@ public class Path {
                 }
             }
 
-            fPoints = newPoints;
+            mPoints = newPoints;
         }
     }
 
@@ -501,13 +501,13 @@ public class Path {
      */
     private void createPath() {
 
-        fPath = new ArrayList<>();
+        mPath = new ArrayList<>();
 
-        for (int p = 0; p < fPoints.size(); p++) {
-            fPath.add(new PathPoint(fPoints.get(p), getPointDistance(p), getPointCurvature(p), getPointVelocity(p)));
+        for (int p = 0; p < mPoints.size(); p++) {
+            mPath.add(new PathPoint(mPoints.get(p), getPointDistance(p), getPointCurvature(p), getPointVelocity(p)));
         }
 
-        for (int p = fPoints.size() - 2; p >= 0; p--) {
+        for (int p = mPoints.size() - 2; p >= 0; p--) {
             getPathPoint(p).setVelocity(getPointNewVelocity(p));
         }
     }
@@ -520,7 +520,7 @@ public class Path {
      */
     private double getPointDistance(int p) {
         if (p == 0) return 0.0;
-        return fPoints.get(p).distance(fPoints.get(p - 1)) + getPathPoint(p - 1).getDistance();
+        return mPoints.get(p).distance(mPoints.get(p - 1)) + getPathPoint(p - 1).getDistance();
     }
 
     /**
@@ -532,8 +532,8 @@ public class Path {
      * @return the curvature of the path at the point, represent as 1 / radius of the circle made by the amount of curvature
      */
     private double getPointCurvature(int p) {
-        if (p <= 0 || p >= fPoints.size() - 1) return 0.0;
-        return getCurvature(fPoints.get(p), fPoints.get(p - 1), fPoints.get(p + 1));
+        if (p <= 0 || p >= mPoints.size() - 1) return 0.0;
+        return getCurvature(mPoints.get(p), mPoints.get(p - 1), mPoints.get(p + 1));
     }
 
     /**
@@ -571,13 +571,13 @@ public class Path {
      * @return the first calculation of velocity
      */
     private double getPointVelocity(int p) {
-        if (p >= fPoints.size() - 2) return fMinSpeed;
+        if (p >= mPoints.size() - 2) return mMinSpeed;
 
-        double d = fPoints.get(p).distance(fPoints.get(p + 1));
+        double d = mPoints.get(p).distance(mPoints.get(p + 1));
 
-        if (p <= 0) return Math.max(Math.min(2 * fMaxAcceleration * d, fTurnSpeed / getPointCurvature(p)), fMinSpeed);
+        if (p <= 0) return Math.max(Math.min(2 * mMaxAcceleration * d, mTurnSpeed / getPointCurvature(p)), mMinSpeed);
 
-        return Math.max(Math.min(getPathPoint(p - 1).getVelocity() + 2 * fMaxAcceleration * d, Math.min(fTurnSpeed / getPointCurvature(p), fMaxSpeed)), fMinSpeed);
+        return Math.max(Math.min(getPathPoint(p - 1).getVelocity() + 2 * mMaxAcceleration * d, Math.min(mTurnSpeed / getPointCurvature(p), mMaxSpeed)), mMinSpeed);
     }
 
     /**
@@ -589,11 +589,11 @@ public class Path {
      * @return the second/final calculation of velocity
      */
     private double getPointNewVelocity(int p) {
-        if (p >= fPoints.size() - 2) return fMinSpeed;
+        if (p >= mPoints.size() - 2) return mMinSpeed;
 
-        double d = fPoints.get(p).distance(fPoints.get(p + 1));
+        double d = mPoints.get(p).distance(mPoints.get(p + 1));
 
-        return Math.min(getPathPoint(p).getVelocity(), Math.min(getPathPoint(p + 1).getVelocity() + 2 * fMaxDeceleration * d, fMaxSpeed));
+        return Math.min(getPathPoint(p).getVelocity(), Math.min(getPathPoint(p + 1).getVelocity() + 2 * mMaxDeceleration * d, mMaxSpeed));
     }
 
     /**
