@@ -2,12 +2,11 @@ package org.uacr.robot;
 
 import org.uacr.shared.abstractions.*;
 import org.uacr.shared.concretions.*;
-import org.uacr.utilities.injection.AbstractModule;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
-public abstract class Module extends AbstractModule {
-    private static final Logger sLogger = LogManager.getLogger(Module.class);
+public abstract class AbstractModule extends org.uacr.utilities.injection.AbstractModule {
+    private static final Logger sLogger = LogManager.getLogger(AbstractModule.class);
 
     protected void configure() {
         bind(EventBus.class, SharedEventBus.class);

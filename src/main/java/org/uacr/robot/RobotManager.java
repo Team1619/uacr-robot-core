@@ -19,11 +19,11 @@ public class RobotManager {
 
     protected final InputValues fSharedInputValues;
     protected final RobotConfiguration fRobotConfiguration;
-    private StateControls fStateControls;
+    private AbstractStateControls fStateControls;
     @Nullable
-    private ModeLogic fLastModeLogic;
+    private AbstractModeLogic fLastModeLogic;
 
-    public RobotManager(InputValues inputValues, RobotConfiguration robotConfiguration, StateControls stateControls) {
+    public RobotManager(InputValues inputValues, RobotConfiguration robotConfiguration, AbstractStateControls stateControls) {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
         fStateControls = stateControls;
@@ -53,7 +53,7 @@ public class RobotManager {
         fStateControls.update();
 
         // Gets the current mode logic from state controls
-        ModeLogic currentModeLogic = fStateControls.getCurrentModeLogic();
+        AbstractModeLogic currentModeLogic = fStateControls.getCurrentModeLogic();
 
         // If the requested mode logic has changed dispose the old mode and initialize the new mode logic
         if (currentModeLogic != fLastModeLogic) {

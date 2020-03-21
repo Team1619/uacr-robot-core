@@ -1,7 +1,7 @@
 package org.uacr.services.states;
 
 import org.uacr.robot.RobotManager;
-import org.uacr.robot.StateControls;
+import org.uacr.robot.AbstractStateControls;
 import org.uacr.shared.abstractions.FMS;
 import org.uacr.shared.abstractions.InputValues;
 import org.uacr.shared.abstractions.ObjectsDirectory;
@@ -33,7 +33,7 @@ public class StatesService implements ScheduledService {
     private RobotManager fRobotManager;
 
     @Inject
-    public StatesService(InputValues inputValues, FMS fms, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory, StateControls stateControls) {
+    public StatesService(InputValues inputValues, FMS fms, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory, AbstractStateControls stateControls) {
         fParser = new YamlConfigParser();
         fSharedObjectsDirectory = objectsDirectory;
         fSharedInputValues = inputValues;

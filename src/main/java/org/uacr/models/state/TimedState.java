@@ -1,6 +1,6 @@
 package org.uacr.models.state;
 
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.Timer;
 import org.uacr.utilities.YamlConfigParser;
@@ -24,7 +24,7 @@ public class TimedState implements State {
     private final Timer fTimer = new Timer();
     private final int fTimeout;
 
-    public TimedState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+    public TimedState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fStateName = name;
 
         fSubStateName = config.getString("state");

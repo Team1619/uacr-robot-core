@@ -1,6 +1,6 @@
 package org.uacr.models.state;
 
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.logging.LogManager;
@@ -20,14 +20,14 @@ public class SequencerState implements State {
 
     private static final Logger sLogger = LogManager.getLogger(SequencerState.class);
 
-    private final ModelFactory fModelFactory;
+    private final AbstractModelFactory fModelFactory;
     private final String fStateName;
 
     private List<State> fStates = new ArrayList<>();
     private int fCurrentStateIndex;
     private State fCurrentState;
 
-    public SequencerState(ModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+    public SequencerState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fModelFactory = modelFactory;
         fStateName = name;
 

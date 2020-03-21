@@ -7,7 +7,7 @@ import org.uacr.models.inputs.vector.InputVector;
 import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
 import org.uacr.models.state.State;
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.shared.abstractions.InputValues;
 import org.uacr.shared.abstractions.ObjectsDirectory;
 import org.uacr.shared.abstractions.RobotConfiguration;
@@ -31,7 +31,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
 
     private static final Logger sLogger = LogManager.getLogger(SharedObjectsDirectory.class);
 
-    private final ModelFactory fModelFactory;
+    private final AbstractModelFactory fModelFactory;
     private final RobotConfiguration fRobotConfiguration;
     private final InputValues fSharedInputValues;
     private final Map<String, InputBoolean> fInputBooleanObjects = new ConcurrentHashMap<>();
@@ -44,7 +44,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     private final Map<Object, Object> fHardwareObjects = new ConcurrentHashMap<>();
 
     @Inject
-    public SharedObjectsDirectory(ModelFactory modelFactory, RobotConfiguration robotConfiguration, InputValues inputValues) {
+    public SharedObjectsDirectory(AbstractModelFactory modelFactory, RobotConfiguration robotConfiguration, InputValues inputValues) {
         fModelFactory = modelFactory;
         fRobotConfiguration = robotConfiguration;
         fSharedInputValues = inputValues;

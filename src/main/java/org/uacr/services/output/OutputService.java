@@ -2,7 +2,7 @@ package org.uacr.services.output;
 
 import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
-import org.uacr.robot.ModelFactory;
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.shared.abstractions.InputValues;
 import org.uacr.shared.abstractions.ObjectsDirectory;
 import org.uacr.shared.abstractions.OutputValues;
@@ -38,7 +38,7 @@ public class OutputService implements ScheduledService {
     private long FRAME_TIME_THRESHOLD;
 
     @Inject
-    public OutputService(ModelFactory modelFactory, InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+    public OutputService(AbstractModelFactory modelFactory, InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
         fSharedInputValues = inputValues;
         fSharedOutputValues = outputValues;
         fRobotConfiguration = robotConfiguration;
