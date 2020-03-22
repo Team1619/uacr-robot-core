@@ -6,7 +6,7 @@ public class SimInputNumericSetEvent {
     public final double fValue;
 
     public SimInputNumericSetEvent(String name, double value) {
-        this.fName = name;
-        this.fValue = value;
+        fName = name;
+        fValue = value;
     }
 }

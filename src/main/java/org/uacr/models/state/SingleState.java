@@ -7,6 +7,7 @@ import org.uacr.utilities.Config;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -45,8 +46,9 @@ public class SingleState implements State {
         // Only create a new behavior class instance if it has not already been created by another state
         // A single instance allows all states using this behvavior class to share member variable information inside the single instance
         // Behavior.Intialize() is called each time a new state is entered and Behavior.Dispose() is called when leaving the state
+        @Nullable
         Behavior behavior = fSharedObectsDirectory.getBehaviorObject(fBehaviorName);
-        //noinspection ConstantConditions
+
         if (behavior == null) {
             behavior = fModelFactory.createBehavior(fBehaviorName, fBehaviorConfig);
             fSharedObectsDirectory.setBehaviorObject(fBehaviorName, behavior);

@@ -33,6 +33,7 @@ public interface ObjectsDirectory {
     // Behaviors
     void setBehaviorObject(String name, Behavior behavior);
 
+    @Nullable
     Behavior getBehaviorObject(String name);
 
 

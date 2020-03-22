@@ -8,7 +8,7 @@ public class SimInputVectorSetEvent {
     public final Map<String, Double> fValues;
 
     public SimInputVectorSetEvent(String name, Map<String, Double> values) {
-        this.fName = name;
-        this.fValues = values;
+        fName = name;
+        fValues = values;
     }
 }

@@ -195,6 +195,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     }
 
     @Override
+    @Nullable
     public Behavior getBehaviorObject(String name) {
         return fBehaviorObjects.get(name);
     }

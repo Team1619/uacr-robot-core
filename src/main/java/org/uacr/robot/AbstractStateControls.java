@@ -21,7 +21,7 @@ public abstract class AbstractStateControls {
     protected final InputValues fSharedInputValues;
     protected final RobotConfiguration fRobotConfiguration;
     private final HashMap<ControlMode, AbstractModeLogic> fModeLogicMap;
-    protected final FMS.Mode fFmsMode;
+    protected FMS.Mode mFmsMode;
     private ControlMode mCurrentControlMode;
     @Nullable
     private AbstractRobotStatus mRobotStatus;
@@ -30,7 +30,7 @@ public abstract class AbstractStateControls {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
         fModeLogicMap = new HashMap<>();
-        fFmsMode = FMS.Mode.DISABLED;
+        mFmsMode = FMS.Mode.DISABLED;
     }
 
     /**

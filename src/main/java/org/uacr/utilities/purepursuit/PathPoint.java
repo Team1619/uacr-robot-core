@@ -15,9 +15,9 @@ public class PathPoint extends Point {
 
     public PathPoint(double x, double y, double distance, double curvature, double velocity) {
         super(x, y);
-        this.fDistance = distance;
-        this.fCurvature = curvature;
-        this.mVelocity = velocity;
+        fDistance = distance;
+        fCurvature = curvature;
+        mVelocity = velocity;
     }
 
     public PathPoint(Point point, double distance, double curvature, double velocity) {
@@ -37,6 +37,6 @@ public class PathPoint extends Point {
     }
 
     public void setVelocity(double velocity) {
-        this.mVelocity = velocity;
+        mVelocity = velocity;
     }
 }
