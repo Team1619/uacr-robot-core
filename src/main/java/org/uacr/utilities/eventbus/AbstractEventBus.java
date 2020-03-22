@@ -1,6 +1,6 @@
 package org.uacr.utilities.eventbus;
 
-public abstract class EventBus {
+public abstract class AbstractEventBus {
 
     public abstract void register(Object listener);
 
