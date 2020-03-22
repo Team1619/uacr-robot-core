@@ -1,6 +1,7 @@
 package org.uacr.shared.concretions;
 
 import org.uacr.shared.abstractions.EventBus;
+import org.uacr.utilities.eventbus.AbstractEventBus;
 import org.uacr.utilities.eventbus.AsyncEventBus;
 import org.uacr.utilities.injection.Singleton;
 import org.uacr.utilities.logging.LogManager;
@@ -13,7 +14,7 @@ public class SharedEventBus implements EventBus {
 
     private static final Logger sLogger = LogManager.getLogger(SharedEventBus.class);
 
-    private final org.uacr.utilities.eventbus.EventBus fEventBus;
+    private final AbstractEventBus fEventBus;
 
     public SharedEventBus() {
         fEventBus = new AsyncEventBus(Executors.newFixedThreadPool(4));

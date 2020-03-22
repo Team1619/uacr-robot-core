@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-public class AsyncEventBus extends EventBus {
+public class AsyncEventBus extends AbstractEventBus {
 
     private final Executor fExecutor;
 
