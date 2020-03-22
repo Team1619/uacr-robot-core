@@ -14,13 +14,23 @@ public class SharedInputValues implements InputValues {
 
     private static final Logger sLogger = LogManager.getLogger(SharedInputValues.class);
 
-    private Map<String, Boolean> fInputBooleans = new ConcurrentHashMap<>();
-    private Map<String, Boolean> fInputBooleanRisingEdges = new ConcurrentHashMap<>();
-    private Map<String, Boolean> fInputBooleanFallingEdges = new ConcurrentHashMap<>();
-    private Map<String, Double> fInputNumerics = new ConcurrentHashMap<>();
-    private Map<String, Map<String, Double>> fInputVectors = new ConcurrentHashMap<>();
-    private Map<String, String> fInputStrings = new ConcurrentHashMap<>();
-    private Map<String, String> fInputFlags = new ConcurrentHashMap<>();
+    private final Map<String, Boolean> fInputBooleans;
+    private final Map<String, Boolean> fInputBooleanRisingEdges;
+    private final Map<String, Boolean> fInputBooleanFallingEdges;
+    private final Map<String, Double> fInputNumerics;
+    private final Map<String, Map<String, Double>> fInputVectors;
+    private final Map<String, String> fInputStrings;
+    private final Map<String, String> fInputFlags;
+
+    public SharedInputValues() {
+        fInputBooleans = new ConcurrentHashMap<>();
+        fInputBooleanRisingEdges = new ConcurrentHashMap<>();
+        fInputBooleanFallingEdges = new ConcurrentHashMap<>();
+        fInputNumerics = new ConcurrentHashMap<>();
+        fInputVectors = new ConcurrentHashMap<>();
+        fInputStrings = new ConcurrentHashMap<>();
+        fInputFlags = new ConcurrentHashMap<>();
+    }
 
     @Override
     public boolean getBoolean(String name) {

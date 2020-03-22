@@ -10,8 +10,8 @@ import org.uacr.shared.abstractions.RobotConfiguration;
 
 public abstract class AbstractModeLogic {
 
-    protected InputValues fSharedInputValues;
-    protected RobotConfiguration fRobotConfiguration;
+    protected final InputValues fSharedInputValues;
+    protected final RobotConfiguration fRobotConfiguration;
 
     public AbstractModeLogic(InputValues inputValues, RobotConfiguration robotConfiguration) {
         fSharedInputValues = inputValues;

@@ -32,10 +32,10 @@ public class OutputService implements ScheduledService {
     private final RobotConfiguration fRobotConfiguration;
     private final YamlConfigParser fOutputNumericsParser;
     private final YamlConfigParser fOutputBooleansParser;
-    private Set<String> fOutputNumericNames;
-    private Set<String> fOutputBooleanNames;
-    private double fPreviousTime;
-    private long FRAME_TIME_THRESHOLD;
+    private Set<String> mOutputNumericNames;
+    private Set<String> mOutputBooleanNames;
+    private double mPreviousTime;
+    private long mFrameTimeThreshold;
 
     @Inject
     public OutputService(AbstractModelFactory modelFactory, InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
@@ -45,8 +45,8 @@ public class OutputService implements ScheduledService {
         fSharedOutputsDirectory = objectsDirectory;
         fOutputNumericsParser = new YamlConfigParser();
         fOutputBooleansParser = new YamlConfigParser();
-        fOutputNumericNames = new HashSet<>();
-        fOutputBooleanNames = new HashSet<>();
+        mOutputNumericNames = new HashSet<>();
+        mOutputBooleanNames = new HashSet<>();
     }
 
     @Override
@@ -57,11 +57,11 @@ public class OutputService implements ScheduledService {
         fOutputBooleansParser.loadWithFolderName("output-booleans.yaml");
         fSharedOutputsDirectory.registerAllOutputs(fOutputNumericsParser, fOutputBooleansParser);
 
-        fOutputNumericNames = fRobotConfiguration.getOutputNumericNames();
-        fOutputBooleanNames = fRobotConfiguration.getOutputBooleanNames();
+        mOutputNumericNames = fRobotConfiguration.getOutputNumericNames();
+        mOutputBooleanNames = fRobotConfiguration.getOutputBooleanNames();
 
-        fPreviousTime = System.currentTimeMillis();
-        FRAME_TIME_THRESHOLD = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_output_service");
+        mPreviousTime = System.currentTimeMillis();
+        mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_output_service");
 
         sLogger.trace("OutputService started");
     }
@@ -71,13 +71,13 @@ public class OutputService implements ScheduledService {
 
         double frameStartTime = System.currentTimeMillis();
 
-        for (String outputNumericName : fOutputNumericNames) {
+        for (String outputNumericName : mOutputNumericNames) {
             OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
             Map<String, Object> outputNumericOutputs = fSharedOutputValues.getOutputNumericValue(outputNumericName);
             outputNumericObject.processFlag(fSharedOutputValues.getOutputFlag(outputNumericName));
             outputNumericObject.setHardware((String) outputNumericOutputs.get("type"), (double) outputNumericOutputs.get("value"), (String) outputNumericOutputs.get("profile"));
         }
-        for (String outputBooleanName : fOutputBooleanNames) {
+        for (String outputBooleanName : mOutputBooleanNames) {
             OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(outputBooleanName);
             outputBooleanObject.processFlag(fSharedOutputValues.getOutputFlag(outputBooleanName));
             outputBooleanObject.setHardware(fSharedOutputValues.getBoolean(outputBooleanName));
@@ -86,12 +86,12 @@ public class OutputService implements ScheduledService {
         // Check for delayed frames
         double currentTime = System.currentTimeMillis();
         double frameTime = currentTime - frameStartTime;
-        double totalCycleTime = currentTime - fPreviousTime;
+        double totalCycleTime = currentTime - mPreviousTime;
         fSharedInputValues.setNumeric("ipn_frame_time_output_service", frameTime);
-        if (frameTime > FRAME_TIME_THRESHOLD) {
+        if (frameTime > mFrameTimeThreshold) {
             sLogger.debug("********** Output Service frame time = {}", frameTime);
         }
-        fPreviousTime = currentTime;
+        mPreviousTime = currentTime;
 
     }
 

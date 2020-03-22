@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MultiService implements Service {
 
-    private List<Service> fServices;
+    private final List<Service> fServices;
 
     public MultiService(Service... services) {
         fServices = Arrays.asList(services);

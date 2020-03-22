@@ -13,7 +13,11 @@ public class SharedFMS implements FMS {
 
     private static final Logger sLogger = LogManager.getLogger(SharedFMS.class);
 
-    private Map<String, Mode> fData = new ConcurrentHashMap<>();
+    private final Map<String, Mode> fData;
+
+    public SharedFMS() {
+        fData = new ConcurrentHashMap<>();
+    }
 
     @Override
     public Mode getMode() {

@@ -27,7 +27,7 @@ public class DoneForTimeState implements State {
 
     private final int fStateTimeout;
 
-    private int fMaxTimeout;
+    private final int fMaxTimeout;
 
     public DoneForTimeState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fStateName = name;

@@ -2,23 +2,28 @@ package org.uacr.utilities;
 
 public class Timer {
 
-    private long startTime = -1;
-    private long time;
+    private long mStartTime;
+    private long mTime;
+
+    public Timer() {
+        mStartTime = -1;
+        mTime = 0;
+    }
 
     public void start(long timeMs) {
-        this.time = timeMs;
-        this.startTime = System.currentTimeMillis();
+        mTime = timeMs;
+        mStartTime = System.currentTimeMillis();
     }
 
     public void reset() {
-        this.startTime = -1;
+        mStartTime = -1;
     }
 
     public boolean isStarted() {
-        return this.startTime > -1;
+        return mStartTime > -1;
     }
 
     public boolean isDone() {
-        return startTime != -1 && System.currentTimeMillis() - startTime >= time;
+        return mStartTime != -1 && System.currentTimeMillis() - mStartTime >= mTime;
     }
 }

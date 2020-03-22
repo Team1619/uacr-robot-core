@@ -16,9 +16,14 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
     private static final Logger sLogger = LogManager.getLogger(SharedRobotConfiguration.class);
 
-    private final Yaml fYaml = new Yaml();
+    private final Yaml fYaml;
 
-    private Map<String, Map<String, Object>> fData = new HashMap<>();
+    private Map<String, Map<String, Object>> mData;
+
+    public SharedRobotConfiguration() {
+        mData = new HashMap<>();
+        fYaml = new Yaml();
+    }
 
     @Override
     public void initialize() {
@@ -26,7 +31,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
         YamlConfigParser parser = new YamlConfigParser();
         parser.loadWithFolderName("robot-configuration.yaml");
-        fData = parser.getData();
+        mData = parser.getData();
 
         sLogger.trace("Loaded");
     }
@@ -134,25 +139,25 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     @Override
     public Object get(String category, String key) {
         ensureExists(category, key);
-        return fData.get(category).get(key);
+        return mData.get(category).get(key);
     }
 
     @Override
     public Map<String, Object> getCategory(String category) {
         ensureCategoryExists(category);
-        return fData.get(category);
+        return mData.get(category);
     }
 
     @Override
     public int getInt(String category, String key) {
         ensureExists(category, key);
         try {
-            return (int) fData.get(category).get(key);
+            return (int) mData.get(category).get(key);
         } catch (Exception ex) {
-            if (fData.get(category).get(key) == null) {
+            if (mData.get(category).get(key) == null) {
                 throw new ConfigurationInvalidTypeException("int", key, "null");
             } else {
-                throw new ConfigurationInvalidTypeException("int", key, fData.get(category).get(key));
+                throw new ConfigurationInvalidTypeException("int", key, mData.get(category).get(key));
             }
         }
     }
@@ -161,12 +166,12 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     public double getDouble(String category, String key) {
         ensureExists(category, key);
         try {
-            return (double) fData.get(category).get(key);
+            return (double) mData.get(category).get(key);
         } catch (Exception ex) {
-            if (fData.get(category).get(key) == null) {
+            if (mData.get(category).get(key) == null) {
                 throw new ConfigurationInvalidTypeException("double", key, "null");
             } else {
-                throw new ConfigurationInvalidTypeException("double", key, fData.get(category).get(key));
+                throw new ConfigurationInvalidTypeException("double", key, mData.get(category).get(key));
             }
         }
     }
@@ -175,12 +180,12 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     public boolean getBoolean(String category, String key) {
         ensureExists(category, key);
         try {
-            return (boolean) fData.get(category).get(key);
+            return (boolean) mData.get(category).get(key);
         } catch (Exception ex) {
-            if (fData.get(category).get(key) == null) {
+            if (mData.get(category).get(key) == null) {
                 throw new ConfigurationInvalidTypeException("Boolean", key, "null");
             } else {
-                throw new ConfigurationInvalidTypeException("Boolean", key, fData.get(category).get(key));
+                throw new ConfigurationInvalidTypeException("Boolean", key, mData.get(category).get(key));
             }
         }
     }
@@ -189,12 +194,12 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     public String getString(String category, String key) {
         ensureExists(category, key);
         try {
-            return (String) fData.get(category).get(key);
+            return (String) mData.get(category).get(key);
         } catch (Exception ex) {
-            if (fData.get(category).get(key) == null) {
+            if (mData.get(category).get(key) == null) {
                 throw new ConfigurationInvalidTypeException("String", key, "null");
             } else {
-                throw new ConfigurationInvalidTypeException("String", key, fData.get(category).get(key));
+                throw new ConfigurationInvalidTypeException("String", key, mData.get(category).get(key));
             }
         }
     }
@@ -203,9 +208,9 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     public List getList(String category, String key) {
         ensureExists(category, key);
         try {
-            return (List) fData.get(category).get(key);
+            return (List) mData.get(category).get(key);
         } catch (Exception ex) {
-            throw new ConfigurationInvalidTypeException("int", key, fData.get(key));
+            throw new ConfigurationInvalidTypeException("int", key, mData.get(key));
         }
     }
 
@@ -213,9 +218,9 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     public Map getMap(String category, String key) {
         ensureExists(category, key);
         try {
-            return (Map) fData.get(category).get(key);
+            return (Map) mData.get(category).get(key);
         } catch (Exception ex) {
-            throw new ConfigurationInvalidTypeException("int", key, fData.get(key));
+            throw new ConfigurationInvalidTypeException("int", key, mData.get(key));
         }
     }
 
@@ -223,9 +228,9 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     public Set getSet(String category, String key) {
         ensureExists(category, key);
         try {
-            return new HashSet((List) fData.get(category).get(key));
+            return new HashSet((List) mData.get(category).get(key));
         } catch (ClassCastException ex) {
-            throw new ConfigurationInvalidTypeException("set", key, fData.get(category).get(key));
+            throw new ConfigurationInvalidTypeException("set", key, mData.get(category).get(key));
         }
     }
 
@@ -246,26 +251,26 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
     private void ensureExists(String category, String key) {
         ensureCategoryExists(category);
-        if (!fData.get(category).containsKey(key)) {
+        if (!mData.get(category).containsKey(key)) {
             throw new ConfigurationException("***** No value found for key  '" + key + "' in category '" + category + "' *****");
         }
     }
 
     private void ensureCategoryExists(String category) {
-        if (!fData.containsKey(category)) {
+        if (!mData.containsKey(category)) {
             throw new ConfigurationException("***** No category '" + category + "' found in SharedRobotConfiguration *****");
         }
     }
 
     public String toString() {
-        return fData.toString();
+        return mData.toString();
     }
 
     public boolean contains(String category, String key) {
-        return fData.get(category).containsKey(key);
+        return mData.get(category).containsKey(key);
     }
 
     public boolean categoryIsEmpty(String category) {
-        return !fData.containsKey(category) || fData.get(category) == null;
+        return !mData.containsKey(category) || mData.get(category) == null;
     }
 }

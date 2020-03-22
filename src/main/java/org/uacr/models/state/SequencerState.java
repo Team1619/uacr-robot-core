@@ -23,28 +23,30 @@ public class SequencerState implements State {
     private final AbstractModelFactory fModelFactory;
     private final String fStateName;
 
-    private List<State> fStates = new ArrayList<>();
-    private int fCurrentStateIndex;
-    private State fCurrentState;
+    private final List<State> fStates;
+    private int mCurrentStateIndex;
+    private State mCurrentState;
 
     public SequencerState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fModelFactory = modelFactory;
         fStateName = name;
 
+        fStates = new ArrayList<>();
+
         for (Object stateName : config.getList("sequence")) {
             fStates.add(fModelFactory.createState((String) stateName, parser, parser.getConfig(stateName)));
         }
 
-        fCurrentStateIndex = 0;
-        fCurrentState = fStates.get(fCurrentStateIndex);
+        mCurrentStateIndex = 0;
+        mCurrentState = fStates.get(mCurrentStateIndex);
     }
 
     @Override
     public Set<State> getSubStates() {
         // returns a list of all the states it is currently running in this frame
         Set<State> states = new HashSet<>();
-        states.add(fCurrentState);
-        states.addAll(fCurrentState.getSubStates());
+        states.add(mCurrentState);
+        states.addAll(mCurrentState.getSubStates());
         return states;
     }
 
@@ -57,15 +59,15 @@ public class SequencerState implements State {
     @Override
     public void update() {
 
-        if (fCurrentStateIndex >= fStates.size()) {
+        if (mCurrentStateIndex >= fStates.size()) {
             return;
         }
         // Increments through the sequence
-        if (fCurrentState.isDone()) {
-            if (fCurrentStateIndex < (fStates.size())) {
-                fCurrentStateIndex++;
-                if (fCurrentStateIndex < (fStates.size())) {
-                    fCurrentState = fStates.get(fCurrentStateIndex);
+        if (mCurrentState.isDone()) {
+            if (mCurrentStateIndex < (fStates.size())) {
+                mCurrentStateIndex++;
+                if (mCurrentStateIndex < (fStates.size())) {
+                    mCurrentState = fStates.get(mCurrentStateIndex);
                 }
             }
         }
@@ -74,13 +76,13 @@ public class SequencerState implements State {
     @Override
     public void dispose() {
         sLogger.trace("Leaving Sequencer State {}", fStateName);
-        fCurrentStateIndex = 0;
-        fCurrentState = fStates.get(fCurrentStateIndex);
+        mCurrentStateIndex = 0;
+        mCurrentState = fStates.get(mCurrentStateIndex);
     }
 
     @Override
     public boolean isDone() {
-        return fCurrentStateIndex >= fStates.size();
+        return mCurrentStateIndex >= fStates.size();
     }
 
     @Override

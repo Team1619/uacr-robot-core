@@ -12,25 +12,26 @@ import java.util.HashSet;
 public class LogManager {
 
     @Nullable
-    private static LogManager fLogManager = null;
+    private static LogManager sLogManager = null;
 
-    private HashSet<LogHandler> logHandlers = new HashSet<>();
+    private HashSet<LogHandler> mLogHandlers = new HashSet<>();
 
-    private Level fCurrentLoggingLevel = Level.INFO;
+    private Level mCurrentLoggingLevel = Level.INFO;
 
-    private DateTimeFormatter fDateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+    private final DateTimeFormatter fDateTimeFormatter;
 
     private LogManager() {
-        fLogManager = this;
+        sLogManager = this;
         addLogHandler(new DefaultLogHandler());
+        fDateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
     }
 
     // Creates a logger and a log manager if necessary
     public static Logger getLogger(String prefix) {
-        if (fLogManager == null) {
-            fLogManager = new LogManager();
+        if (sLogManager == null) {
+            sLogManager = new LogManager();
         }
-        return new Logger(fLogManager, prefix);
+        return new Logger(sLogManager, prefix);
     }
 
     public static Logger getLogger(Class prefix) {
@@ -38,30 +39,30 @@ public class LogManager {
     }
 
     public static Level getLogLevel() {
-        if (fLogManager == null) {
+        if (sLogManager == null) {
             new LogManager();
         }
-        return fLogManager.fCurrentLoggingLevel;
+        return sLogManager.mCurrentLoggingLevel;
     }
 
     public static void setLogLevel(Level level) {
-        if (fLogManager == null) {
+        if (sLogManager == null) {
             new LogManager();
         }
-        fLogManager.fCurrentLoggingLevel = level;
+        sLogManager.mCurrentLoggingLevel = level;
     }
 
     // Creates a log manager if necessary and adds the logHandler to the list of log handlers
     public static void addLogHandler(LogHandler logHandler) {
-        if (fLogManager == null) {
+        if (sLogManager == null) {
             new LogManager();
         }
-        fLogManager.logHandlers.add(logHandler);
+        sLogManager.mLogHandlers.add(logHandler);
     }
 
     public static void removeLogHandler(LogHandler logHandler) {
-        if (fLogManager != null) {
-            fLogManager.logHandlers.remove(logHandler);
+        if (sLogManager != null) {
+            sLogManager.mLogHandlers.remove(logHandler);
         }
     }
 
@@ -75,16 +76,16 @@ public class LogManager {
 
         switch (level) {
             case TRACE:
-                logHandlers.forEach((handler) -> handler.trace(line));
+                mLogHandlers.forEach((handler) -> handler.trace(line));
                 break;
             case DEBUG:
-                logHandlers.forEach((handler) -> handler.debug(line));
+                mLogHandlers.forEach((handler) -> handler.debug(line));
                 break;
             case INFO:
-                logHandlers.forEach((handler) -> handler.info(line));
+                mLogHandlers.forEach((handler) -> handler.info(line));
                 break;
             case ERROR:
-                logHandlers.forEach((handler) -> handler.error(line));
+                mLogHandlers.forEach((handler) -> handler.error(line));
                 break;
         }
     }
@@ -113,7 +114,7 @@ public class LogManager {
 
     // Decides if a message is above the level that the logging is set to
     private boolean shouldLog(Level level) {
-        return fCurrentLoggingLevel.getPriority() <= level.getPriority();
+        return mCurrentLoggingLevel.getPriority() <= level.getPriority();
     }
 
     public enum Level {

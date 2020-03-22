@@ -11,8 +11,8 @@ public class Scheduler {
     private final double fStandardDelay;
     private final TimeUnit fTimeUnit;
 
-    private long fStartTime = 0;
-    private long fLastTime = 0;
+    private long mStartTime = 0;
+    private long mLastTime = 0;
 
     // Standard delay: min time each frame can run
     // Initial delay: delay before first frame
@@ -37,24 +37,24 @@ public class Scheduler {
 
     // Called on start-up
     public synchronized void start() {
-        fStartTime = System.nanoTime();
+        mStartTime = System.nanoTime();
     }
 
     // Called every frame
     public synchronized void run() {
-        fStartTime = 0;
-        fLastTime = System.nanoTime();
+        mStartTime = 0;
+        mLastTime = System.nanoTime();
     }
 
     // Determines whether a frame has reached it's min time
     public synchronized boolean shouldRun() {
         long currentTime = System.nanoTime();
 
-        if (fStartTime != 0 && currentTime - fStartTime < fTimeUnit.toNanoseconds(fInitialDelay)) {
+        if (mStartTime != 0 && currentTime - mStartTime < fTimeUnit.toNanoseconds(fInitialDelay)) {
             return false;
         }
 
-        return fLastTime == 0 || !(currentTime - fLastTime < fTimeUnit.toNanoseconds(fStandardDelay));
+        return mLastTime == 0 || !(currentTime - mLastTime < fTimeUnit.toNanoseconds(fStandardDelay));
     }
 
     // Returns the amount of time until the next time the service should run
@@ -71,15 +71,15 @@ public class Scheduler {
     }
 
     public synchronized long nextRunTimeNanoseconds() {
-        if (fStartTime != 0) {
-            long time = (int) (fLastTime + fTimeUnit.toNanoseconds(fInitialDelay));
+        if (mStartTime != 0) {
+            long time = (int) (mLastTime + fTimeUnit.toNanoseconds(fInitialDelay));
             if (time < 0) {
                 return 0;
             }
             return time;
         }
 
-        long time = (long) (fLastTime + fTimeUnit.toNanoseconds(fStandardDelay));
+        long time = (long) (mLastTime + fTimeUnit.toNanoseconds(fStandardDelay));
         if (time < 0) {
             return 0;
         }

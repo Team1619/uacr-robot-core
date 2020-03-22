@@ -31,12 +31,12 @@ public class InputService implements ScheduledService {
     private final YamlConfigParser fInputBooleanParser;
     private final YamlConfigParser fInputNumericParser;
     private final YamlConfigParser fInputVectorParser;
-    private Set<String> fInputBooleanNames;
-    private Set<String> fInputNumericNames;
-    private Set<String> fInputVectorNames;
-    private double fPreviousTime;
-    private long FRAME_TIME_THRESHOLD;
-    private long FRAME_CYCLE_TIME_THRESHOLD;
+    private Set<String> mInputBooleanNames;
+    private Set<String> mInputNumericNames;
+    private Set<String> mInputVectorNames;
+    private double mPreviousTime;
+    private long mFrameTimeThreshold;
+    private long mFrameCycleTimeThreshold;
 
     @Inject
     public InputService(AbstractModelFactory modelFactory, InputValues inputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
@@ -46,9 +46,9 @@ public class InputService implements ScheduledService {
         fInputBooleanParser = new YamlConfigParser();
         fInputNumericParser = new YamlConfigParser();
         fInputVectorParser = new YamlConfigParser();
-        fInputBooleanNames = new HashSet<>();
-        fInputNumericNames = new HashSet<>();
-        fInputVectorNames = new HashSet<>();
+        mInputBooleanNames = new HashSet<>();
+        mInputNumericNames = new HashSet<>();
+        mInputVectorNames = new HashSet<>();
     }
 
     @Override
@@ -60,13 +60,13 @@ public class InputService implements ScheduledService {
         fInputVectorParser.loadWithFolderName("input-vectors.yaml");
         fSharedObjectsDirectory.registerAllInputs(fInputBooleanParser, fInputNumericParser, fInputVectorParser);
 
-        fInputBooleanNames = fRobotConfiguration.getInputBooleanNames();
-        fInputNumericNames = fRobotConfiguration.getInputNumericNames();
-        fInputVectorNames = fRobotConfiguration.getInputVectorNames();
+        mInputBooleanNames = fRobotConfiguration.getInputBooleanNames();
+        mInputNumericNames = fRobotConfiguration.getInputNumericNames();
+        mInputVectorNames = fRobotConfiguration.getInputVectorNames();
 
-        fPreviousTime = System.currentTimeMillis();
-        FRAME_TIME_THRESHOLD = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_input_service");
-        FRAME_CYCLE_TIME_THRESHOLD = fRobotConfiguration.getInt("global_timing", "frame_cycle_time_threshold_core_thread");
+        mPreviousTime = System.currentTimeMillis();
+        mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_input_service");
+        mFrameCycleTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_cycle_time_threshold_core_thread");
 
         fSharedInputValues.setString("active states", "");
 
@@ -78,7 +78,7 @@ public class InputService implements ScheduledService {
 
         double frameStartTime = System.currentTimeMillis();
 
-        for (String name : fInputBooleanNames) {
+        for (String name : mInputBooleanNames) {
             InputBoolean inputBoolean = fSharedObjectsDirectory.getInputBooleanObject(name);
             inputBoolean.processFlag(fSharedInputValues.getInputFlag(name));
             inputBoolean.update();
@@ -105,7 +105,7 @@ public class InputService implements ScheduledService {
 
         //sLogger.trace("Updated boolean inputs");
 
-        for (String name : fInputNumericNames) {
+        for (String name : mInputNumericNames) {
             InputNumeric inputNumeric = fSharedObjectsDirectory.getInputNumericObject(name);
             inputNumeric.processFlag(fSharedInputValues.getInputFlag(name));
             inputNumeric.update();
@@ -114,7 +114,7 @@ public class InputService implements ScheduledService {
 
         //sLogger.trace("Updated numeric inputs");
 
-        for (String name : fInputVectorNames) {
+        for (String name : mInputVectorNames) {
             InputVector inputVector = fSharedObjectsDirectory.getInputVectorObject(name);
             inputVector.processFlag(fSharedInputValues.getInputFlag(name));
             inputVector.update();
@@ -126,16 +126,16 @@ public class InputService implements ScheduledService {
         // Check for delayed frames
         double currentTime = System.currentTimeMillis();
         double frameTime = currentTime - frameStartTime;
-        double totalCycleTime = frameStartTime - fPreviousTime;
+        double totalCycleTime = frameStartTime - mPreviousTime;
         fSharedInputValues.setNumeric("ipn_frame_time_input_service", frameTime);
         fSharedInputValues.setNumeric("ipn_frame_cycle_time_core_thread", totalCycleTime);
-        if (frameTime > FRAME_TIME_THRESHOLD) {
+        if (frameTime > mFrameTimeThreshold) {
             sLogger.debug("********** Input Service frame time = {}", frameTime);
         }
-        if (totalCycleTime > FRAME_CYCLE_TIME_THRESHOLD) {
+        if (totalCycleTime > mFrameCycleTimeThreshold) {
             sLogger.debug("********** Core thread frame cycle time = {}", totalCycleTime);
         }
-        fPreviousTime = frameStartTime;
+        mPreviousTime = frameStartTime;
     }
 
     @Override

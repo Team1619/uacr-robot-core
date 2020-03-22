@@ -8,7 +8,11 @@ import java.util.HashMap;
 
 public abstract class AbstractModule {
 
-    private HashMap<Class, Class> bindings = new HashMap<>();
+    private final HashMap<Class, Class> fBindings;
+
+    public AbstractModule() {
+        fBindings = new HashMap<>();
+    }
 
     protected abstract void configure();
 
@@ -17,10 +21,10 @@ public abstract class AbstractModule {
             throw new RuntimeException("Cannot bind " + child + " to " + parent);
         }
 
-        bindings.put(parent, child);
+        fBindings.put(parent, child);
     }
 
     public HashMap<Class, Class> getBindings() {
-        return (HashMap<Class, Class>) bindings.clone();
+        return (HashMap<Class, Class>) fBindings.clone();
     }
 }

@@ -13,9 +13,9 @@ public class ServiceWrapper implements Service {
     @Nullable
     private final Scheduler scheduler;
 
-    private boolean fIsCurrentlyRunning = false;
+    private boolean mIsCurrentlyRunning = false;
 
-    private ServiceState fServiceState = ServiceState.AWAITING_START;
+    private ServiceState mServiceState = ServiceState.AWAITING_START;
 
     public ServiceWrapper(Service service) {
         fService = service;
@@ -30,15 +30,15 @@ public class ServiceWrapper implements Service {
 
     // Returns the current state of the service
     public ServiceState getServiceState() {
-        synchronized (fServiceState) {
-            return fServiceState;
+        synchronized (mServiceState) {
+            return mServiceState;
         }
     }
 
     // Determines whether a service should run based on the service's current state and a scheduler if included in the service
     public boolean shouldRun() {
-        synchronized (fServiceState) {
-            if (fServiceState == ServiceState.AWAITING_START || fServiceState == ServiceState.STOPPING) {
+        synchronized (mServiceState) {
+            if (mServiceState == ServiceState.AWAITING_START || mServiceState == ServiceState.STOPPING) {
                 return false;
             }
         }
@@ -72,11 +72,11 @@ public class ServiceWrapper implements Service {
     }
 
     public boolean isCurrentlyRunning() {
-        return fIsCurrentlyRunning;
+        return mIsCurrentlyRunning;
     }
 
     public void setCurrentlyRunning(boolean currentlyRunning) {
-        fIsCurrentlyRunning = currentlyRunning;
+        mIsCurrentlyRunning = currentlyRunning;
     }
 
     public String getServiceName() {
@@ -87,8 +87,8 @@ public class ServiceWrapper implements Service {
     @Override
     public synchronized void startUp() throws Exception {
         Thread.currentThread().setName(getServiceName());
-        synchronized (fServiceState) {
-            fServiceState = ServiceState.STARTING;
+        synchronized (mServiceState) {
+            mServiceState = ServiceState.STARTING;
         }
         if (scheduler != null) {
             scheduler.start();
@@ -100,32 +100,32 @@ public class ServiceWrapper implements Service {
     @Override
     public synchronized void runOneIteration() throws Exception {
         Thread.currentThread().setName(getServiceName());
-        fIsCurrentlyRunning = true;
+        mIsCurrentlyRunning = true;
         if (scheduler != null) {
             scheduler.run();
         }
-        synchronized (fServiceState) {
-            fServiceState = ServiceState.RUNNING;
+        synchronized (mServiceState) {
+            mServiceState = ServiceState.RUNNING;
         }
         try {
             fService.runOneIteration();
         } catch (Exception e) {
-            fIsCurrentlyRunning = false;
+            mIsCurrentlyRunning = false;
             throw e;
         }
-        fIsCurrentlyRunning = false;
+        mIsCurrentlyRunning = false;
     }
 
     // Shuts down the service
     @Override
     public synchronized void shutDown() throws Exception {
         Thread.currentThread().setName(getServiceName());
-        synchronized (fServiceState) {
-            fServiceState = ServiceState.STOPPING;
+        synchronized (mServiceState) {
+            mServiceState = ServiceState.STOPPING;
         }
         fService.shutDown();
-        synchronized (fServiceState) {
-            fServiceState = ServiceState.STOPPED;
+        synchronized (mServiceState) {
+            mServiceState = ServiceState.STOPPED;
         }
     }
 }

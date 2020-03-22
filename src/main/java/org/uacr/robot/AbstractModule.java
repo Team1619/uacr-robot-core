@@ -6,7 +6,6 @@ import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
 public abstract class AbstractModule extends org.uacr.utilities.injection.AbstractModule {
-    private static final Logger sLogger = LogManager.getLogger(AbstractModule.class);
 
     protected void configure() {
         bind(EventBus.class, SharedEventBus.class);
