@@ -2,8 +2,6 @@ package org.uacr.robot;
 
 import org.uacr.shared.abstractions.*;
 import org.uacr.shared.concretions.*;
-import org.uacr.utilities.logging.LogManager;
-import org.uacr.utilities.logging.Logger;
 
 public abstract class AbstractModule extends org.uacr.utilities.injection.AbstractModule {
 

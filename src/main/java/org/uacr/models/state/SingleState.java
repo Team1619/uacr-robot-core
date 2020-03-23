@@ -23,18 +23,16 @@ public class SingleState implements State {
     private static final Logger sLogger = LogManager.getLogger(SingleState.class);
 
     private final AbstractModelFactory fModelFactory;
-    private final String fStateName;
-    private final ObjectsDirectory fSharedObectsDirectory;
-
+    private final ObjectsDirectory fSharedObjectsDirectory;
     private final Behavior fBehavior;
-
-    private final String fBehaviorName;
     private final Config fBehaviorConfig;
+    private final String fStateName;
+    private final String fBehaviorName;
 
     public SingleState(AbstractModelFactory modelFactory, String name, Config config, ObjectsDirectory objectsDirectory) {
         fModelFactory = modelFactory;
+        fSharedObjectsDirectory = objectsDirectory;
         fStateName = name;
-        fSharedObectsDirectory = objectsDirectory;
 
         fBehaviorName = config.getString("behavior");
         if (config.contains("behavior_config")) {
@@ -47,11 +45,11 @@ public class SingleState implements State {
         // A single instance allows all states using this behvavior class to share member variable information inside the single instance
         // Behavior.Intialize() is called each time a new state is entered and Behavior.Dispose() is called when leaving the state
         @Nullable
-        Behavior behavior = fSharedObectsDirectory.getBehaviorObject(fBehaviorName);
+        Behavior behavior = fSharedObjectsDirectory.getBehaviorObject(fBehaviorName);
 
         if (behavior == null) {
             behavior = fModelFactory.createBehavior(fBehaviorName, fBehaviorConfig);
-            fSharedObectsDirectory.setBehaviorObject(fBehaviorName, behavior);
+            fSharedObjectsDirectory.setBehaviorObject(fBehaviorName, behavior);
         }
 
         fBehavior = behavior;

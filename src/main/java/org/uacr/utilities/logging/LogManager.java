@@ -14,16 +14,20 @@ public class LogManager {
     @Nullable
     private static LogManager sLogManager = null;
 
-    private HashSet<LogHandler> mLogHandlers = new HashSet<>();
-
-    private Level mCurrentLoggingLevel = Level.INFO;
-
     private final DateTimeFormatter fDateTimeFormatter;
+
+    private HashSet<LogHandler> mLogHandlers;
+    private Level mCurrentLoggingLevel;
 
     private LogManager() {
         sLogManager = this;
-        addLogHandler(new DefaultLogHandler());
+
         fDateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+
+        mLogHandlers = new HashSet<>();
+        mCurrentLoggingLevel = Level.INFO;
+
+        addLogHandler(new DefaultLogHandler());
     }
 
     // Creates a logger and a log manager if necessary

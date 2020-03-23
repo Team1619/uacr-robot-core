@@ -1,7 +1,7 @@
 package org.uacr.services.states;
 
-import org.uacr.robot.RobotManager;
 import org.uacr.robot.AbstractStateControls;
+import org.uacr.robot.RobotManager;
 import org.uacr.shared.abstractions.FMS;
 import org.uacr.shared.abstractions.InputValues;
 import org.uacr.shared.abstractions.ObjectsDirectory;
@@ -20,28 +20,30 @@ import org.uacr.utilities.services.Scheduler;
 public class StatesService implements ScheduledService {
 
     private static final Logger sLogger = LogManager.getLogger(StatesService.class);
-    private final ObjectsDirectory fSharedObjectsDirectory;
-    private final InputValues fSharedInputValues;
-    private final FMS fFms;
-    private final YamlConfigParser fParser;
-    private final RobotConfiguration fRobotConfiguration;
-    private double mPreviousTime;
-    private long mFrameTimeThreshold;
 
-    private FMS.Mode fCurrentFmsMode;
-    private StateMachine fStateMachine;
-    private RobotManager fRobotManager;
+    private final InputValues fSharedInputValues;
+    private final ObjectsDirectory fSharedObjectsDirectory;
+    private final FMS fFms;
+    private final YamlConfigParser fStatesParser;
+    private final RobotConfiguration fRobotConfiguration;
+    private final StateMachine fStateMachine;
+    private final RobotManager fRobotManager;
+
+    private FMS.Mode mCurrentFmsMode;
+    private long mFrameTimeThreshold;
 
     @Inject
     public StatesService(InputValues inputValues, FMS fms, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory, AbstractStateControls stateControls) {
-        fParser = new YamlConfigParser();
-        fSharedObjectsDirectory = objectsDirectory;
         fSharedInputValues = inputValues;
+        fSharedObjectsDirectory = objectsDirectory;
         fFms = fms;
-        fCurrentFmsMode = fFms.getMode();
+        fStatesParser = new YamlConfigParser();
         fRobotConfiguration = robotConfiguration;
         fRobotManager = new RobotManager(fSharedInputValues, fRobotConfiguration, stateControls);
         fStateMachine = new StateMachine(fSharedObjectsDirectory, fRobotManager, fRobotConfiguration, fSharedInputValues);
+
+        mCurrentFmsMode = fFms.getMode();
+        mFrameTimeThreshold = -1;
     }
 
     /**
@@ -51,17 +53,16 @@ public class StatesService implements ScheduledService {
      */
     @Override
     public void startUp() throws Exception {
-        sLogger.debug("Starting StatesService");
+        sLogger.trace("Starting StatesService");
 
-        fParser.loadWithFolderName("states.yaml");
-        fSharedObjectsDirectory.registerAllStates(fParser);
-
-        mPreviousTime = System.currentTimeMillis();
         mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_state_service");
+
+        fStatesParser.loadWithFolderName("states.yaml");
+        fSharedObjectsDirectory.registerAllStates(fStatesParser);
 
         fSharedInputValues.setBoolean("ipb_robot_has_been_zeroed", false);
 
-        sLogger.debug("StatesService started");
+        sLogger.trace("StatesService started");
     }
 
     /**
@@ -88,7 +89,7 @@ public class StatesService implements ScheduledService {
         FMS.Mode nextFmsMode = fFms.getMode();
 
         //If mode is changing
-        if (nextFmsMode != fCurrentFmsMode) {
+        if (nextFmsMode != mCurrentFmsMode) {
 
             // Initialize StateMachine with either Teleop or Auto StateControls
             if (nextFmsMode == FMS.Mode.AUTONOMOUS) {
@@ -101,7 +102,7 @@ public class StatesService implements ScheduledService {
             } else if (nextFmsMode == FMS.Mode.DISABLED) {
                 fRobotManager.dispose();
                 fStateMachine.dispose();
-                if (fCurrentFmsMode != FMS.Mode.AUTONOMOUS) {
+                if (mCurrentFmsMode != FMS.Mode.AUTONOMOUS) {
                     fSharedInputValues.setBoolean("ipb_robot_has_been_zeroed", false);
                 }
                 fSharedInputValues.setBoolean("ipb_auto_complete", false);
@@ -109,8 +110,8 @@ public class StatesService implements ScheduledService {
         }
 
         //Update the current RobotManger and update the StateMachine
-        fCurrentFmsMode = nextFmsMode;
-        if (fCurrentFmsMode != FMS.Mode.DISABLED) {
+        mCurrentFmsMode = nextFmsMode;
+        if (mCurrentFmsMode != FMS.Mode.DISABLED) {
             fRobotManager.update();
             fStateMachine.update();
         }
@@ -118,13 +119,10 @@ public class StatesService implements ScheduledService {
         // Check for delayed frames
         double currentTime = System.currentTimeMillis();
         double frameTime = currentTime - frameStartTime;
-        double totalCycleTime = currentTime - mPreviousTime;
         fSharedInputValues.setNumeric("ipn_frame_time_states_service", frameTime);
         if (frameTime > mFrameTimeThreshold) {
             sLogger.debug("********** States Service frame time = {}", frameTime);
         }
-        mPreviousTime = currentTime;
-
     }
 
     @Override

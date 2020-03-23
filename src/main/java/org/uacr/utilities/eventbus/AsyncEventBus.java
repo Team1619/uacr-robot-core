@@ -11,12 +11,10 @@ import java.util.concurrent.Executor;
 public class AsyncEventBus extends AbstractEventBus {
 
     private final Executor fExecutor;
-
     private final Set<Object> fListeners;
 
     public AsyncEventBus(Executor executor) {
         fExecutor = executor;
-
         fListeners = Collections.synchronizedSet(new HashSet<>());
     }
 

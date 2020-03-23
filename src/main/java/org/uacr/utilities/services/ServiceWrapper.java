@@ -9,13 +9,11 @@ import javax.annotation.Nullable;
 public class ServiceWrapper implements Service {
 
     private final Service fService;
-
     @Nullable
     private final Scheduler scheduler;
 
-    private boolean mIsCurrentlyRunning = false;
-
-    private ServiceState mServiceState = ServiceState.AWAITING_START;
+    private ServiceState mServiceState;
+    private boolean mIsCurrentlyRunning;
 
     public ServiceWrapper(Service service) {
         fService = service;
@@ -26,6 +24,9 @@ public class ServiceWrapper implements Service {
         } else {
             scheduler = null;
         }
+
+        mServiceState = ServiceState.AWAITING_START;
+        mIsCurrentlyRunning = false;
     }
 
     // Returns the current state of the service

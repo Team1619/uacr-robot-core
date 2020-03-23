@@ -19,10 +19,11 @@ public class StateMachine {
 
     private static final Logger sLogger = LogManager.getLogger(StateMachine.class);
 
-    private final ObjectsDirectory fSharedObjectsDirectory;
-    private final RobotConfiguration fRobotConfiguration;
     private final InputValues fSharedInputValues;
+    private final RobotConfiguration fRobotConfiguration;
+    private final ObjectsDirectory fSharedObjectsDirectory;
     private final RobotManager fRobotManager;
+
     private Set<String> fAllSubsystemNames = new LinkedHashSet<>();
     private Set<String> fAllStateNames = new LinkedHashSet<>();
     private List<String> fPriorityKeys = new ArrayList<>();
@@ -33,10 +34,10 @@ public class StateMachine {
     private Set<State> fActiveStates = new LinkedHashSet<>();
 
     public StateMachine(ObjectsDirectory objectsDirectory, RobotManager robotManager, RobotConfiguration robotConfiguration, InputValues inputValues) {
+        fSharedInputValues = inputValues;
+        fRobotConfiguration = robotConfiguration;
         fSharedObjectsDirectory = objectsDirectory;
         fRobotManager = robotManager;
-        fRobotConfiguration = robotConfiguration;
-        fSharedInputValues = inputValues;
     }
 
     /**

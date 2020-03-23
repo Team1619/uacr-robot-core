@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class Config {
 
-    private final String fType;
     private final Map<String, Object> fData;
+    private final String fType;
 
     public Config(String type, @Nullable Map data) {
         fType = type;

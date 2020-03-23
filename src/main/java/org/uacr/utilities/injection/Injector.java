@@ -13,14 +13,16 @@ import java.util.HashMap;
 
 public class Injector {
 
-    private HashMap<Class, Class> mBindings;
     private final HashMap<Class, Object> fSingletons;
+
+    private HashMap<Class, Class> mBindings;
 
     /**
      * Configures bindings and creates singletons
      */
     public Injector(AbstractModule module) {
         mBindings = new HashMap<>();
+
         fSingletons = new HashMap<>();
 
         module.configure();

@@ -19,17 +19,15 @@ public class ParallelState implements State {
     private static final Logger sLogger = LogManager.getLogger(ParallelState.class);
 
     private final AbstractModelFactory fModelFactory;
-    private final String fStateName;
-
     private final Set<State> fForegroundStates;
     private final Set<State> fBackgroundStates;
+    private final String fStateName;
 
     public ParallelState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fModelFactory = modelFactory;
-        fStateName = name;
-
         fForegroundStates = new HashSet<>();
         fBackgroundStates = new HashSet<>();
+        fStateName = name;
 
         for (Object foregroundStateName : config.getList("foreground_states")) {
             fForegroundStates.add(fModelFactory.createState((String) foregroundStateName, parser, parser.getConfig(foregroundStateName)));
