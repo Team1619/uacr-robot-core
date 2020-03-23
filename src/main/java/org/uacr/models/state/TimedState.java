@@ -18,18 +18,19 @@ public class TimedState implements State {
 
     private static final Logger sLogger = LogManager.getLogger(TimedState.class);
 
-    private final String fStateName;
+    private final Timer fTimer;
     private final State fSubState;
-    private final String fSubStateName;
-    private final Timer fTimer = new Timer();
     private final int fTimeout;
+    private final String fStateName;
+    private final String fSubStateName;
 
     public TimedState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
+        fTimer = new Timer();
         fStateName = name;
-
-        fSubStateName = config.getString("state");
-        fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fStateName));
         fTimeout = config.getInt("timeout");
+        fSubStateName = config.getString("state");
+
+        fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fStateName));
     }
 
     @Override

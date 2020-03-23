@@ -7,9 +7,9 @@ package org.uacr.utilities.services;
 
 public class Scheduler {
 
+    private final TimeUnit fTimeUnit;
     private final double fInitialDelay;
     private final double fStandardDelay;
-    private final TimeUnit fTimeUnit;
 
     private long mStartTime = 0;
     private long mLastTime = 0;
@@ -30,9 +30,12 @@ public class Scheduler {
     }
 
     public Scheduler(double initialDelay, double standardDelay, TimeUnit timeUnit) {
+        fTimeUnit = timeUnit;
         fInitialDelay = initialDelay;
         fStandardDelay = standardDelay;
-        fTimeUnit = timeUnit;
+
+        mStartTime = -1;
+        mLastTime = -1;
     }
 
     // Called on start-up

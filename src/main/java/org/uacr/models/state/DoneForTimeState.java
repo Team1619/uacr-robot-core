@@ -18,25 +18,23 @@ public class DoneForTimeState implements State {
 
     private static final Logger sLogger = LogManager.getLogger(DoneForTimeState.class);
 
-    private final String fStateName;
+    private final Timer fStateTimer;
+    private final Timer fMaxTimer;
     private final State fSubState;
+    private final int fStateTimeout;
+    private final int fMaxTimeout;
+    private final String fStateName;
     private final String fSubStateName;
 
-    private final Timer fStateTimer = new Timer();
-    private final Timer fMaxTimer = new Timer();
-
-    private final int fStateTimeout;
-
-    private final int fMaxTimeout;
-
     public DoneForTimeState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
-        fStateName = name;
-
-        fSubStateName = config.getString("state");
-        fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fSubStateName));
-
+        fStateTimer = new Timer();
+        fMaxTimer = new Timer();
         fStateTimeout = config.getInt("state_timeout");
         fMaxTimeout = config.getInt("max_timeout", -1);
+        fStateName = name;
+        fSubStateName = config.getString("state");
+
+        fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fSubStateName));
     }
 
     @Override

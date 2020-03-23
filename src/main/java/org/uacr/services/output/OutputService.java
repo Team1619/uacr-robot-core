@@ -32,9 +32,9 @@ public class OutputService implements ScheduledService {
     private final RobotConfiguration fRobotConfiguration;
     private final YamlConfigParser fOutputNumericsParser;
     private final YamlConfigParser fOutputBooleansParser;
+
     private Set<String> mOutputNumericNames;
     private Set<String> mOutputBooleanNames;
-    private double mPreviousTime;
     private long mFrameTimeThreshold;
 
     @Inject
@@ -45,23 +45,23 @@ public class OutputService implements ScheduledService {
         fSharedOutputsDirectory = objectsDirectory;
         fOutputNumericsParser = new YamlConfigParser();
         fOutputBooleansParser = new YamlConfigParser();
+
         mOutputNumericNames = new HashSet<>();
         mOutputBooleanNames = new HashSet<>();
+        mFrameTimeThreshold = -1;
     }
 
     @Override
     public void startUp() throws Exception {
-        sLogger.debug("Starting OutputService");
+        sLogger.trace("Starting OutputService");
+
+        mOutputNumericNames = fRobotConfiguration.getOutputNumericNames();
+        mOutputBooleanNames = fRobotConfiguration.getOutputBooleanNames();
+        mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_output_service");
 
         fOutputNumericsParser.loadWithFolderName("output-numerics.yaml");
         fOutputBooleansParser.loadWithFolderName("output-booleans.yaml");
         fSharedOutputsDirectory.registerAllOutputs(fOutputNumericsParser, fOutputBooleansParser);
-
-        mOutputNumericNames = fRobotConfiguration.getOutputNumericNames();
-        mOutputBooleanNames = fRobotConfiguration.getOutputBooleanNames();
-
-        mPreviousTime = System.currentTimeMillis();
-        mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_output_service");
 
         sLogger.trace("OutputService started");
     }
@@ -69,7 +69,7 @@ public class OutputService implements ScheduledService {
     @Override
     public void runOneIteration() throws Exception {
 
-        double frameStartTime = System.currentTimeMillis();
+        long frameStartTime = System.currentTimeMillis();
 
         for (String outputNumericName : mOutputNumericNames) {
             OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
@@ -84,15 +84,12 @@ public class OutputService implements ScheduledService {
         }
 
         // Check for delayed frames
-        double currentTime = System.currentTimeMillis();
-        double frameTime = currentTime - frameStartTime;
-        double totalCycleTime = currentTime - mPreviousTime;
+        long currentTime = System.currentTimeMillis();
+        long frameTime = currentTime - frameStartTime;
         fSharedInputValues.setNumeric("ipn_frame_time_output_service", frameTime);
         if (frameTime > mFrameTimeThreshold) {
             sLogger.debug("********** Output Service frame time = {}", frameTime);
         }
-        mPreviousTime = currentTime;
-
     }
 
     @Override

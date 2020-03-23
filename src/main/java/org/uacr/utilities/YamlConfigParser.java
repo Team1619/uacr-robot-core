@@ -14,20 +14,26 @@ public class YamlConfigParser {
 
     private static final Logger sLogger = LogManager.getLogger(YamlConfigParser.class);
 
-    private final Yaml fYaml = new Yaml();
+    private final Yaml fYaml;
 
-    private Map<String, Map<String, Object>> fData = new HashMap<>();
-    private Map<String, String> fNameTypes = new HashMap<>();
+    private Map<String, Map<String, Object>> mData;
+    private Map<String, String> mNameTypes;
+    private String mRobotVariation;
 
-    private String fRobotVariation = "none";
+    public YamlConfigParser() {
+        fYaml = new Yaml();
+
+        mData = new HashMap<>();
+        mNameTypes = new HashMap<>();
+        mRobotVariation = "none";
+    }
 
     public void loadWithFolderName(String path) {
-
         YamlConfigParser parser = new YamlConfigParser();
         parser.load("general.yaml");
         Config config = parser.getConfig("robot");
 
-        fRobotVariation = config.getString("robot_variation", "");
+        mRobotVariation = config.getString("robot_variation", "");
 
         load(path);
     }
@@ -37,37 +43,37 @@ public class YamlConfigParser {
         sLogger.trace("Loading config file '{}'", path);
 
         try {
-            fData = fYaml.load(getClassLoader().getResourceAsStream(path));
+            mData = fYaml.load(getClassLoader().getResourceAsStream(path));
         } catch (Throwable t) {
             sLogger.error(t.getMessage());
         }
 
-        if (fData == null) {
-            fData = new HashMap<>();
+        if (mData == null) {
+            mData = new HashMap<>();
         }
 
         sLogger.trace("Loaded config file '{}'", path);
 
-        fNameTypes = new HashMap<>();
+        mNameTypes = new HashMap<>();
 
-        for (Map.Entry<String, Map<String, Object>> entry : fData.entrySet()) {
+        for (Map.Entry<String, Map<String, Object>> entry : mData.entrySet()) {
             if (entry.getValue() != null) {
                 for (String name : entry.getValue().keySet()) {
                     if (!entry.getKey().equals("variations")) {
-                        fNameTypes.put(name, entry.getKey());
+                        mNameTypes.put(name, entry.getKey());
                     }
                 }
             }
         }
 
-        if (!fRobotVariation.equals("") && fData.containsKey("variations")) {
-            Map<String, Object> variation = (Map<String, Object>) fData.get("variations").get(fRobotVariation);
+        if (!mRobotVariation.equals("") && mData.containsKey("variations")) {
+            Map<String, Object> variation = (Map<String, Object>) mData.get("variations").get(mRobotVariation);
             if (variation != null) {
                 loadVariation(variation, new ArrayList<>());
             }
         }
 
-        fData.remove("variations");
+        mData.remove("variations");
     }
 
     private void loadVariation(Map<String, Object> variation, ArrayList<String> stack) {
@@ -78,7 +84,7 @@ public class YamlConfigParser {
                 stack.remove(entry.getKey());
             } else {
                 stack.add(entry.getKey());
-                editMapValueWithStack(fData, (ArrayList<String>) stack.clone(), entry.getValue());
+                editMapValueWithStack(mData, (ArrayList<String>) stack.clone(), entry.getValue());
                 stack.remove(entry.getKey());
             }
         }
@@ -101,20 +107,20 @@ public class YamlConfigParser {
 
         sLogger.trace("Getting config with name '{}'", name);
 
-        if (!(fNameTypes.containsKey(name) && fData.containsKey(fNameTypes.get(name)))) {
+        if (!(mNameTypes.containsKey(name) && mData.containsKey(mNameTypes.get(name)))) {
             throw new ConfigurationException("***** No config exists for name '" + name + "' *****");
         }
 
-        String type = fNameTypes.get(name);
+        String type = mNameTypes.get(name);
         try {
-            return new Config(type, (Map) fData.get(type).get(name));
+            return new Config(type, (Map) mData.get(type).get(name));
         } catch (ClassCastException ex) {
-            throw new ConfigurationException("***** Expected map but found " + fData.getClass().getSimpleName() + "*****");
+            throw new ConfigurationException("***** Expected map but found " + mData.getClass().getSimpleName() + "*****");
         }
     }
 
     public Map getData() {
-        return fData;
+        return mData;
     }
 
     protected ClassLoader getClassLoader() {

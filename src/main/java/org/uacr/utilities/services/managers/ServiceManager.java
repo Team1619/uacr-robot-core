@@ -18,13 +18,16 @@ public abstract class ServiceManager {
 
     private final ExecutorService fExecutor;
     private final List<ServiceWrapper> fServices;
-    private ServiceState mCurrentState = ServiceState.AWAITING_START;
+
+    private ServiceState mCurrentState;
 
     //Create a new thread and serviceWrappers for each service that it is managing
     public ServiceManager(List<Service> services) {
         fExecutor = Executors.newCachedThreadPool();
-
         fServices = Collections.synchronizedList(new ArrayList<>());
+
+        mCurrentState = ServiceState.AWAITING_START;
+
         for (Service service : services) {
             fServices.add(new ServiceWrapper(service));
         }

@@ -1,6 +1,7 @@
 package org.uacr.models.exceptions;
 
 public class ConfigurationInvalidTypeException extends ConfigurationException {
+
     public ConfigurationInvalidTypeException(String type, String key, Object data) {
         super("******** Expected " + type + " for " + key + " found " + data.getClass().getSimpleName() + " ********");
     }

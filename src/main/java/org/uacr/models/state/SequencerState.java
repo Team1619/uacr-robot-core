@@ -21,17 +21,16 @@ public class SequencerState implements State {
     private static final Logger sLogger = LogManager.getLogger(SequencerState.class);
 
     private final AbstractModelFactory fModelFactory;
+    private final List<State> fStates;
     private final String fStateName;
 
-    private final List<State> fStates;
-    private int mCurrentStateIndex;
     private State mCurrentState;
+    private int mCurrentStateIndex;
 
     public SequencerState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fModelFactory = modelFactory;
-        fStateName = name;
-
         fStates = new ArrayList<>();
+        fStateName = name;
 
         for (Object stateName : config.getList("sequence")) {
             fStates.add(fModelFactory.createState((String) stateName, parser, parser.getConfig(stateName)));

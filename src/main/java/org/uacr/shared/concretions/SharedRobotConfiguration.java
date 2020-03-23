@@ -7,7 +7,6 @@ import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Singleton;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 
@@ -16,13 +15,10 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
     private static final Logger sLogger = LogManager.getLogger(SharedRobotConfiguration.class);
 
-    private final Yaml fYaml;
-
     private Map<String, Map<String, Object>> mData;
 
     public SharedRobotConfiguration() {
         mData = new HashMap<>();
-        fYaml = new Yaml();
     }
 
     @Override

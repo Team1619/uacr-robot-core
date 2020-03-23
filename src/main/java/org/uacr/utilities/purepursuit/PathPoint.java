@@ -11,12 +11,15 @@ public class PathPoint extends Point {
 
     private final double fDistance;
     private final double fCurvature;
+
     private double mVelocity;
 
     public PathPoint(double x, double y, double distance, double curvature, double velocity) {
         super(x, y);
+
         fDistance = distance;
         fCurvature = curvature;
+
         mVelocity = velocity;
     }
 

@@ -13,6 +13,7 @@ public class Pose2d extends Point {
 
     public Pose2d(double x, double y, double heading) {
         super(x, y);
+
         fHeading = heading;
     }
 
