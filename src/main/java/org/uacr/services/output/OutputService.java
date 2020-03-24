@@ -3,10 +3,7 @@ package org.uacr.services.output;
 import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
 import org.uacr.robot.AbstractModelFactory;
-import org.uacr.shared.abstractions.InputValues;
-import org.uacr.shared.abstractions.ObjectsDirectory;
-import org.uacr.shared.abstractions.OutputValues;
-import org.uacr.shared.abstractions.RobotConfiguration;
+import org.uacr.shared.abstractions.*;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Inject;
 import org.uacr.utilities.logging.LogManager;
@@ -26,6 +23,7 @@ public class OutputService implements ScheduledService {
 
     private static final Logger sLogger = LogManager.getLogger(OutputService.class);
 
+    private final FMS fFms;
     private final InputValues fSharedInputValues;
     private final OutputValues fSharedOutputValues;
     private final ObjectsDirectory fSharedOutputsDirectory;
@@ -33,12 +31,14 @@ public class OutputService implements ScheduledService {
     private final YamlConfigParser fOutputNumericsParser;
     private final YamlConfigParser fOutputBooleansParser;
 
+    private FMS.Mode mCurrentFmsMode;
     private Set<String> mOutputNumericNames;
     private Set<String> mOutputBooleanNames;
     private long mFrameTimeThreshold;
 
     @Inject
-    public OutputService(AbstractModelFactory modelFactory, InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+    public OutputService(AbstractModelFactory modelFactory, FMS fms, InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+        fFms = fms;
         fSharedInputValues = inputValues;
         fSharedOutputValues = outputValues;
         fRobotConfiguration = robotConfiguration;
@@ -46,6 +46,7 @@ public class OutputService implements ScheduledService {
         fOutputNumericsParser = new YamlConfigParser();
         fOutputBooleansParser = new YamlConfigParser();
 
+        mCurrentFmsMode = FMS.Mode.DISABLED;
         mOutputNumericNames = new HashSet<>();
         mOutputBooleanNames = new HashSet<>();
         mFrameTimeThreshold = -1;
@@ -70,6 +71,21 @@ public class OutputService implements ScheduledService {
     public void runOneIteration() throws Exception {
 
         long frameStartTime = System.currentTimeMillis();
+
+        FMS.Mode nextFmsMode = fFms.getMode();
+
+        if (mCurrentFmsMode == FMS.Mode.DISABLED && nextFmsMode != FMS.Mode.DISABLED) {
+            for (String outputNumericName : mOutputNumericNames) {
+                OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
+                outputNumericObject.initalize();
+            }
+            for (String outputBooleanName : mOutputBooleanNames) {
+                OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(outputBooleanName);
+                outputBooleanObject.initalize();
+            }
+        }
+
+        mCurrentFmsMode = nextFmsMode;
 
         for (String outputNumericName : mOutputNumericNames) {
             OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
