@@ -8,14 +8,15 @@ public class ClosedLoopControllerProfile {
 
     private String fName;
 
-    private double mF;
-    private double mP;
-    private double mI;
-    private double mD;
-    private double mMaxIntegral;
-    private double mIntegralRange;
-    private double mMaxOutput;
-    private double mIdleOutput;
+    private final double fF;
+    private final double fP;
+    private final double fI;
+    private final double fD;
+    private final double fMaxIntegral;
+    private final double fIntegralRange;
+    private final double fMaxOutput;
+    private final double fIdleOutput;
+
     private double mKv;
     private double mKa;
     private double mKForceCompensation;
@@ -26,15 +27,15 @@ public class ClosedLoopControllerProfile {
         fName = name;
         if (values.containsKey("f") && values.containsKey("p") && values.containsKey("i") && values.containsKey("d") &&
                 values.containsKey("max_integral") && values.containsKey("integral_range") && values.containsKey("max_output") && values.containsKey("idle_output")) {
-            mF = values.get("f");
-            mP = values.get("p");
-            mI = values.get("i");
-            mD = values.get("d");
+            fF = values.get("f");
+            fP = values.get("p");
+            fI = values.get("i");
+            fD = values.get("d");
 
-            mMaxIntegral = values.get("max_integral");
-            mIntegralRange = values.get("integral_range");
-            mMaxOutput = values.get("max_output");
-            mIdleOutput = values.get("idle_output");
+            fMaxIntegral = values.get("max_integral");
+            fIntegralRange = values.get("integral_range");
+            fMaxOutput = values.get("max_output");
+            fIdleOutput = values.get("idle_output");
 
             if (values.containsKey("ka") && values.containsKey("kv")) {
                 mHasFeedForward = true;
@@ -53,35 +54,35 @@ public class ClosedLoopControllerProfile {
     }
 
     public double getF() {
-        return mF;
+        return fF;
     }
 
     public double getP() {
-        return mP;
+        return fP;
     }
 
     public double getI() {
-        return mI;
+        return fI;
     }
 
     public double getD() {
-        return mD;
+        return fD;
     }
 
     public double getMaxIntegral() {
-        return mMaxIntegral;
+        return fMaxIntegral;
     }
 
     public double getIntegralRange() {
-        return mIntegralRange;
+        return fIntegralRange;
     }
 
     public double getMaxOutput() {
-        return mMaxOutput;
+        return fMaxOutput;
     }
 
     public double getIdleOutput() {
-        return mIdleOutput;
+        return fIdleOutput;
     }
 
     public double getKv() {
