@@ -12,6 +12,6 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
-    compile 'org.yaml:snakeyaml:1.21'
+    implementation (group: 'com.google.guava', name: 'guava', version: '25.1-jre')
+    implementation 'org.yaml:snakeyaml:1.21'
 }

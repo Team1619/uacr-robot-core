@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="uacr-robot-core:jar">
+    <output-path>$PROJECT_DIR$/../jar-files</output-path>
+    <root id="archive" name="uacr-robot-core.jar">
+      <element id="module-output" name="uacr-robot-core.main" />
+    </root>
+  </artifact>
+</component>
