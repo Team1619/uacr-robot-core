@@ -12,10 +12,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * The base for all states
+ * The base for all states that preform a single action on a single subsystem
  * One implementation is created for each state listed under 'single_state' in the state ymal file
  * Creates one copy of the associated behavior and points all states that use it to the same instance
- * Watches after the associated behavior
  */
 
 public class SingleState implements State {

@@ -2,6 +2,11 @@ package org.uacr.models.state;
 
 import java.util.Set;
 
+/**
+ * The base class for all states.
+ * States are implementations of behaviors and use a behavior with the specific configuration parameters.
+ */
+
 public interface State {
 
     /**
