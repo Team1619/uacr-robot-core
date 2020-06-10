@@ -1,5 +1,6 @@
 package org.uacr.utilities.services.managers;
 
+import org.uacr.utilities.Lists;
 import org.uacr.utilities.services.Scheduler;
 import org.uacr.utilities.services.Service;
 import org.uacr.utilities.services.ServiceState;
@@ -15,7 +16,7 @@ public class ScheduledLinearServiceManager extends LinearServiceManager {
     private final Scheduler fScheduler;
 
     public ScheduledLinearServiceManager(Scheduler scheduler, Service... services) {
-        this(scheduler, List.of(services));
+        this(scheduler, Lists.of(services));
     }
 
     public ScheduledLinearServiceManager(Scheduler scheduler, List<Service> services) {
