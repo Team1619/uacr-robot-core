@@ -1,5 +1,7 @@
 package org.uacr.utilities.purepursuit;
 
+import java.util.List;
+
 /**
  * Point is a simple class which stores an x and y value for a point,
  * and can do simple operations on the point
@@ -12,9 +14,27 @@ public class Point {
     protected final double fX;
     protected final double fY;
 
+    public Point() {
+        fX = 0;
+        fY = 0;
+    }
+
     public Point(double x, double y) {
         fX = x;
         fY = y;
+    }
+
+    public Point(List<Double> coordinates) {
+        if(coordinates.size() < 1) {
+            fX = 0;
+            fY = 0;
+        } else if(coordinates.size() < 2) {
+            fX = coordinates.get(0);
+            fY = 0;
+        } else {
+            fX = coordinates.get(0);
+            fY = coordinates.get(1);
+        }
     }
 
     public double getX() {
