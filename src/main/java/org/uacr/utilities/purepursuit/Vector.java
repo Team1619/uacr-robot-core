@@ -1,5 +1,7 @@
 package org.uacr.utilities.purepursuit;
 
+import java.util.List;
+
 /**
  * Vector is an add on to the Point class,
  * allowing it to preform vector operations
@@ -9,16 +11,24 @@ package org.uacr.utilities.purepursuit;
 
 public class Vector extends Point {
 
-    public Vector(double x, double y) {
-        super(x, y);
+    public Vector() {
+        super();
+    }
+
+    public Vector(double magnitude, double angle) {
+        this(new Point(magnitude * Math.cos(Math.toRadians(angle)), magnitude * Math.sin(Math.toRadians(angle))));
+    }
+
+    public Vector(List<Double> coordinates) {
+        super(coordinates);
     }
 
     public Vector(Point point) {
-        this(point.getX(), point.getY());
+        super(point.getX(), point.getY());
     }
 
     public Vector(double x1, double y1, double x2, double y2) {
-        this(x2 - x1, y2 - y1);
+        this(new Point(x2 - x1, y2 - y1));
     }
 
     public Vector(Point point1, Point point2) {
@@ -29,12 +39,20 @@ public class Vector extends Point {
         return Math.sqrt(Math.pow(fX, 2) + Math.pow(fY, 2));
     }
 
+    public double angle() {
+        return Math.toDegrees(Math.atan2(fY, fX));
+    }
+
     public Vector normalize() {
-        return new Vector((1 / magnitude()) * fX, (1 / magnitude()) * fY);
+        return new Vector(1, angle());
     }
 
     public Vector scale(double scalar) {
-        return new Vector(fX * scalar, fY * scalar);
+        return new Vector(new Point(fX * scalar, fY * scalar));
+    }
+
+    public Vector rotate(double degrees) {
+        return new Vector(magnitude(), angle() + degrees);
     }
 
     public double dot(Vector vector) {
