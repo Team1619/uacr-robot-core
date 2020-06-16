@@ -61,7 +61,7 @@ public class Vector extends Point {
     }
 
     public Vector scale(double scalar) {
-        return new Vector(new Point(fX * scalar, fY * scalar));
+        return new Vector(magnitude() * scalar, angle());
     }
 
     public Vector rotate(double degrees) {
