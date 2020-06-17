@@ -104,10 +104,6 @@ public class Path {
         this(new ArrayList<>(Arrays.asList(points)));
     }
 
-    public void setTurnErrorScalar(double turnErrorScalar) {
-        mTurnErrorScalar = turnErrorScalar;
-    }
-
     /**
      * Getters for path specific creation and following data
      */
@@ -148,7 +144,11 @@ public class Path {
         mTrackingErrorSpeed = trackingErrorSpeed;
     }
 
-    public double getTurnErrorScalar(double turnErrorScalar) {
+    public void setTurnErrorScalar(double turnErrorScalar) {
+        mTurnErrorScalar = turnErrorScalar;
+    }
+
+    public double getTurnErrorScalar() {
         return mTurnErrorScalar;
     }
 
@@ -318,6 +318,9 @@ public class Path {
         int index = -1;
 
         for (int i = mLastCurrentPointIndex; i < getPath().size(); i++) {
+            if(getPathPoint(i).getDistance() - getPathPoint(mLastCurrentPointIndex).getDistance() > mLookAheadDistance) {
+                break;
+            }
             if (currentPosition.distance(getPathPoint(i)) < distance) {
                 index = i;
                 distance = currentPosition.distance(getPathPoint(i));
