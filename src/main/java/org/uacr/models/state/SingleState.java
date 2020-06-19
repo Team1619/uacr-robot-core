@@ -4,6 +4,7 @@ import org.uacr.models.behavior.Behavior;
 import org.uacr.robot.AbstractModelFactory;
 import org.uacr.shared.abstractions.ObjectsDirectory;
 import org.uacr.utilities.Config;
+import org.uacr.utilities.Sets;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
@@ -57,7 +58,7 @@ public class SingleState implements State {
 
     @Override
     public Set<State> getSubStates() {
-        return Set.of(this);
+        return Sets.of(this);
     }
 
     @Override

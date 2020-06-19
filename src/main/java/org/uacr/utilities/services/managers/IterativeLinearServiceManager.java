@@ -1,5 +1,6 @@
 package org.uacr.utilities.services.managers;
 
+import org.uacr.utilities.Lists;
 import org.uacr.utilities.services.Service;
 import org.uacr.utilities.services.ServiceState;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class IterativeLinearServiceManager extends LinearServiceManager {
 
     public IterativeLinearServiceManager(Service... services) {
-        this(List.of(services));
+        this(Lists.of(services));
     }
 
     public IterativeLinearServiceManager(List<Service> services) {

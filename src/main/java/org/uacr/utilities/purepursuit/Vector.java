@@ -1,5 +1,7 @@
 package org.uacr.utilities.purepursuit;
 
+import java.util.List;
+
 /**
  * Vector is an add on to the Point class,
  * allowing it to preform vector operations
@@ -9,16 +11,37 @@ package org.uacr.utilities.purepursuit;
 
 public class Vector extends Point {
 
-    public Vector(double x, double y) {
-        super(x, y);
+    private double fMagnitude;
+    private double fAngle;
+
+    public Vector() {
+        super();
+        fMagnitude = 0;
+        fAngle = 0;
+    }
+
+    public Vector(double magnitude, double angle) {
+        this(new Point(magnitude * Math.cos(Math.toRadians(angle)), magnitude * Math.sin(Math.toRadians(angle))));
+        fMagnitude = magnitude;
+        fAngle = angle;
+    }
+
+    public Vector(List<Double> coordinates) {
+        super(coordinates);
+        fMagnitude = Math.sqrt(Math.pow(fX, 2) + Math.pow(fY, 2));
+        fAngle = Math.toDegrees(Math.atan2(fY, fX));
     }
 
     public Vector(Point point) {
-        this(point.getX(), point.getY());
+        super(point.getX(), point.getY());
+        fMagnitude = Math.sqrt(Math.pow(fX, 2) + Math.pow(fY, 2));
+        fAngle = Math.toDegrees(Math.atan2(fY, fX));
     }
 
     public Vector(double x1, double y1, double x2, double y2) {
-        this(x2 - x1, y2 - y1);
+        this(new Point(x2 - x1, y2 - y1));
+        fMagnitude = Math.sqrt(Math.pow(fX, 2) + Math.pow(fY, 2));
+        fAngle = Math.toDegrees(Math.atan2(fY, fX));
     }
 
     public Vector(Point point1, Point point2) {
@@ -26,15 +49,23 @@ public class Vector extends Point {
     }
 
     public double magnitude() {
-        return Math.sqrt(Math.pow(fX, 2) + Math.pow(fY, 2));
+        return fMagnitude;
+    }
+
+    public double angle() {
+        return fAngle;
     }
 
     public Vector normalize() {
-        return new Vector((1 / magnitude()) * fX, (1 / magnitude()) * fY);
+        return new Vector(1, angle());
     }
 
     public Vector scale(double scalar) {
-        return new Vector(fX * scalar, fY * scalar);
+        return new Vector(magnitude() * scalar, angle());
+    }
+
+    public Vector rotate(double degrees) {
+        return new Vector(magnitude(), angle() + degrees);
     }
 
     public double dot(Vector vector) {
