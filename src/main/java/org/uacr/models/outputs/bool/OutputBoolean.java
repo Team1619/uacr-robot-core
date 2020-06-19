@@ -12,7 +12,7 @@ public abstract class OutputBoolean {
         fIsInverted = config.getBoolean("inverted", false);
     }
 
-    public void initalize() {
+    public void initialize() {
 
     }
 

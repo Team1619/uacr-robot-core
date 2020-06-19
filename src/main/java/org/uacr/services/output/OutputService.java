@@ -77,11 +77,11 @@ public class OutputService implements ScheduledService {
         if (mCurrentFmsMode == FMS.Mode.DISABLED && nextFmsMode != FMS.Mode.DISABLED) {
             for (String outputNumericName : mOutputNumericNames) {
                 OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
-                outputNumericObject.initalize();
+                outputNumericObject.initialize();
             }
             for (String outputBooleanName : mOutputBooleanNames) {
                 OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(outputBooleanName);
-                outputBooleanObject.initalize();
+                outputBooleanObject.initialize();
             }
         }
 

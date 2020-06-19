@@ -12,7 +12,7 @@ public abstract class OutputNumeric {
         fIsInverted = config.getBoolean("inverted", false);
     }
 
-    public void initalize() {
+    public void initialize() {
 
     }
 
