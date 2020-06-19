@@ -12,6 +12,10 @@ public abstract class OutputNumeric {
         fIsInverted = config.getBoolean("inverted", false);
     }
 
+    public void initialize() {
+
+    }
+
     public abstract void setHardware(String outputType, double outputValue, String profile);
 
     public abstract void processFlag(String flag);

@@ -12,7 +12,11 @@ public abstract class OutputBoolean {
         fIsInverted = config.getBoolean("inverted", false);
     }
 
-    public abstract void processFlag(String flag);
+    public void initialize() {
+
+    }
 
     public abstract void setHardware(boolean outputValue);
+
+    public abstract void processFlag(String flag);
 }
