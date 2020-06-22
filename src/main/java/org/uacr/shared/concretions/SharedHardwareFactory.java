@@ -24,7 +24,7 @@ public class SharedHardwareFactory implements HardwareFactory {
     }
 
     /**
-     * Finds, instantiates, stores, and return external hardware objects for framework hardware objects
+     * Finds, instantiates, stores, and returns external hardware objects for framework hardware objects
      *
      * @param tClass the class of the external hardware object to be returned
      * @param parameters the constructor parameters of the external hardware object to be returned
