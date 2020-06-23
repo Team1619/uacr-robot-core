@@ -12,6 +12,7 @@ public abstract class AbstractModule extends org.uacr.utilities.injection.Abstra
         bind(FMS.class, SharedFMS.class);
         bind(RobotConfiguration.class, SharedRobotConfiguration.class);
         bind(ObjectsDirectory.class, SharedObjectsDirectory.class);
+        bind(HardwareFactory.class, SharedHardwareFactory.class);
 
         configureModeSpecificConcretions();
     }
