@@ -97,15 +97,20 @@ public class StatesService implements ScheduledService {
                 fRobotManager.initialize(nextFmsMode);
                 fStateMachine.initialize();
             } else if (nextFmsMode == FMS.Mode.TELEOP) {
-                fRobotManager.initialize(nextFmsMode);
-                fStateMachine.initialize();
+                if(fSharedInputValues.getBoolean("ipb_auto_complete")) {
+                    fSharedInputValues.setBoolean("ipb_auto_complete", false);
+                    fRobotManager.dispose();
+                    fStateMachine.dispose();
+                    fRobotManager.initialize(nextFmsMode);
+                    fStateMachine.initialize();
+                }
             } else if (nextFmsMode == FMS.Mode.DISABLED) {
-                fRobotManager.dispose();
-                fStateMachine.dispose();
+                sLogger.info("Current mode {} next mode {}", mCurrentFmsMode, nextFmsMode);
                 if (mCurrentFmsMode != FMS.Mode.AUTONOMOUS) {
+                    fRobotManager.dispose();
+                    fStateMachine.dispose();
                     fSharedInputValues.setBoolean("ipb_robot_has_been_zeroed", false);
                 }
-                fSharedInputValues.setBoolean("ipb_auto_complete", false);
             }
         }
 

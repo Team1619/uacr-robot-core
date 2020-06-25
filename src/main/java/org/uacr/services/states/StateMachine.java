@@ -103,7 +103,6 @@ public class StateMachine {
 
         fActiveStates.clear();
         fPrimaryActiveStates.clear();
-        update();
     }
 
     /**
