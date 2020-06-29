@@ -9,9 +9,10 @@ import javax.annotation.Nullable;
 public class ServiceWrapper implements Service {
 
     private final Service fService;
+
     @Nullable
     private final Scheduler scheduler;
-
+    @Nullable
     private ServiceState mServiceState;
     private boolean mIsCurrentlyRunning;
 
