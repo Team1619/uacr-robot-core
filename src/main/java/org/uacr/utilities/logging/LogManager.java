@@ -15,8 +15,8 @@ public class LogManager {
     private static LogManager sLogManager = null;
 
     private final DateTimeFormatter fDateTimeFormatter;
+    private final HashSet<LogHandler> fLogHandlers;
 
-    private HashSet<LogHandler> mLogHandlers;
     private Level mCurrentLoggingLevel;
 
     private LogManager() {
@@ -24,7 +24,7 @@ public class LogManager {
 
         fDateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
-        mLogHandlers = new HashSet<>();
+        fLogHandlers = new HashSet<>();
         mCurrentLoggingLevel = Level.INFO;
 
         addLogHandler(new DefaultLogHandler());
@@ -61,12 +61,12 @@ public class LogManager {
         if (sLogManager == null) {
             new LogManager();
         }
-        sLogManager.mLogHandlers.add(logHandler);
+        sLogManager.fLogHandlers.add(logHandler);
     }
 
     public static void removeLogHandler(LogHandler logHandler) {
         if (sLogManager != null) {
-            sLogManager.mLogHandlers.remove(logHandler);
+            sLogManager.fLogHandlers.remove(logHandler);
         }
     }
 
@@ -80,16 +80,16 @@ public class LogManager {
 
         switch (level) {
             case TRACE:
-                mLogHandlers.forEach((handler) -> handler.trace(line));
+                fLogHandlers.forEach((handler) -> handler.trace(line));
                 break;
             case DEBUG:
-                mLogHandlers.forEach((handler) -> handler.debug(line));
+                fLogHandlers.forEach((handler) -> handler.debug(line));
                 break;
             case INFO:
-                mLogHandlers.forEach((handler) -> handler.info(line));
+                fLogHandlers.forEach((handler) -> handler.info(line));
                 break;
             case ERROR:
-                mLogHandlers.forEach((handler) -> handler.error(line));
+                fLogHandlers.forEach((handler) -> handler.error(line));
                 break;
         }
     }
@@ -102,7 +102,7 @@ public class LogManager {
 
         StringBuilder line = new StringBuilder();
 
-        String[] parts = message.split("\\{}");
+        String[] parts = message.split("\\{\\}");
 
         for (int p = 0; p < parts.length - 1; p++) {
             line.append(parts[p]);
