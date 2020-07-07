@@ -16,7 +16,7 @@ public class LogManager {
 
     private final DateTimeFormatter fDateTimeFormatter;
 
-    private HashSet<LogHandler> mLogHandlers;
+    private final HashSet<LogHandler> mLogHandlers;
     private Level mCurrentLoggingLevel;
 
     private LogManager() {
@@ -102,7 +102,7 @@ public class LogManager {
 
         StringBuilder line = new StringBuilder();
 
-        String[] parts = message.split("\\{}");
+        String[] parts = message.split("\\{\\}");
 
         for (int p = 0; p < parts.length - 1; p++) {
             line.append(parts[p]);
