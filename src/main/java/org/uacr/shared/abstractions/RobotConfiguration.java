@@ -36,11 +36,11 @@ public interface RobotConfiguration {
 
     String getString(String category, String key);
 
-    List getList(String category, String key);
+    <T> List getList(String category, String key);
 
-    Map getMap(String category, String key);
+    <K, V> Map<K, V> getMap(String category, String key);
 
-    Set getSet(String category, String key);
+    <T> Set getSet(String category, String key);
 
     <T extends Enum<T>> T getEnum(String category, String key, Class<T> enumClass);
 
