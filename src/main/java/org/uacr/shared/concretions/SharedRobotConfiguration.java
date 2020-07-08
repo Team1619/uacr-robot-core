@@ -42,32 +42,35 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
         stateKeys.addAll(getSubsystemNames());
 
+        @Nullable
         Map<String, Map<String, List<String>>> yamlStateMaps = getMap("general", "states");
 
         Map<String, Set<String>> stateMap = new HashMap<>();
 
-        for (String stateKey : stateKeys) {
-            if (!yamlStateMaps.containsKey(stateKey)) {
-                continue;
-            }
+        if (yamlStateMaps != null) {
+            for (String stateKey : stateKeys) {
+                if (!yamlStateMaps.containsKey(stateKey)) {
+                    continue;
+                }
 
-            @Nullable
-            Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
+                @Nullable
+                Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
 
-            if (singleKeyStateMap != null) {
-                for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
-                    String priority = singlePriorityMap.getKey();
-                    priority = priority.replace("priority_level_", "");
-                    List<String> singlePriorityStateList = singlePriorityMap.getValue();
+                if (singleKeyStateMap != null) {
+                    for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
+                        String priority = singlePriorityMap.getKey();
+                        priority = priority.replace("priority_level_", "");
+                        List<String> singlePriorityStateList = singlePriorityMap.getValue();
 
-                    if (stateMap.containsKey(priority)) {
-                        stateMap.get(priority).addAll(singlePriorityStateList);
-                    } else {
-                        Set<String> singlePriorityStateNames = new LinkedHashSet<>();
+                        if (stateMap.containsKey(priority)) {
+                            stateMap.get(priority).addAll(singlePriorityStateList);
+                        } else {
+                            Set<String> singlePriorityStateNames = new LinkedHashSet<>();
 
-                        singlePriorityStateNames.addAll(singlePriorityStateList);
+                            singlePriorityStateNames.addAll(singlePriorityStateList);
 
-                        stateMap.put(priority, singlePriorityStateNames);
+                            stateMap.put(priority, singlePriorityStateNames);
+                        }
                     }
                 }
             }
