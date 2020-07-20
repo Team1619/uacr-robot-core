@@ -21,7 +21,7 @@ public abstract class OutputNumeric {
     }
 
     /**
-     * Tells the OutputNumeric to set it's hardware object to the o.
+     * Tells the OutputNumeric to set it's hardware object to the output value.
      * @param outputValue the value to set to the hardware
      */
     public abstract void setHardware(String outputType, double outputValue, String profile);

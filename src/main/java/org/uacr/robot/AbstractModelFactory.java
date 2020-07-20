@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles the creation of objects
+ * Handles the creation of input, output and state objects
  */
 
 public abstract class AbstractModelFactory {
@@ -35,6 +35,13 @@ public abstract class AbstractModelFactory {
     protected final RobotConfiguration fRobotConfiguration;
     protected final ObjectsDirectory fSharedObjectDirectory;
     private final List<AbstractModelFactory> fModelFactories;
+
+    /**
+     * @param inputValues a map that stores all the input values
+     * @param outputValues a map that stores all the output values
+     * @param robotConfiguration the yaml file which specifies which object to create
+     * @param objectsDirectory a map to store all the objects once created
+     */
 
     @Inject
     public AbstractModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {

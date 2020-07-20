@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * The base for all states that preform a single action on a single subsystem
+ * The base for all states
+ * States preform a single action on a single subsystem
  * One implementation is created for each state listed under 'single_state' in the state ymal file
  * Creates one copy of the associated behavior and points all states that use it to the same instance
  */
@@ -28,11 +29,19 @@ public class SingleState implements State {
     private final String fStateName;
     private final String fBehaviorName;
 
+    /**
+     * @param modelFactory so it can create the behavior associated with the state
+     * @param name of the state
+     * @param config for the state
+     * @param objectsDirectory so it can get the behavior associated with the state if it already exists
+     */
+
     public SingleState(AbstractModelFactory modelFactory, String name, Config config, ObjectsDirectory objectsDirectory) {
         fModelFactory = modelFactory;
         fSharedObjectsDirectory = objectsDirectory;
         fStateName = name;
 
+        //Reads in the behavior and behavior config for the state
         fBehaviorName = config.getString("behavior");
         if (config.contains("behavior_config")) {
             fBehaviorConfig = config.getSubConfig("behavior_config", "behavior_config");
@@ -54,40 +63,73 @@ public class SingleState implements State {
         fBehavior = behavior;
     }
 
+    /**
+     * @return the state
+     */
+
     @Override
     public Set<State> getSubStates() {
         return Set.of(this);
     }
+
+    /**
+     * call initialize on the behavior
+     */
 
     @Override
     public void initialize() {
         fBehavior.initialize(fStateName, fBehaviorConfig);
     }
 
+    /**
+     * Call update on the behavior
+     */
+
     @Override
     public void update() {
         fBehavior.update();
     }
+
+    /**
+     * Call dispose on the behavior
+     */
 
     @Override
     public void dispose() {
         fBehavior.dispose();
     }
 
+    /**
+     * @return the isDone from the behavior
+     */
+
     @Override
     public boolean isDone() {
         return fBehavior.isDone();
     }
+
+    /**
+     * @return the subsystem used by the state
+     */
 
     @Override
     public Set<String> getSubsystems() {
         return fBehavior.getSubsystems();
     }
 
+    /**
+     * @return the name of the state
+     */
+
     @Override
     public String getName() {
         return fStateName;
     }
+
+    /**
+     * This method is used so the .toString will return the name of the state if called on this object
+     * @return the name of the state
+     */
 
     @Override
     public String toString() {
