@@ -52,6 +52,16 @@ public abstract class AbstractModelFactory {
         fModelFactories = new ArrayList<>();
     }
 
+    /**
+     * Creates an Output Numeric (an output that takes a numeric value such as a motor)
+     * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
+     * This is to allow for sim and robot model factories
+     * @param name of the object to create
+     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @param parser the ymal parser for the object, used to read the config
+     * @return the desired output numeric object
+     */
+
     public OutputNumeric createOutputNumeric(Object name, Config config, YamlConfigParser parser) {
         for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
@@ -61,6 +71,16 @@ public abstract class AbstractModelFactory {
         }
         throw new ConfigurationTypeDoesNotExistException(config.getType());
     }
+
+    /**
+     * Creates an Output Boolean (an output that takes a boolean value such as a solenoid)
+     * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
+     * This is to allow for sim and robot model factories
+     * @param name of the object to create
+     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @param parser the ymal parser for the object, used to read the config
+     * @return the desired Output Boolean object
+     */
 
     public OutputBoolean createOutputBoolean(Object name, Config config, YamlConfigParser parser) {
         for (AbstractModelFactory modelFactory : fModelFactories) {
@@ -72,6 +92,15 @@ public abstract class AbstractModelFactory {
         throw new ConfigurationTypeDoesNotExistException(config.getType());
     }
 
+    /**
+     * Creates an Input Boolean (an input that returns a boolean value such as a button)
+     * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
+     * This is to allow for sim and robot model factories
+     * @param name of the object to create
+     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @return the desired Input Boolean object
+     */
+
     public InputBoolean createInputBoolean(Object name, Config config) {
         for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
@@ -81,6 +110,15 @@ public abstract class AbstractModelFactory {
         }
         throw new ConfigurationTypeDoesNotExistException(config.getType());
     }
+
+    /**
+     * Creates an Input Numeric (an input that returns a numeric value such as a joystick)
+     * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
+     * This is to allow for sim and robot model factories
+     * @param name of the object to create
+     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @return the desired Input Numeric object
+     */
 
     public InputNumeric createInputNumeric(Object name, Config config) {
         for (AbstractModelFactory modelFactory : fModelFactories) {
@@ -92,6 +130,15 @@ public abstract class AbstractModelFactory {
         throw new ConfigurationTypeDoesNotExistException(config.getType());
     }
 
+    /**
+     * Creates an Input Vector (an input that returns a vector value (multiple values) such as a camera)
+     * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
+     * This is to allow for sim and robot model factories
+     * @param name of the object to create
+     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @return the desired Input Vector object
+     */
+
     public InputVector createInputVector(Object name, Config config) {
         for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
@@ -102,6 +149,15 @@ public abstract class AbstractModelFactory {
         throw new ConfigurationTypeDoesNotExistException(config.getType());
     }
 
+    /**
+     * Creates a Behavior (the logic that executes the actions of states)
+     * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
+     * This is to allow for sim and robot model factories
+     * @param name of the object to create
+     * @param config for the state that created it, this might need to be removed as it does not fit the current system
+     * @return the desired Behavior object
+     */
+
     public Behavior createBehavior(String name, Config config) {
         for (AbstractModelFactory modelFactory : fModelFactories) {
             try {
@@ -111,6 +167,14 @@ public abstract class AbstractModelFactory {
         }
         throw new ConfigurationTypeDoesNotExistException(config.getType());
     }
+
+    /**
+     * Creates a State (an instance of a Behavior that preforms a specific task)
+     * @param name of the object to create
+     * @param parser the ymal config parser used to read the config values
+     * @param config for the object, contains values used by the state such as motor speeds
+     * @return the desired State object
+     */
 
     public State createState(String name, YamlConfigParser parser, Config config) {
         sLogger.trace("Creating state '{}' of type '{}' with config '{}'", name, config.getType(), config.getData());
@@ -142,6 +206,11 @@ public abstract class AbstractModelFactory {
         }
         return state;
     }
+
+    /**
+     * Used by the implementations of AbstractModelFactory to regerster
+     * @param modelFactory
+     */
 
     public void registerModelFactory(AbstractModelFactory modelFactory) {
         fModelFactories.add(modelFactory);

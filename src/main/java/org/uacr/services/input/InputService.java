@@ -39,6 +39,13 @@ public class InputService implements ScheduledService {
     private long mFrameTimeThreshold;
     private long mFrameCycleTimeThreshold;
 
+    /**
+     * @param modelFactory the ModelFactory to be used (currently not used)
+     * @param inputValues the map that holds the values from all the inputs
+     * @param robotConfiguration used to obtain a list of all the inputs to be created as well as other configuration information used by the InputService
+     * @param objectsDirectory used to store the input objects
+     */
+
     @Inject
     public InputService(AbstractModelFactory modelFactory, InputValues inputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
         fSharedInputValues = inputValues;
@@ -55,6 +62,14 @@ public class InputService implements ScheduledService {
         mFrameTimeThreshold = -1;
         mFrameCycleTimeThreshold = -1;
     }
+
+    /**
+     * Starts the input service
+     * Obtains a list of all input objects (boolean, numeric and vector)
+     * Loads the input ymal files
+     * Registers the inputs with the objects directory (this creates them)
+     * @throws Exception if the start up process does no succeed
+     */
 
     @Override
     public void startUp() throws Exception {
@@ -76,6 +91,13 @@ public class InputService implements ScheduledService {
 
         sLogger.trace("InputService started");
     }
+
+    /**
+     * Runs every frame
+     * Loops through all inputs and updates their values in SharedInputValues
+     * Monitors for long frame times
+     * @throws Exception if it does not run cleanly
+     */
 
     @Override
     public void runOneIteration() throws Exception {
@@ -142,10 +164,20 @@ public class InputService implements ScheduledService {
         mPreviousTime = frameStartTime;
     }
 
+    /**
+     * Shuts down the InputService
+     * Currently preforms no actions
+     * @throws Exception
+     */
+
     @Override
     public void shutDown() throws Exception {
 
     }
+
+    /**
+     * @return a new Scheduler class with the desired frame duration
+     */
 
     @Override
     public Scheduler scheduler() {

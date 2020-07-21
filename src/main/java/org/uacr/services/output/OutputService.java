@@ -37,6 +37,14 @@ public class OutputService implements ScheduledService {
     private Set<String> mOutputBooleanNames;
     private long mFrameTimeThreshold;
 
+    /**
+     * @param modelFactory the ModelFactory to be used (currently not used)
+     * @param inputValues the map that holds the values from all the inputs
+     * @param outputValues the map that holds the values from all the outputs
+     * @param robotConfiguration used to obtain a list of all the outputs to be created as well as other configuration information used by the OutputService
+     * @param objectsDirectory objectsDirectory used to store the output objects
+     */
+
     @Inject
     public OutputService(AbstractModelFactory modelFactory, InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
         fSharedInputValues = inputValues;
@@ -50,6 +58,15 @@ public class OutputService implements ScheduledService {
         mOutputBooleanNames = new HashSet<>();
         mFrameTimeThreshold = -1;
     }
+
+
+    /**
+     * Starts the OutputService
+     * Obtains a list of all output objects (boolean and numeric)
+     * Loads the output ymal files
+     * Registers the outputs with the objects directory (this creates them)
+     * @throws Exception if the start up process does no succeed
+     */
 
     @Override
     public void startUp() throws Exception {
@@ -65,6 +82,14 @@ public class OutputService implements ScheduledService {
 
         sLogger.trace("OutputService started");
     }
+
+    /**
+     * Runs every frame
+     * Loops through all outputs and updates output values using he values in the sharedOutputValues map
+     * Monitors for long frame times
+     * @throws Exception if it does not run cleanly
+     */
+
 
     @Override
     public void runOneIteration() throws Exception {
@@ -92,10 +117,20 @@ public class OutputService implements ScheduledService {
         }
     }
 
+    /**
+     * Shuts down the InputService
+     * Currently preforms no actions
+     * @throws Exception
+     */
+
     @Override
     public void shutDown() throws Exception {
 
     }
+
+    /**
+     * @return a new Scheduler class with the desired frame duration
+     */
 
     @Override
     public Scheduler scheduler() {
