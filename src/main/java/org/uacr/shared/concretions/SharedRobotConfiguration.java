@@ -8,6 +8,7 @@ import org.uacr.utilities.injection.Singleton;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
@@ -41,30 +42,36 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
         stateKeys.addAll(getSubsystemNames());
 
+        @Nullable
         Map<String, Map<String, List<String>>> yamlStateMaps = getMap("general", "states");
 
         Map<String, Set<String>> stateMap = new HashMap<>();
 
-        for (String stateKey : stateKeys) {
-            if (!yamlStateMaps.containsKey(stateKey)) {
-                continue;
-            }
+        if (yamlStateMaps != null) {
+            for (String stateKey : stateKeys) {
+                if (!yamlStateMaps.containsKey(stateKey)) {
+                    continue;
+                }
 
-            Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
+                @Nullable
+                Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
 
-            for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
-                String priority = singlePriorityMap.getKey();
-                priority = priority.replace("priority_level_", "");
-                List<String> singlePriorityStateList = singlePriorityMap.getValue();
+                if (singleKeyStateMap != null) {
+                    for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
+                        String priority = singlePriorityMap.getKey();
+                        priority = priority.replace("priority_level_", "");
+                        List<String> singlePriorityStateList = singlePriorityMap.getValue();
 
-                if (stateMap.containsKey(priority)) {
-                    stateMap.get(priority).addAll(singlePriorityStateList);
-                } else {
-                    Set<String> singlePriorityStateNames = new LinkedHashSet<>();
+                        if (stateMap.containsKey(priority)) {
+                            stateMap.get(priority).addAll(singlePriorityStateList);
+                        } else {
+                            Set<String> singlePriorityStateNames = new LinkedHashSet<>();
 
-                    singlePriorityStateNames.addAll(singlePriorityStateList);
+                            singlePriorityStateNames.addAll(singlePriorityStateList);
 
-                    stateMap.put(priority, singlePriorityStateNames);
+                            stateMap.put(priority, singlePriorityStateNames);
+                        }
+                    }
                 }
             }
         }
@@ -81,21 +88,27 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
         stateKeys.addAll(getSubsystemNames());
 
+        @Nullable
         Map<String, Map<String, List<String>>> yamlStateMaps = getMap("general", "states");
 
         Set<String> stateSet = new LinkedHashSet<>();
 
-        for (String stateKey : stateKeys) {
-            if (!yamlStateMaps.containsKey(stateKey)) {
-                continue;
-            }
+        if (yamlStateMaps != null) {
+            for (String stateKey : stateKeys) {
+                if (!yamlStateMaps.containsKey(stateKey)) {
+                    continue;
+                }
 
-            Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
+                @Nullable
+                Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
 
-            for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
-                List<String> singlePriorityStateList = singlePriorityMap.getValue();
+                if (singleKeyStateMap != null) {
+                    for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
+                        List<String> singlePriorityStateList = singlePriorityMap.getValue();
 
-                stateSet.addAll(singlePriorityStateList);
+                        stateSet.addAll(singlePriorityStateList);
+                    }
+                }
             }
         }
 
@@ -201,30 +214,30 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     @Override
-    public List getList(String category, String key) {
+    public <T> List<T> getList(String category, String key) {
         ensureExists(category, key);
         try {
-            return (List) mData.get(category).get(key);
+            return (List<T>) mData.get(category).get(key);
         } catch (Exception ex) {
             throw new ConfigurationInvalidTypeException("int", key, mData.get(key));
         }
     }
 
     @Override
-    public Map getMap(String category, String key) {
+    public <K, V> Map<K, V> getMap(String category, String key) {
         ensureExists(category, key);
         try {
-            return (Map) mData.get(category).get(key);
+            return (Map<K, V>) mData.get(category).get(key);
         } catch (Exception ex) {
             throw new ConfigurationInvalidTypeException("int", key, mData.get(key));
         }
     }
 
     @Override
-    public Set getSet(String category, String key) {
+    public <T> Set<T> getSet(String category, String key) {
         ensureExists(category, key);
         try {
-            return new HashSet((List) mData.get(category).get(key));
+            return new HashSet<T>((List<T>) mData.get(category).get(key));
         } catch (ClassCastException ex) {
             throw new ConfigurationInvalidTypeException("set", key, mData.get(category).get(key));
         }
