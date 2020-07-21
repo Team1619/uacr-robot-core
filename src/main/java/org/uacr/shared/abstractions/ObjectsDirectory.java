@@ -12,6 +12,10 @@ import org.uacr.utilities.YamlConfigParser;
 
 import javax.annotation.Nullable;
 
+/**
+ * Handles the creation (using the ModelFactory) of the input, output, state and behavior objects
+ */
+
 public interface ObjectsDirectory {
 
     // Inputs

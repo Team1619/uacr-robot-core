@@ -1,5 +1,9 @@
 package org.uacr.shared.abstractions;
 
+/**
+ * Stores the values from all of the inputs
+ */
+
 import java.util.Map;
 
 public interface InputValues {

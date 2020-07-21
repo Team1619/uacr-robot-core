@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Stores all the configuration values from the robot-configuration.ymal file
+ */
+
 public interface RobotConfiguration {
 
     void initialize();

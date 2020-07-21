@@ -1,5 +1,9 @@
 package org.uacr.shared.abstractions;
 
+/**
+ * Handles the distribution of information when running in Sim
+ */
+
 public interface EventBus {
 
     void register(Object object);

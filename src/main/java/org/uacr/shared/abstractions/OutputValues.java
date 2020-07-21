@@ -1,5 +1,8 @@
 package org.uacr.shared.abstractions;
 
+/**
+ * Stores the values to be sent to all of the outputs
+ */
 
 import java.util.Map;
 
