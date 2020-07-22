@@ -1,6 +1,7 @@
 package org.uacr.shared.concretions;
 
 import org.uacr.shared.abstractions.OutputValues;
+import org.uacr.utilities.Maps;
 import org.uacr.utilities.injection.Singleton;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
@@ -99,7 +100,7 @@ public class SharedOutputValues implements OutputValues {
 
     @Override
     public void setNumeric(String outputNumericName, String outputType, double outputValue, String profile) {
-        fOutputNumerics.put(outputNumericName, Map.of("type", outputType, "value", outputValue, "profile", profile));
+        fOutputNumerics.put(outputNumericName, Maps.of("type", outputType, "value", outputValue, "profile", profile));
     }
 
     /**
@@ -109,7 +110,7 @@ public class SharedOutputValues implements OutputValues {
 
     @Override
     public Map<String, Object> getOutputNumericValue(String outputNumericName) {
-        return fOutputNumerics.getOrDefault(outputNumericName, Map.of("value", 0.0, "type", "percent", "profile", "none"));
+        return fOutputNumerics.getOrDefault(outputNumericName, Maps.of("value", 0.0, "type", "percent", "profile", "none"));
     }
 
     /**

@@ -61,11 +61,4 @@ public interface ObjectsDirectory {
     OutputBoolean getOutputBooleanObject(String name);
 
     OutputNumeric getOutputNumericObject(String name);
-
-
-    // Hardware Objects
-    void setHardwareObject(Object deviceNumber, Object hardwareObject);
-
-    @Nullable
-    Object getHardwareObject(Object deviceNumber);
 }

@@ -21,6 +21,13 @@ public abstract class OutputNumeric {
     }
 
     /**
+     * Initializes the OutputNumeric class
+     */
+    public void initialize() {
+
+    }
+
+    /**
      * Tells the OutputNumeric to set it's hardware object to the output value.
      * @param outputValue the value to set to the hardware
      */

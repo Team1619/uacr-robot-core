@@ -8,6 +8,7 @@ import org.uacr.utilities.injection.Singleton;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -55,37 +56,42 @@ public class SharedRobotConfiguration implements RobotConfiguration {
         stateKeys.addAll(getSubsystemNames());
 
         // A map of all states listed in robot-configuration.yaml
+        @Nullable
         Map<String, Map<String, List<String>>> yamlStateMaps = getMap("general", "states");
 
         // Holds the states sorted by priority and not stateKey (subsystem name, sequence or parallel)
         Map<String, Set<String>> stateMap = new HashMap<>();
 
         // Loop through each state key (subsystem name, sequence or parallel) and add its states to the stateMap with the correct priority level
-        for (String stateKey : stateKeys) {
-            if (!yamlStateMaps.containsKey(stateKey)) {
-                continue;
-            }
+        if (yamlStateMaps != null) {
+            for (String stateKey : stateKeys) {
+                if (!yamlStateMaps.containsKey(stateKey)) {
+                    continue;
+                }
 
-            Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
+                @Nullable
+                Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
 
-            // Loops through each priority level for a single state key (subsystem name, sequence or parallel)
-            for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
-                String priority = singlePriorityMap.getKey();
-                // Removes unnecessary text to reduce priory levels to ints
-                priority = priority.replace("priority_level_", "");
-                // A list of all the states in the current priority level for this stateKey (subsystem name, sequence or parallel)
-                List<String> singlePriorityStateList = singlePriorityMap.getValue();
+                // Loops through each priority level for a single state key (subsystem name, sequence or parallel)
+                if (singleKeyStateMap != null) {
+                    for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
+                        String priority = singlePriorityMap.getKey();
+                        // Removes unnecessary text to reduce priory levels to ints
+                        priority = priority.replace("priority_level_", "");
+                        // A list of all the states in the current priority level for this stateKey (subsystem name, sequence or parallel)
+                        List<String> singlePriorityStateList = singlePriorityMap.getValue();
+                        //If the current priority level already exists add all states for this stateKey (subsystem name, sequence or parallel)
+                        //If it doesn't already exist, create it and then add all states for this stateKey (subsystem name, sequence or parallel)
+                        if (stateMap.containsKey(priority)) {
+                            stateMap.get(priority).addAll(singlePriorityStateList);
+                        } else {
+                            Set<String> singlePriorityStateNames = new LinkedHashSet<>();
 
-                //If the current priority level already exists add all states for this stateKey (subsystem name, sequence or parallel)
-                //If it doesn't already exist, create it and then add all states for this stateKey (subsystem name, sequence or parallel)
-                if (stateMap.containsKey(priority)) {
-                    stateMap.get(priority).addAll(singlePriorityStateList);
-                } else {
-                    Set<String> singlePriorityStateNames = new LinkedHashSet<>();
+                            singlePriorityStateNames.addAll(singlePriorityStateList);
 
-                    singlePriorityStateNames.addAll(singlePriorityStateList);
-
-                    stateMap.put(priority, singlePriorityStateNames);
+                            stateMap.put(priority, singlePriorityStateNames);
+                        }
+                    }
                 }
             }
         }
@@ -107,21 +113,27 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
         stateKeys.addAll(getSubsystemNames());
 
+        @Nullable
         Map<String, Map<String, List<String>>> yamlStateMaps = getMap("general", "states");
 
         Set<String> stateSet = new LinkedHashSet<>();
 
-        for (String stateKey : stateKeys) {
-            if (!yamlStateMaps.containsKey(stateKey)) {
-                continue;
-            }
+        if (yamlStateMaps != null) {
+            for (String stateKey : stateKeys) {
+                if (!yamlStateMaps.containsKey(stateKey)) {
+                    continue;
+                }
 
-            Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
+                @Nullable
+                Map<String, List<String>> singleKeyStateMap = yamlStateMaps.get(stateKey);
 
-            for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
-                List<String> singlePriorityStateList = singlePriorityMap.getValue();
+                if (singleKeyStateMap != null) {
+                    for (Map.Entry<String, List<String>> singlePriorityMap : singleKeyStateMap.entrySet()) {
+                        List<String> singlePriorityStateList = singlePriorityMap.getValue();
 
-                stateSet.addAll(singlePriorityStateList);
+                        stateSet.addAll(singlePriorityStateList);
+                    }
+                }
             }
         }
 
@@ -295,10 +307,10 @@ public class SharedRobotConfiguration implements RobotConfiguration {
      */
 
     @Override
-    public List getList(String category, String key) {
+    public <T> List<T> getList(String category, String key) {
         ensureExists(category, key);
         try {
-            return (List) mData.get(category).get(key);
+            return (List<T>) mData.get(category).get(key);
         } catch (Exception ex) {
             throw new ConfigurationInvalidTypeException("int", key, mData.get(key));
         }
@@ -312,10 +324,10 @@ public class SharedRobotConfiguration implements RobotConfiguration {
      */
 
     @Override
-    public Map getMap(String category, String key) {
+    public <K, V> Map<K, V> getMap(String category, String key) {
         ensureExists(category, key);
         try {
-            return (Map) mData.get(category).get(key);
+            return (Map<K, V>) mData.get(category).get(key);
         } catch (Exception ex) {
             throw new ConfigurationInvalidTypeException("int", key, mData.get(key));
         }
@@ -329,10 +341,10 @@ public class SharedRobotConfiguration implements RobotConfiguration {
      */
 
     @Override
-    public Set getSet(String category, String key) {
+    public <T> Set<T> getSet(String category, String key) {
         ensureExists(category, key);
         try {
-            return new HashSet((List) mData.get(category).get(key));
+            return new HashSet<T>((List<T>) mData.get(category).get(key));
         } catch (ClassCastException ex) {
             throw new ConfigurationInvalidTypeException("set", key, mData.get(category).get(key));
         }

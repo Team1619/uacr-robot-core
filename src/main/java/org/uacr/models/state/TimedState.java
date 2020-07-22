@@ -2,6 +2,7 @@ package org.uacr.models.state;
 
 import org.uacr.robot.AbstractModelFactory;
 import org.uacr.utilities.Config;
+import org.uacr.utilities.Sets;
 import org.uacr.utilities.Timer;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.logging.LogManager;
@@ -48,7 +49,7 @@ public class TimedState implements State {
 
     @Override
     public Set<State> getSubStates() {
-        return Set.of(fSubState);
+        return Sets.of(fSubState);
     }
 
     /**

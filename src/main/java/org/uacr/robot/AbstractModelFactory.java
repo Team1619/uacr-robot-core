@@ -9,10 +9,7 @@ import org.uacr.models.inputs.vector.InputVector;
 import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
 import org.uacr.models.state.*;
-import org.uacr.shared.abstractions.InputValues;
-import org.uacr.shared.abstractions.ObjectsDirectory;
-import org.uacr.shared.abstractions.OutputValues;
-import org.uacr.shared.abstractions.RobotConfiguration;
+import org.uacr.shared.abstractions.*;
 import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Inject;
@@ -32,7 +29,7 @@ public abstract class AbstractModelFactory {
 
     protected final InputValues fSharedInputValues;
     protected final OutputValues fSharedOutputValues;
-    protected final RobotConfiguration fRobotConfiguration;
+    protected final RobotConfiguration fSharedRobotConfiguration;
     protected final ObjectsDirectory fSharedObjectDirectory;
     private final List<AbstractModelFactory> fModelFactories;
 
@@ -47,8 +44,9 @@ public abstract class AbstractModelFactory {
     public AbstractModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
         fSharedInputValues = inputValues;
         fSharedOutputValues = outputValues;
-        fRobotConfiguration = robotConfiguration;
+        fSharedRobotConfiguration = robotConfiguration;
         fSharedObjectDirectory = objectsDirectory;
+
         fModelFactories = new ArrayList<>();
     }
 

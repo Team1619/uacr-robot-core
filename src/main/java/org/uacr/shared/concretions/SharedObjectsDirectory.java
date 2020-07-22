@@ -309,17 +309,4 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     public Behavior getBehaviorObject(String name) {
         return fBehaviorObjects.get(name);
     }
-
-    //TODO remove these
-    //--------------------------- Hardware Objects ----------------------------------------//
-    @Override
-    public void setHardwareObject(Object identifier, Object hardwareObject) {
-        fHardwareObjects.put(identifier, hardwareObject);
-    }
-
-    @Override
-    @Nullable
-    public Object getHardwareObject(Object identifier) {
-        return fHardwareObjects.getOrDefault(identifier, null);
-    }
 }

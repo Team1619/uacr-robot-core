@@ -21,6 +21,14 @@ public abstract class OutputBoolean {
     }
 
     /**
+     * Initializes the OutputBoolean class
+     * Not currently used
+     */
+    public void initialize() {
+
+    }
+
+    /**
      * Tells the OutputBoolean to set it's hardware object to the o.
      * @param outputValue the value to set to the hardware
      */

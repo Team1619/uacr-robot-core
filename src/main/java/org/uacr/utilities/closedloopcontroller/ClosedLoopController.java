@@ -1,4 +1,4 @@
-package org.uacr.utilities.closedLoopController;
+package org.uacr.utilities.closedloopcontroller;
 
 import org.uacr.models.exceptions.ConfigurationInvalidTypeException;
 import org.uacr.utilities.Config;
