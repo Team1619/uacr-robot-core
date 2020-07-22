@@ -66,7 +66,7 @@ public class InputService implements ScheduledService {
     /**
      * Starts the input service
      * Obtains a list of all input objects (boolean, numeric and vector)
-     * Loads the input ymal files
+     * Loads the input yaml files
      * Registers the inputs with the objects directory (this creates them)
      * @throws Exception if the start up process does no succeed
      */

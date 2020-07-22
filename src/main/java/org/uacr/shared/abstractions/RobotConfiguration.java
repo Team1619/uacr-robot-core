@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Stores all the configuration values from the robot-configuration.ymal file
+ * Stores all the configuration values from the robot-configuration.yaml file
  */
 
 public interface RobotConfiguration {

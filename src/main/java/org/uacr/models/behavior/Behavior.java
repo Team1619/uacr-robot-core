@@ -21,7 +21,7 @@ public interface Behavior {
      * This is a place to read values from the state config file
      * This is called by the StateMachine on the first frame a state becomes active
      * @param stateName The name of the state being initialized
-     * @param config    Contains the information under the name of the state in the state.ymal file
+     * @param config    Contains the information under the name of the state in the state.yaml file
      */
     void initialize(String stateName, Config config);
 

@@ -31,7 +31,7 @@ public class SequencerState implements State {
     /**
      * @param modelFactory so it can create its substates
      * @param name of the sequencer state
-     * @param parser the ymal parser for the sequencer
+     * @param parser the yaml parser for the sequencer
      * @param config the config for the sequencer
      */
 

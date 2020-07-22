@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * Stores and allows access to all information in the robot-configuration.ymal file
+ * Stores and allows access to all information in the robot-configuration.yaml file
  */
 
 @Singleton
@@ -101,7 +101,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * @return a set of all the state names listed in robot-configuration.ymal
+     * @return a set of all the state names listed in robot-configuration.yaml
      */
 
     @Override
@@ -141,7 +141,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * @return the list of subsystem names specified in robot-configuration.ymal
+     * @return the list of subsystem names specified in robot-configuration.yaml
      */
     @Override
     public Set<String> getSubsystemNames() {
@@ -149,7 +149,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * @return the list of InputBoolean names specified in robot-configuration.ymal
+     * @return the list of InputBoolean names specified in robot-configuration.yaml
      */
 
     @Override
@@ -158,7 +158,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * @return the list of InputNumeric names specified in robot-configuration.ymal
+     * @return the list of InputNumeric names specified in robot-configuration.yaml
      */
 
     @Override
@@ -167,7 +167,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * @return the list of InputVector names specified in robot-configuration.ymal
+     * @return the list of InputVector names specified in robot-configuration.yaml
      */
 
     @Override
@@ -176,7 +176,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * @return the list of OutputNumeric names specified in robot-configuration.ymal
+     * @return the list of OutputNumeric names specified in robot-configuration.yaml
      */
 
     @Override
@@ -185,7 +185,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * @return the list of OutputBoolean names specified in robot-configuration.ymal
+     * @return the list of OutputBoolean names specified in robot-configuration.yaml
      */
 
     @Override
@@ -194,7 +194,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves the value of a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves the value of a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value
@@ -216,7 +216,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves an int from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves an int from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value if it exists and is of type int
@@ -237,7 +237,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves a double from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves a double from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value if it exists and is of type double
@@ -258,7 +258,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves a boolean from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves a boolean from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value if it exists and is of type boolean
@@ -279,7 +279,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves a String from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves a String from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value if it exists and is of type String
@@ -300,7 +300,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves a List from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves a List from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value as a List if it exists
@@ -317,7 +317,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves a Map from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves a Map from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value as a Map if it exists
@@ -334,7 +334,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Retrieves a Set from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves a Set from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value as a Set if it exists
@@ -352,7 +352,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
 
     /**
-     * Retrieves an Enum from a key value pair specified under a category in robot-configuration.ymal
+     * Retrieves an Enum from a key value pair specified under a category in robot-configuration.yaml
      * @param category to retrieves value from
      * @param key for the value to be returned
      * @return the desired value as an Enum if it exists

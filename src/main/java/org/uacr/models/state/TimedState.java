@@ -30,7 +30,7 @@ public class TimedState implements State {
     /**
      * @param modelFactory so it can create its substate
      * @param name of the TimedState
-     * @param parser ymal parser for the TimedState
+     * @param parser yaml parser for the TimedState
      * @param config for the TimedState
      */
 

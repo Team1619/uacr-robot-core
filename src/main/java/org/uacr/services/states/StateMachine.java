@@ -290,7 +290,7 @@ public class StateMachine {
     }
 
     /**
-     * Loops through all states listed in robotconfigruation.ymal and calls initialize on any states that are becoming active this frame
+     * Loops through all states listed in robotconfigruation.yaml and calls initialize on any states that are becoming active this frame
      *
      * @param nextActiveStates the list of states that are active this frame
      */
@@ -308,7 +308,7 @@ public class StateMachine {
     }
 
     /**
-     * Loops through all states listed in robotconfigruation.ymal and calls dispose on any states that are becoming inactive this frame
+     * Loops through all states listed in robotconfigruation.yaml and calls dispose on any states that are becoming inactive this frame
      *
      * @param nextActiveStates the list of states that are active this frame
      */

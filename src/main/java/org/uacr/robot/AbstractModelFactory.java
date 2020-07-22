@@ -56,7 +56,7 @@ public abstract class AbstractModelFactory {
      * This is to allow for sim and robot model factories
      * @param name of the object to create
      * @param config for the object, usually contains things like ID, weather it is inverted etc.
-     * @param parser the ymal parser for the object, used to read the config
+     * @param parser the yaml parser for the object, used to read the config
      * @return the desired output numeric object
      */
 
@@ -76,7 +76,7 @@ public abstract class AbstractModelFactory {
      * This is to allow for sim and robot model factories
      * @param name of the object to create
      * @param config for the object, usually contains things like ID, weather it is inverted etc.
-     * @param parser the ymal parser for the object, used to read the config
+     * @param parser the yaml parser for the object, used to read the config
      * @return the desired Output Boolean object
      */
 
@@ -169,7 +169,7 @@ public abstract class AbstractModelFactory {
     /**
      * Creates a State (an instance of a Behavior that preforms a specific task)
      * @param name of the object to create
-     * @param parser the ymal config parser used to read the config values
+     * @param parser the yaml config parser used to read the config values
      * @param config for the object, contains values used by the state such as motor speeds
      * @return the desired State object
      */

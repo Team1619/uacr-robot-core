@@ -64,7 +64,7 @@ public class OutputService implements ScheduledService {
     /**
      * Starts the OutputService
      * Obtains a list of all output objects (boolean and numeric)
-     * Loads the output ymal files
+     * Loads the output yaml files
      * Registers the outputs with the objects directory (this creates them)
      * @throws Exception if the start up process does no succeed
      */

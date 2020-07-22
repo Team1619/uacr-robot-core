@@ -36,7 +36,7 @@ public class DoneForTimeState implements State {
     /**
      * @param modelFactory so the doneForTimeState can create its substate
      * @param name the name of the DoneForTimeState
-     * @param parser the ymal parser for the DoneForTimeState
+     * @param parser the yaml parser for the DoneForTimeState
      * @param config the config of the DoneForTimeState
      */
 

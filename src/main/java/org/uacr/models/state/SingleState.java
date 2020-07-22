@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * The base for all states
  * States preform a single action on a single subsystem
- * One implementation is created for each state listed under 'single_state' in the state ymal file
+ * One implementation is created for each state listed under 'single_state' in the state yaml file
  * Creates one copy of the associated behavior and points all states that use it to the same instance
  */
 

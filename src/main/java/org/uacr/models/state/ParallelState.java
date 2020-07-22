@@ -29,7 +29,7 @@ public class ParallelState implements State {
     /**
      * @param modelFactory so the parallel state can creat its substates
      * @param name of the parallel state
-     * @param parser ymal parser for the parallel state
+     * @param parser yaml parser for the parallel state
      * @param config for the parallel state
      */
 

@@ -71,9 +71,9 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     /**
      * Loops through all inputs and calls the appropriate method to create them and store them in the appropriate map
      * Once all inputs have been created, calls initialize on all inputs
-     * @param inputBooleansParser holds the information from the InputBooleans ymal file
-     * @param inputNumericsParser holds the information from the InputNumerics ymal file
-     * @param inputVectorsParser holds the information from the InputVectors ymal file
+     * @param inputBooleansParser holds the information from the InputBooleans yaml file
+     * @param inputNumericsParser holds the information from the InputNumerics yaml file
+     * @param inputVectorsParser holds the information from the InputVectors yaml file
      */
     @Override
     public void registerAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser) {
@@ -115,7 +115,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     /**
      * Uses the ModelFactory to create the desired InputBoolean and stores it in the InputBooleanObjects map
      * @param name of the input to be created
-     * @param config the ymal configuration for the input
+     * @param config the yaml configuration for the input
      */
 
     @Override
@@ -126,7 +126,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     /**
      * Uses the ModelFactory to create the desired InputNumeric and stores it in the InputBooleanObjects map
      * @param name of the input to be created
-     * @param config the ymal configuration for the input
+     * @param config the yaml configuration for the input
      */
 
     @Override
@@ -137,7 +137,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     /**
      * Uses the ModelFactory to create the desired InputVector and stores it in the InputBooleanObjects map
      * @param name of the input to be created
-     * @param config the ymal configuration for the input
+     * @param config the yaml configuration for the input
      */
 
     @Override
@@ -179,7 +179,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
 
     /**
      * Loops through all states and calls the method to create them and store them
-     * @param statesParser holds the information from the States ymal file
+     * @param statesParser holds the information from the States yaml file
      */
 
     @Override
@@ -193,7 +193,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     /**
      * Uses the ModelFactory to create the desired state
      * @param name of the state to be created
-     * @param statesParser holds the information from the States ymal file
+     * @param statesParser holds the information from the States yaml file
      * @param config for the state
      */
 
@@ -226,8 +226,8 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
 
     /**
      * Loops through all outputs and calls the appropriate method to create them and store them in the appropriate map
-     * @param outputNumericsParser holds the information from the OutputNumerics ymal file
-     * @param outputsBooleanParser holds the information from the OutputBooleans ymal file
+     * @param outputNumericsParser holds the information from the OutputNumerics yaml file
+     * @param outputsBooleanParser holds the information from the OutputBooleans yaml file
      */
 
     @Override
@@ -248,7 +248,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     /**
      * Uses the ModelFactory to create the desired OutputNumeric and stores it in the OutputNumericObjects map
      * @param name of the output to be created
-     * @param config the ymal configuration for the output
+     * @param config the yaml configuration for the output
      */
 
     @Override
@@ -259,7 +259,7 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     /**
      * Uses the ModelFactory to create the desired OutputBoolean and stores it in the OutputBooleanObjects map
      * @param name of the output to be created
-     * @param config the ymal configuration for the output
+     * @param config the yaml configuration for the output
      */
 
     @Override
