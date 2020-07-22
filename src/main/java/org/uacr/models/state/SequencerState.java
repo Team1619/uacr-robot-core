@@ -63,7 +63,7 @@ public class SequencerState implements State {
     }
 
     /**
-     * Not currently used by sequencer states
+     * Called at the beginning of the state
      */
 
     @Override

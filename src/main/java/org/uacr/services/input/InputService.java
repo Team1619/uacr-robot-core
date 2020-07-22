@@ -40,7 +40,7 @@ public class InputService implements ScheduledService {
     private long mFrameCycleTimeThreshold;
 
     /**
-     * @param modelFactory the ModelFactory to be used (currently not used)
+     * @param modelFactory the ModelFactory to be used
      * @param inputValues the map that holds the values from all the inputs
      * @param robotConfiguration used to obtain a list of all the inputs to be created as well as other configuration information used by the InputService
      * @param objectsDirectory used to store the input objects

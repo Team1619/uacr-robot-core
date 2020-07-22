@@ -37,7 +37,7 @@ public class OutputService implements ScheduledService {
     private long mFrameTimeThreshold;
 
     /**
-     * @param modelFactory the ModelFactory to be used (currently not used)
+     * @param modelFactory the ModelFactory to be used
      * @param inputValues the map that holds the values from all the inputs
      * @param outputValues the map that holds the values from all the outputs
      * @param robotConfiguration used to obtain a list of all the outputs to be created as well as other configuration information used by the OutputService

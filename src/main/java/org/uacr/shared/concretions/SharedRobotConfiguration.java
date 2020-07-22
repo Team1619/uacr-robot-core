@@ -369,7 +369,6 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     }
 
     /**
-     * Currently not used
      * @return the class loader
      */
     protected ClassLoader getClassLoader() {

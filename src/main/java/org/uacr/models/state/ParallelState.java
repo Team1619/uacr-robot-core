@@ -71,7 +71,7 @@ public class ParallelState implements State {
     }
 
     /**
-     * Not currently used by parallel states
+     * Called  at the beginning of the state
      */
 
     @Override
@@ -80,7 +80,7 @@ public class ParallelState implements State {
     }
 
     /**
-     * Not currently used by parallel states
+     * Called every frame
      */
 
     @Override
@@ -89,7 +89,7 @@ public class ParallelState implements State {
     }
 
     /**
-     * Not currently used by parallel states
+     * Called when the state finishes
      */
 
     @Override

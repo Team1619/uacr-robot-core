@@ -63,7 +63,7 @@ public class TimedState implements State {
     }
 
     /**
-     * Not used for Timed States
+     * Called every frame
      */
 
     @Override

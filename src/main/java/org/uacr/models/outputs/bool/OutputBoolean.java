@@ -22,7 +22,6 @@ public abstract class OutputBoolean {
 
     /**
      * Initializes the OutputBoolean class
-     * Not currently used
      */
     public void initialize() {
 

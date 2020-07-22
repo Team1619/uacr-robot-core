@@ -77,7 +77,7 @@ public class DoneForTimeState implements State {
     }
 
     /**
-     * Currently not used for DoneForTimeStates
+     * Called every frame
      */
 
     @Override

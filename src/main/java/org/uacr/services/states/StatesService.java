@@ -135,7 +135,6 @@ public class StatesService implements ScheduledService {
 
     /**
      * Shuts down the StateService
-     * Currently not used for any actions
      * @throws Exception
      */
 
