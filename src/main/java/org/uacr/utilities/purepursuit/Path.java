@@ -1,5 +1,7 @@
 package org.uacr.utilities.purepursuit;
 
+import org.uacr.utilities.Util;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +14,7 @@ import java.util.Arrays;
 
 public class Path {
 
-    /**PursuitPath specific creation and following data*/
+    // PursuitPath specific creation and following data
 
     /**
      * Distance between each point (inches)
@@ -64,14 +66,7 @@ public class Path {
      */
     private double mLookAheadDistance = 5;
 
-    /**
-     * Look ahead distance for velocity calculations
-     */
-    private int mVelocityLookAheadPoints = 1;
-
-    /**
-     * Run specific data, gets reset with reset() method
-     */
+    // Run specific data, gets reset with reset() method
 
     private int mLastPointIndex = 0;
     private int mLastCurrentPointIndex = 0;
@@ -192,15 +187,7 @@ public class Path {
         mLookAheadDistance = lookAheadDistance;
     }
 
-    public int getVelocityLookAheadPoints() {
-        return mVelocityLookAheadPoints;
-    }
-
-    public void setVelocityLookAheadPoints(int lookAheadPoints) {
-        mVelocityLookAheadPoints = lookAheadPoints;
-    }
-
-    /**Methods for path following*/
+    // Methods for path following
 
     /**
      * Returns a single PathPoint from fPath
@@ -297,11 +284,7 @@ public class Path {
      * @return the velocity
      */
     public double getPathPointVelocity(int index, Pose2d currentLocation) {
-        double speed = mMaxSpeed;
-        for (int i = index; i < index + mVelocityLookAheadPoints && i < getPoints().size(); i++) {
-            speed = Math.min(speed, range(getPathPoint(i).getVelocity() / range(getTrackingError(currentLocation) / mTrackingErrorSpeed, 1, 3), mMinSpeed, mMaxSpeed));
-        }
-        return speed;
+        return Util.limit(getPathPoint(index).getVelocity() / Util.limit(getTrackingError(currentLocation) / mTrackingErrorSpeed, 1, 3), mMinSpeed, mMaxSpeed);
     }
 
     /**
@@ -314,7 +297,7 @@ public class Path {
     public int getClosestPointIndex(Point currentPosition) {
         if (mPath == null || mPath.size() == 0) return -1;
 
-        double distance = 1000000;
+        double distance = Double.MAX_VALUE;
         int index = -1;
 
         for (int i = mLastCurrentPointIndex; i < getPath().size(); i++) {
@@ -351,7 +334,7 @@ public class Path {
         for (int i = getClosestPointIndex(currentPosition); i < getPath().size(); i++) {
             mCurvature = Math.abs(getCurvatureFromPathPoint(i, currentPosition));
 
-            double correction = range(mCurvature, 1, 5);
+            double correction = Util.limit(mCurvature, 1, 5);
 
             double curvature = 0;
 
@@ -359,7 +342,7 @@ public class Path {
                 curvature += getPointCurvature(closest);
             }
 
-            if (getPointDistance(i) - getPointDistance(closest) > mLookAheadDistance / range(curvature / 3, 1, 2)) {
+            if (getPointDistance(i) - getPointDistance(closest) > mLookAheadDistance / Util.limit(curvature / 3, 1, 2)) {
                 mLastPointIndex = i;
                 return i;
             }
@@ -580,7 +563,7 @@ public class Path {
 
         if (p <= 0) return Math.max(Math.min(2 * mMaxAcceleration * d, mTurnSpeed / getPointCurvature(p)), mMinSpeed);
 
-        return Math.max(Math.min(getPathPoint(p - 1).getVelocity() + 2 * mMaxAcceleration * d, Math.min(mTurnSpeed / getPointCurvature(p), mMaxSpeed)), mMinSpeed);
+        return Math.max(Util.min(getPathPoint(p - 1).getVelocity() + 2 * mMaxAcceleration * d, mTurnSpeed / getPointCurvature(p), mMaxSpeed), mMinSpeed);
     }
 
     /**
@@ -596,24 +579,6 @@ public class Path {
 
         double d = mPoints.get(p).distance(mPoints.get(p + 1));
 
-        return Math.min(getPathPoint(p).getVelocity(), Math.min(getPathPoint(p + 1).getVelocity() + 2 * mMaxDeceleration * d, mMaxSpeed));
-    }
-
-    /**
-     * Returns number in the bounds of min and max
-     *
-     * @param number the initial number
-     * @param min    the lower bound of the return value
-     * @param max    the upper bound of the return value
-     * @return the bounded number
-     */
-    private double range(double number, double min, double max) {
-        if (number < min) {
-            return min;
-        }
-        if (number > max) {
-            return max;
-        }
-        return number;
+        return Util.min(getPathPoint(p).getVelocity(), getPathPoint(p + 1).getVelocity() + 2 * mMaxDeceleration * d, mMaxSpeed);
     }
 }
