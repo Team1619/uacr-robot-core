@@ -23,7 +23,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Handles the creation and use of all objects (inputs, states, outputs, behaviors, talons)
+ * Handles the creation and use of objects (inputs, states, outputs, behaviors)
+ * Does not handle hardware objects
  */
 
 @Singleton
@@ -43,6 +44,13 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     private final Map<Object, Behavior> fBehaviorObjects;
     private final Map<Object, Object> fHardwareObjects;
 
+    /**
+     * Creates maps to store all types of objects
+     * @param modelFactory used to create objects
+     * @param robotConfiguration used to get lists of input, output, and state names
+     * @param inputValues currently not used
+     */
+
     @Inject
     public SharedObjectsDirectory(AbstractModelFactory modelFactory, RobotConfiguration robotConfiguration, InputValues inputValues) {
         fModelFactory = modelFactory;
@@ -60,6 +68,13 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
 
     //--------------------------- Inputs ----------------------------------------//
 
+    /**
+     * Loops through all inputs and calls the appropriate method to create them and store them in the appropriate map
+     * Once all inputs have been created, calls initialize on all inputs
+     * @param inputBooleansParser holds the information from the InputBooleans ymal file
+     * @param inputNumericsParser holds the information from the InputNumerics ymal file
+     * @param inputVectorsParser holds the information from the InputVectors ymal file
+     */
     @Override
     public void registerAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser) {
         for (String inputBooleanName : fRobotConfiguration.getInputBooleanNames()) {
@@ -97,30 +112,63 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
 
     }
 
+    /**
+     * Uses the ModelFactory to create the desired InputBoolean and stores it in the InputBooleanObjects map
+     * @param name of the input to be created
+     * @param config the ymal configuration for the input
+     */
+
     @Override
     public void registerInputBoolean(String name, Config config) {
         fInputBooleanObjects.put(name, fModelFactory.createInputBoolean(name, config));
     }
+
+    /**
+     * Uses the ModelFactory to create the desired InputNumeric and stores it in the InputBooleanObjects map
+     * @param name of the input to be created
+     * @param config the ymal configuration for the input
+     */
 
     @Override
     public void registerInputNumeric(String name, Config config) {
         fInputNumericObjects.put(name, fModelFactory.createInputNumeric(name, config));
     }
 
+    /**
+     * Uses the ModelFactory to create the desired InputVector and stores it in the InputBooleanObjects map
+     * @param name of the input to be created
+     * @param config the ymal configuration for the input
+     */
+
     @Override
     public void registerInputVector(String name, Config config) {
         fInputVectorObjects.put(name, fModelFactory.createInputVector(name, config));
     }
+
+    /**
+     * @param name of the InputBoolean desired
+     * @return the InputBoolean object
+     */
 
     @Override
     public InputBoolean getInputBooleanObject(String name) {
         return fInputBooleanObjects.get(name);
     }
 
+    /**
+     * @param name of the InputNumeric desired
+     * @return the InputNumeric object
+     */
+
     @Override
     public InputNumeric getInputNumericObject(String name) {
         return fInputNumericObjects.get(name);
     }
+
+    /**
+     * @param name of the InputVector desired
+     * @return the InputVector object
+     */
 
     @Override
     public InputVector getInputVectorObject(String name) {
@@ -128,6 +176,12 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     }
 
     //--------------------------- States ----------------------------------------//
+
+    /**
+     * Loops through all states and calls the method to create them and store them
+     * @param statesParser holds the information from the States ymal file
+     */
+
     @Override
     public void registerAllStates(YamlConfigParser statesParser) {
         for (String stateName : fRobotConfiguration.getStateNames()) {
@@ -136,15 +190,32 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
         }
     }
 
+    /**
+     * Uses the ModelFactory to create the desired state
+     * @param name of the state to be created
+     * @param statesParser holds the information from the States ymal file
+     * @param config for the state
+     */
+
     @Override
     public void registerStates(String name, YamlConfigParser statesParser, Config config) {
         fModelFactory.createState(name, statesParser, config);
     }
 
+    /**
+     * @param name of desired state
+     * @return the state object
+     */
     @Override
     public State getStateObject(String name) {
         return fStateObjects.get(name);
     }
+
+    /**
+     * Adds a state to the StateObjects map
+     * @param name of state to be added
+     * @param state the state object
+     */
 
     @Override
     public void setStateObject(String name, State state) {
@@ -152,6 +223,13 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     }
 
     //--------------------------- Outputs ----------------------------------------//
+
+    /**
+     * Loops through all outputs and calls the appropriate method to create them and store them in the appropriate map
+     * @param outputNumericsParser holds the information from the OutputNumerics ymal file
+     * @param outputsBooleanParser holds the information from the OutputBooleans ymal file
+     */
+
     @Override
     public void registerAllOutputs(YamlConfigParser outputNumericsParser, YamlConfigParser outputsBooleanParser) {
         for (String outputNumericName : fRobotConfiguration.getOutputNumericNames()) {
@@ -167,20 +245,42 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
         }
     }
 
+    /**
+     * Uses the ModelFactory to create the desired OutputNumeric and stores it in the OutputNumericObjects map
+     * @param name of the output to be created
+     * @param config the ymal configuration for the output
+     */
+
     @Override
     public void registerOutputNumeric(String name, Config config, YamlConfigParser parser) {
         fOutputNumericObjects.put(name, fModelFactory.createOutputNumeric(name, config, parser));
     }
+
+    /**
+     * Uses the ModelFactory to create the desired OutputBoolean and stores it in the OutputBooleanObjects map
+     * @param name of the output to be created
+     * @param config the ymal configuration for the output
+     */
 
     @Override
     public void registerOutputBoolean(String name, Config config, YamlConfigParser parser) {
         fOutputBooleanObjects.put(name, fModelFactory.createOutputBoolean(name, config, parser));
     }
 
+    /**
+     * @param outputNumericName name of the desired OutputNumeric object
+     * @return the OutputNumeric object
+     */
+
     @Override
     public OutputNumeric getOutputNumericObject(String outputNumericName) {
         return fOutputNumericObjects.get(outputNumericName);
     }
+
+    /**
+     * @param outputBooleanName name of the desired OutputBoolean object
+     * @return the OutputBoolean object
+     */
 
     @Override
     public OutputBoolean getOutputBooleanObject(String outputBooleanName) {
@@ -189,10 +289,20 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
 
     //--------------------------- Behaviors ----------------------------------------//
 
+    /**
+     * Adds a behavior object to the BehaviorObjects map
+     * @param name of the behavior object to be added
+     * @param behavior the behavior object
+     */
     @Override
     public void setBehaviorObject(String name, Behavior behavior) {
         fBehaviorObjects.put(name, behavior);
     }
+
+    /**
+     * @param name of the desired behavior object
+     * @return the behavior object
+     */
 
     @Override
     @Nullable
@@ -200,9 +310,8 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
         return fBehaviorObjects.get(name);
     }
 
-
+    //TODO remove these
     //--------------------------- Hardware Objects ----------------------------------------//
-
     @Override
     public void setHardwareObject(Object identifier, Object hardwareObject) {
         fHardwareObjects.put(identifier, hardwareObject);
