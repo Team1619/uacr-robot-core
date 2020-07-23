@@ -28,7 +28,7 @@ public abstract class OutputBoolean {
     }
 
     /**
-     * Tells the OutputBoolean to set it's hardware object to the o.
+     * Sets the hardware object to the output value
      * @param outputValue the value to set to the hardware
      */
     public abstract void setHardware(boolean outputValue);

@@ -12,9 +12,7 @@ import java.util.Set;
 
 /**
  * A shell that runs a state until it is done or it times out
- * I'm not sure this is useful in the current version of the framework
- * Accepts the substate and a single parameter the timout
- * The time out is how long you want to state to run for at max
+ * Runs a single state until it is done or times out
  */
 
 public class TimedState implements State {

@@ -86,7 +86,7 @@ public class OutputService implements ScheduledService {
 
     /**
      * Runs every frame
-     * Loops through all outputs and updates output values using he values in the sharedOutputValues map
+     * Loops through all outputs and updates output values using the values in the sharedOutputValues map
      * Monitors for long frame times
      * @throws Exception if it does not run cleanly
      */

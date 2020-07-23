@@ -21,7 +21,7 @@ public abstract class InputBoolean {
     }
 
     /**
-     * Called by the InputService as the robot switches into a running mode.
+     * Called by the InputService at start up.
      * Use to setup the input for the running.
      */
     public abstract void initialize();

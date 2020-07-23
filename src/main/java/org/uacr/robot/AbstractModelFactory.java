@@ -55,7 +55,7 @@ public abstract class AbstractModelFactory {
      * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
      * This is to allow for sim and robot model factories
      * @param name of the object to create
-     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @param config for the object, usually contains things like ID, whether it is inverted etc.
      * @param parser the yaml parser for the object, used to read the config
      * @return the desired output numeric object
      */
@@ -75,7 +75,7 @@ public abstract class AbstractModelFactory {
      * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
      * This is to allow for sim and robot model factories
      * @param name of the object to create
-     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @param config for the object, usually contains things like ID, whether it is inverted etc.
      * @param parser the yaml parser for the object, used to read the config
      * @return the desired Output Boolean object
      */
@@ -95,7 +95,7 @@ public abstract class AbstractModelFactory {
      * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
      * This is to allow for sim and robot model factories
      * @param name of the object to create
-     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @param config for the object, usually contains things like ID, whether it is inverted etc.
      * @return the desired Input Boolean object
      */
 
@@ -114,7 +114,7 @@ public abstract class AbstractModelFactory {
      * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
      * This is to allow for sim and robot model factories
      * @param name of the object to create
-     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @param config for the object, usually contains things like ID, whether it is inverted etc.
      * @return the desired Input Numeric object
      */
 
@@ -133,7 +133,7 @@ public abstract class AbstractModelFactory {
      * Loops through all implementations of AbstractModelFactory and tries to create the desired object with each until it finds the correct implementation
      * This is to allow for sim and robot model factories
      * @param name of the object to create
-     * @param config for the object, usually contains things like ID, weather it is inverted etc.
+     * @param config for the object, usually contains things like ID, whether it is inverted etc.
      * @return the desired Input Vector object
      */
 
