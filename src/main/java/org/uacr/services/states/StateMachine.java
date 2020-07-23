@@ -10,6 +10,7 @@ import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Determines the life cycles of states and the priority of states who want to become active
@@ -24,40 +25,51 @@ public class StateMachine {
     private final ObjectsDirectory fSharedObjectsDirectory;
     private final RobotManager fRobotManager;
 
-    private Set<String> fAllSubsystemNames = new LinkedHashSet<>();
-    private Set<String> fAllStateNames = new LinkedHashSet<>();
-    private List<String> fPriorityKeys = new ArrayList<>();
-    private Map<String, Set<String>> fAllStateNamesWithPriority = new HashMap<>();
-    private Set<String> fDoNotInterruptStateNames = new LinkedHashSet<>();
-    private Set<String> fDefaultStateNames = new LinkedHashSet<>();
-    private Set<State> fPrimaryActiveStates = new LinkedHashSet<>();
-    private Set<State> fActiveStates = new LinkedHashSet<>();
+    private final List<String> fPriorityKeys;
+    private final Set<String> fDoNotInterruptStateNames;
+    private final Set<String> fDefaultStateNames;
+
+    private Set<String> mAllSubsystemNames;
+    private Set<String> mAllStateNames;
+    private Map<String, Set<String>> mAllStateNamesWithPriority;
+    private Set<State> mPrimaryActiveStates;
+    private Set<State> mActiveStates;
 
     public StateMachine(ObjectsDirectory objectsDirectory, RobotManager robotManager, RobotConfiguration robotConfiguration, InputValues inputValues) {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
         fSharedObjectsDirectory = objectsDirectory;
         fRobotManager = robotManager;
+
+        fPriorityKeys = new ArrayList<>();
+        fDoNotInterruptStateNames = new LinkedHashSet<>();
+        fDefaultStateNames = new LinkedHashSet<>();
+
+        mAllSubsystemNames = new LinkedHashSet<>();
+        mAllStateNames = new LinkedHashSet<>();
+        mAllStateNamesWithPriority = new HashMap<>();
+        mPrimaryActiveStates = new LinkedHashSet<>();
+        mActiveStates = new LinkedHashSet<>();
     }
 
     /**
      * Allows the instance of StateControls to be changed out when switching from Auto to Teleop
      */
     public void initialize() {
-        fAllSubsystemNames = fRobotConfiguration.getSubsystemNames();
-        fAllStateNames = fRobotConfiguration.getStateNames();
-        fAllStateNamesWithPriority = fRobotConfiguration.getStateNamesWithPriority();
+        mAllSubsystemNames = fRobotConfiguration.getSubsystemNames();
+        mAllStateNames = fRobotConfiguration.getStateNames();
+        mAllStateNamesWithPriority = fRobotConfiguration.getStateNamesWithPriority();
 
-        for (Map.Entry<String, Set<String>> priority : fAllStateNamesWithPriority.entrySet()) {
+        for (Map.Entry<String, Set<String>> priority : mAllStateNamesWithPriority.entrySet()) {
             fPriorityKeys.add(priority.getKey());
         }
 
         if (fPriorityKeys.contains("do_not_interrupt")) {
-            fDoNotInterruptStateNames.addAll(fAllStateNamesWithPriority.get("do_not_interrupt"));
+            fDoNotInterruptStateNames.addAll(mAllStateNamesWithPriority.get("do_not_interrupt"));
         }
 
         if (fPriorityKeys.contains("default")) {
-            fDefaultStateNames.addAll(fAllStateNamesWithPriority.get("default"));
+            fDefaultStateNames.addAll(mAllStateNamesWithPriority.get("default"));
         }
 
         Collections.sort(fPriorityKeys);
@@ -82,12 +94,10 @@ public class StateMachine {
         // Initialize states that became active in this frame
         initializeNewlyActiveStates(nextActiveStates);
 
-        fActiveStates = nextActiveStates;
+        mActiveStates = nextActiveStates;
 
         // Update all active states
-        for (State state : fActiveStates) {
-            state.update();
-        }
+        mActiveStates.forEach(State::update);
     }
 
     /**
@@ -97,12 +107,10 @@ public class StateMachine {
     public void dispose() {
 
         // Dispose all active states
-        for (State state : fActiveStates) {
-            state.dispose();
-        }
+        mActiveStates.forEach(State::dispose);
 
-        fActiveStates.clear();
-        fPrimaryActiveStates.clear();
+        mActiveStates.clear();
+        mPrimaryActiveStates.clear();
         update();
     }
 
@@ -125,7 +133,7 @@ public class StateMachine {
     private Set<State> getNextActiveStates() {
         Set<State> nextActiveStates = new LinkedHashSet<>();
         Set<State> primaryNextActiveStates = new LinkedHashSet<>();
-        Set<String> subsystems = new LinkedHashSet<>(fAllSubsystemNames);
+        Set<String> subsystems = new LinkedHashSet<>(mAllSubsystemNames);
 
         // Loop through all the do not interrupt states
         for (String doNotInterruptStateName : fDoNotInterruptStateNames) {
@@ -139,11 +147,11 @@ public class StateMachine {
             State doNotInterruptState = fSharedObjectsDirectory.getStateObject(doNotInterruptStateName);
 
             // Is this state currently active?
-            boolean isCurrentlyActive = fActiveStates.contains(doNotInterruptState);
+            boolean isCurrentlyActive = mActiveStates.contains(doNotInterruptState);
 
             // If the state is currently active, then check if it is done
             boolean isDone = true;
-            if (fPrimaryActiveStates.contains(doNotInterruptState)) {
+            if (mPrimaryActiveStates.contains(doNotInterruptState)) {
                 isDone = fRobotManager.isDone(doNotInterruptStateName, doNotInterruptState);
             }
 
@@ -160,7 +168,7 @@ public class StateMachine {
             Set<State> currentlyActiveStatesThatAreReady = new LinkedHashSet<>();
 
             // All the state names in current priority level
-            Set<String> stateNamesInPriority = fAllStateNamesWithPriority.get(priority);
+            Set<String> stateNamesInPriority = mAllStateNamesWithPriority.get(priority);
 
             // Loop through each state in priority level
             for (String stateNameInPriority : stateNamesInPriority) {
@@ -177,11 +185,11 @@ public class StateMachine {
                 boolean isReady = fRobotManager.isReady(stateNameInPriority);
 
                 // Is this state currently active?
-                boolean isCurrentlyActive = fActiveStates.contains(stateInPriority);
+                boolean isCurrentlyActive = mActiveStates.contains(stateInPriority);
 
                 // If the state is currently active, then check if it is done
                 boolean isDone = true;
-                if (fPrimaryActiveStates.contains(stateInPriority)) {
+                if (mPrimaryActiveStates.contains(stateInPriority)) {
                     isDone = fRobotManager.isDone(stateNameInPriority, stateInPriority);
                 }
 
@@ -225,7 +233,7 @@ public class StateMachine {
         nextActiveStates.addAll(primaryNextActiveStates);
 
         // Create a new list of subsystems to determine which subsystems are still available since the sequencer state only runs one state at a time
-        subsystems = new LinkedHashSet<>(fAllSubsystemNames);
+        subsystems = new LinkedHashSet<>(mAllSubsystemNames);
 
         // For each primary active state add it and its sub states to the set of states that will be active this frame
         // For sequences this may be only a subset of the subsystems used by this sequence
@@ -239,7 +247,7 @@ public class StateMachine {
         }
 
         // Add any states that are currently active whose subsystem(s) are still available
-        for (State state : fActiveStates) {
+        for (State state : mActiveStates) {
 
             // If the state is a single state and its subsystem is available add it to the set of primary active states
             // This is done because we want the state to persist after their primary state has been disposed but
@@ -250,7 +258,7 @@ public class StateMachine {
         }
 
         // Store the currently active primary states for use in the next frame.
-        fPrimaryActiveStates = primaryNextActiveStates;
+        mPrimaryActiveStates = primaryNextActiveStates;
 
         // Store a list of currently active states in the SharedInputValues so it can be displayed on the web dashboard for debugging
         String activeStatesList = nextActiveStates.toString();
@@ -269,24 +277,13 @@ public class StateMachine {
      * @return whether the requested subsystem is available
      */
     private boolean isSubsystemAvailable(State state, Set<String> subsystems) {
-
         // Check if the required subsystems for this state is available
-        boolean valid = true;
-        for (String subsystemName : state.getSubsystems()) {
-            if (!subsystems.contains(subsystemName)) {
-                valid = false;
-                break;
-            }
-        }
-
         // If the subsystems are available then remove them from the list so they can not be used again
-        if (valid) {
-            for (String subsystemName : state.getSubsystems()) {
-                subsystems.remove(subsystemName);
-            }
+        if (subsystems.containsAll(state.getSubsystems())) {
+            subsystems.removeAll(state.getSubsystems());
+            return true;
         }
-
-        return valid;
+        return false;
     }
 
     /**
@@ -295,16 +292,9 @@ public class StateMachine {
      * @param nextActiveStates the list of states that are active this frame
      */
     private void initializeNewlyActiveStates(Set<State> nextActiveStates) {
-        for (String name : fAllStateNames) {
-            State state = fSharedObjectsDirectory.getStateObject(name);
-
-            boolean isInCurrent = fActiveStates.contains(state);
-            boolean isInNext = nextActiveStates.contains(state);
-
-            if (isInNext && !isInCurrent) {
-                state.initialize();
-            }
-        }
+        mAllStateNames.stream().map(fSharedObjectsDirectory::getStateObject)
+                .filter(((Predicate<State>) mActiveStates::contains).negate()).filter(nextActiveStates::contains)
+                .forEachOrdered(State::initialize);
     }
 
     /**
@@ -313,16 +303,9 @@ public class StateMachine {
      * @param nextActiveStates the list of states that are active this frame
      */
     private void disposeInactiveStates(Set<State> nextActiveStates) {
-        for (String name : fAllStateNames) {
-            State state = fSharedObjectsDirectory.getStateObject(name);
-
-            boolean isInCurrent = fActiveStates.contains(state);
-            boolean isInNext = nextActiveStates.contains(state);
-
-            if (isInCurrent && !isInNext) {
-                state.dispose();
-            }
-        }
+        mAllStateNames.stream().map(fSharedObjectsDirectory::getStateObject)
+                .filter(mActiveStates::contains).filter(((Predicate<State>) nextActiveStates::contains).negate())
+                .forEachOrdered(State::initialize);
     }
 
 
@@ -330,6 +313,6 @@ public class StateMachine {
      * @return the list of states that are active this frame
      */
     public Set<State> getCurrentActiveStates() {
-        return fActiveStates;
+        return mActiveStates;
     }
 }

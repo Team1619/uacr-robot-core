@@ -41,7 +41,6 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
     private final Map<String, OutputBoolean> fOutputBooleanObjects;
     private final Map<Object, State> fStateObjects;
     private final Map<Object, Behavior> fBehaviorObjects;
-    private final Map<Object, Object> fHardwareObjects;
 
     @Inject
     public SharedObjectsDirectory(AbstractModelFactory modelFactory, RobotConfiguration robotConfiguration, InputValues inputValues) {
@@ -55,7 +54,6 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
         fOutputBooleanObjects = new ConcurrentHashMap<>();
         fStateObjects = new ConcurrentHashMap<>();
         fBehaviorObjects = new ConcurrentHashMap<>();
-        fHardwareObjects = new ConcurrentHashMap<>();
     }
 
     //--------------------------- Inputs ----------------------------------------//
@@ -80,19 +78,13 @@ public class SharedObjectsDirectory implements ObjectsDirectory {
             sLogger.trace("Registered {} in Input Vectors", inputVectorName);
         }
 
-        for (InputBoolean inputBoolean : fInputBooleanObjects.values()) {
-            inputBoolean.initialize();
-        }
+        fInputBooleanObjects.values().forEach(InputBoolean::initialize);
         sLogger.trace("Input Booleans initialized");
 
-        for (InputNumeric inputNumeric : fInputNumericObjects.values()) {
-            inputNumeric.initialize();
-        }
+        fInputNumericObjects.values().forEach(InputNumeric::initialize);
         sLogger.trace("Input Numerics initialized");
 
-        for (InputVector inputVector : fInputVectorObjects.values()) {
-            inputVector.initialize();
-        }
+        fInputVectorObjects.values().forEach(InputVector::initialize);
         sLogger.trace("Input Vectors initialized");
 
     }

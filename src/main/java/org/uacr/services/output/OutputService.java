@@ -75,14 +75,8 @@ public class OutputService implements ScheduledService {
         FMS.Mode nextFmsMode = fFms.getMode();
 
         if (mCurrentFmsMode == FMS.Mode.DISABLED && nextFmsMode != FMS.Mode.DISABLED) {
-            for (String outputNumericName : mOutputNumericNames) {
-                OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
-                outputNumericObject.initialize();
-            }
-            for (String outputBooleanName : mOutputBooleanNames) {
-                OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(outputBooleanName);
-                outputBooleanObject.initialize();
-            }
+            mOutputBooleanNames.stream().map(fSharedOutputsDirectory::getOutputNumericObject).forEachOrdered(OutputNumeric::initialize);
+            mOutputBooleanNames.stream().map(fSharedOutputsDirectory::getOutputBooleanObject).forEachOrdered(OutputBoolean::initialize);
         }
 
         mCurrentFmsMode = nextFmsMode;
