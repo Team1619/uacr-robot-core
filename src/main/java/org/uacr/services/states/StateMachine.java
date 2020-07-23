@@ -277,9 +277,11 @@ public class StateMachine {
      * @return whether the requested subsystem is available
      */
     private boolean isSubsystemAvailable(State state, Set<String> subsystems) {
+        
         // Check if the required subsystems for this state is available
-        // If the subsystems are available then remove them from the list so they can not be used again
         if (subsystems.containsAll(state.getSubsystems())) {
+
+            // If the subsystems are available then remove them from the list so they can not be used again
             subsystems.removeAll(state.getSubsystems());
             return true;
         }
