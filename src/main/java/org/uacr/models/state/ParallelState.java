@@ -8,6 +8,8 @@ import org.uacr.utilities.logging.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A shell that handles running multiple states simultaneously
@@ -46,12 +48,8 @@ public class ParallelState implements State {
         Set<State> states = new HashSet<>();
         states.addAll(fForegroundStates);
         states.addAll(fBackgroundStates);
-        for (State foregroundState : fForegroundStates) {
-            states.addAll(foregroundState.getSubStates());
-        }
-        for (State backgroundState : fBackgroundStates) {
-            states.addAll(backgroundState.getSubStates());
-        }
+        Stream.concat(fForegroundStates.stream(), fBackgroundStates.stream())
+                .map(State::getSubStates).forEach(states::addAll);
         return states;
     }
 
@@ -72,26 +70,14 @@ public class ParallelState implements State {
 
     @Override
     public boolean isDone() {
-        for (State foregroundState : fForegroundStates) {
-            if (!foregroundState.isDone()) {
-                return false;
-            }
-        }
-
-        return true;
+        return fForegroundStates.stream().allMatch(State::isDone);
     }
 
     @Override
     public Set<String> getSubsystems() {
         // Returns a list of all the subsystems required by all the states it is running
-        Set<String> subsystems = new HashSet<>();
-        for (State state : fForegroundStates) {
-            subsystems.addAll(state.getSubsystems());
-        }
-        for (State state : fBackgroundStates) {
-            subsystems.addAll(state.getSubsystems());
-        }
-        return subsystems;
+        return Stream.concat(fForegroundStates.stream(), fBackgroundStates.stream())
+                .flatMap(state -> getSubsystems().stream()).collect(Collectors.toSet());
     }
 
     @Override

@@ -31,14 +31,16 @@ public abstract class AbstractModelFactory {
     protected final OutputValues fSharedOutputValues;
     protected final RobotConfiguration fSharedRobotConfiguration;
     protected final ObjectsDirectory fSharedObjectDirectory;
+    protected final EventBus fEventBus;
     private final List<AbstractModelFactory> fModelFactories;
 
     @Inject
-    public AbstractModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+    public AbstractModelFactory(InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory, EventBus eventBus) {
         fSharedInputValues = inputValues;
         fSharedOutputValues = outputValues;
         fSharedRobotConfiguration = robotConfiguration;
         fSharedObjectDirectory = objectsDirectory;
+        fEventBus = eventBus;
 
         fModelFactories = new ArrayList<>();
     }
@@ -119,6 +121,9 @@ public abstract class AbstractModelFactory {
                     break;
                 case "sequencer_state":
                     state = new SequencerState(this, name, parser, config);
+                    break;
+                case "event_state":
+                    state = new PositionEventState(this, name, parser, config, fEventBus);
                     break;
                 case "timed_state":
                     state = new TimedState(this, name, parser, config);

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A shell that handles running a sequence of states
@@ -63,11 +64,9 @@ public class SequencerState implements State {
         }
         // Increments through the sequence
         if (mCurrentState.isDone()) {
-            if (mCurrentStateIndex < (fStates.size())) {
-                mCurrentStateIndex++;
-                if (mCurrentStateIndex < (fStates.size())) {
-                    mCurrentState = fStates.get(mCurrentStateIndex);
-                }
+            mCurrentStateIndex++;
+            if (mCurrentStateIndex < fStates.size()) {
+                mCurrentState = fStates.get(mCurrentStateIndex);
             }
         }
     }
@@ -87,11 +86,7 @@ public class SequencerState implements State {
     @Override
     public Set<String> getSubsystems() {
         // Returns a list of all the subsystems required by all the states that will be run sometime during the sequence
-        Set<String> subsystems = new HashSet<>();
-        for (State state : fStates) {
-            subsystems.addAll(state.getSubsystems());
-        }
-        return subsystems;
+        return fStates.stream().flatMap(state -> getSubsystems().stream()).collect(Collectors.toSet());
     }
 
     @Override
