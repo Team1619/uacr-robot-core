@@ -206,8 +206,8 @@ public abstract class AbstractModelFactory {
     }
 
     /**
-     * Used by the implementations of AbstractModelFactory to regerster
-     * @param modelFactory
+     * Used by the robot/sim implementations of AbstractModelFactory to register the desired behaviors model factory as well as this model factory
+     * @param modelFactory the model factory to be regestered
      */
 
     public void registerModelFactory(AbstractModelFactory modelFactory) {
