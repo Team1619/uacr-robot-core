@@ -284,7 +284,7 @@ public class Path {
      * @return the velocity
      */
     public double getPathPointVelocity(int index, Pose2d currentLocation) {
-        return Util.limit(getPathPoint(index).getVelocity() / Util.limit(getTrackingError(currentLocation) / mTrackingErrorSpeed, 1, 3), mMinSpeed, mMaxSpeed);
+        return Util.limit(getPathPoint(index).getVelocity() / Util.limit(getTrackingError(currentLocation), 1, 2), mMinSpeed, mMaxSpeed);
     }
 
     /**
@@ -334,15 +334,7 @@ public class Path {
         for (int i = getClosestPointIndex(currentPosition); i < getPath().size(); i++) {
             mCurvature = Math.abs(getCurvatureFromPathPoint(i, currentPosition));
 
-            double correction = Util.limit(mCurvature, 1, 5);
-
-            double curvature = 0;
-
-            for (int p = closest; p <= i; p++) {
-                curvature += getPointCurvature(closest);
-            }
-
-            if (getPointDistance(i) - getPointDistance(closest) > mLookAheadDistance / Util.limit(curvature / 3, 1, 2)) {
+            if (getPointDistance(i) - getPointDistance(closest) > Util.interpolate(getPathPointVelocity(closest, currentPosition), mMinSpeed, mMaxSpeed, mLookAheadDistance - 15, mLookAheadDistance + 15)) {
                 mLastPointIndex = i;
                 return i;
             }

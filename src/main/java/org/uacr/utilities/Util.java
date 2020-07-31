@@ -81,4 +81,8 @@ public final class Util {
         }
         return maxValue;
     }
+
+    public static double interpolate(double input, double minInput, double maxInput, double minOutput, double maxOutput) {
+        return minOutput + ((maxOutput - minOutput) * ((limit(input, minInput, maxInput) - minInput) / (maxInput - minInput)));
+    }
 }
