@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Handles reading in and distributing the information in the config files
+ * Handles replacing values that are overridden in a variation
+ */
+
 public class YamlConfigParser {
 
     private static final Logger sLogger = LogManager.getLogger(YamlConfigParser.class);
@@ -28,6 +33,10 @@ public class YamlConfigParser {
         mRobotVariation = "none";
     }
 
+    /**
+     * Loads a ymal file and checks if there is a specified variation
+     * @param path the location of the config file, all that usually needs to be specified is the name of the file
+     */
     public void loadWithFolderName(String path) {
         YamlConfigParser parser = new YamlConfigParser();
         parser.load("general.yaml");
@@ -38,6 +47,10 @@ public class YamlConfigParser {
         load(path);
     }
 
+    /**
+     * Loads a ymal file into mData, checks if there is a variation being used and values specified for that variation, removes the variations data once it has been used
+     * @param path the location of the config file, all that usually needs to be specified is the name of the file
+     */
     public void load(String path) {
 
         sLogger.trace("Loading config file '{}'", path);
@@ -76,6 +89,13 @@ public class YamlConfigParser {
         mData.remove("variations");
     }
 
+    /**
+     * Finds the values listed in the variations and figures out the path to that value
+     * Then calls the editMapValueWithStack method to replace the value for this key in mData with the value from the variation
+     * This is a recursive function
+     * @param variation what variation to use
+     * @param stack an ArrayList to hold the path to a particular value so it can be retraced to find the value to replace
+     */
     private void loadVariation(Map<String, Object> variation, ArrayList<String> stack) {
         for (Map.Entry<String, Object> entry : variation.entrySet()) {
             if (entry.getValue() instanceof Map) {
@@ -90,6 +110,13 @@ public class YamlConfigParser {
         }
     }
 
+    /**
+     * Replaces a value in mData with one specified in the variation
+     * This is a recursive function
+     * @param data mData
+     * @param stack the location of the value
+     * @param value the value to change it to
+     */
     private void editMapValueWithStack(Map data, ArrayList<String> stack, Object value) {
         if (stack.size() <= 1) {
             data.put(stack.get(0), value);
@@ -102,6 +129,10 @@ public class YamlConfigParser {
         editMapValueWithStack((Map) data.get(key), stack, value);
     }
 
+    /**
+     * @param object the object that the config is wanted for
+     * @return a new Config with the appropriate data from mData for that object
+     */
     public Config getConfig(Object object) {
         String name = object.toString().toLowerCase();
 
@@ -119,10 +150,16 @@ public class YamlConfigParser {
         }
     }
 
+    /**
+     * @return mData
+     */
     public Map getData() {
         return mData;
     }
 
+    /**
+     * @return the ClassLoader for this file
+     */
     protected ClassLoader getClassLoader() {
         return YamlConfigParser.class.getClassLoader();
     }
