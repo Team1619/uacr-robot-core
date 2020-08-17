@@ -19,8 +19,8 @@ public class DoneForTimeState implements State {
     /**
      * Shell class for all DoneForTimeStates
      * DoneForTimeStates wrap a single state, parallel or sequence and pass it to the state machine to be run using two parameters
-     * a state timeout which causes the robot to stay in the state for the specified amount of time after the state is done
-     * and a max timeout which causes the robot to say the state is done the specified amount of time after the state begins regardless of the status of the state
+     * a state timeout ends the state a specified amount of time after isDone goes true
+     * and a max timeout cause the state to end if isDone does not go true by that time.
      */
 
     private static final Logger sLogger = LogManager.getLogger(DoneForTimeState.class);
@@ -65,7 +65,7 @@ public class DoneForTimeState implements State {
     }
 
     /**
-     * To initialize check if a max timout has been specified and start the timer if it has
+     * To initialize check if a max timout has been specified if so start the max timeout timer
      */
 
     @Override
@@ -78,7 +78,7 @@ public class DoneForTimeState implements State {
 
     /**
      * Called every frame
-     */
+     */a
 
     @Override
     public void update() {

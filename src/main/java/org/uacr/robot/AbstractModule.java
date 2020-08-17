@@ -4,7 +4,7 @@ import org.uacr.shared.abstractions.*;
 import org.uacr.shared.concretions.*;
 
 /**
- * Used by the injector decided witch concretion to use for each requested abstraction
+ * Used by the injector decided which concretion to use for each requested abstraction
  * The ones listed here are the same for all versions of the code
  * Game type, robot, and sim/robot specific pairs are listed in extensions of this class
  */
