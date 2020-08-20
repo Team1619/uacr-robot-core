@@ -78,7 +78,7 @@ public class DoneForTimeState implements State {
 
     /**
      * Called every frame
-     */a
+     */
 
     @Override
     public void update() {
