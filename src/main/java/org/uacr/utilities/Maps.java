@@ -3,7 +3,21 @@ package org.uacr.utilities;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *  A wrapper for Map that allows for the creation of one using Maps.of()
+ *  Also prevents you from changing the Map once it has been created
+ */
+
 public class Maps {
+
+    /**
+     * The following methods accept upto 10 key value pairs
+     * k1, k2, etc are the keys
+     * v1, v2, etc are the values
+     * @param <K> the type of keys
+     * @param <V> the type of values
+     * @return a Map with the specified values and types
+     */
 
     public static <K, V> Map<K, V> of() {
         return new HashMap<>();

@@ -4,6 +4,11 @@ import org.uacr.utilities.Config;
 
 import java.util.Set;
 
+/**
+ * The base for all robot behavior.
+ * A behavior is logic used by a state to preform a single action on the robot.
+ */
+
 public interface Behavior {
 
     /**
@@ -15,9 +20,8 @@ public interface Behavior {
      * Initializes the behavior to run the requested state
      * This is a place to read values from the state config file
      * This is called by the StateMachine on the first frame a state becomes active
-     *
      * @param stateName The name of the state being initialized
-     * @param config    Contains the information under the name of the state in the state.ymal file
+     * @param config    Contains the information under the name of the state in the state.yaml file
      */
     void initialize(String stateName, Config config);
 
@@ -32,7 +36,6 @@ public interface Behavior {
      * In state mode this logic is largely ignored unless the state requests disposal (see idRequestingDisposal) when it is finished
      * In Sequence mode this logic lets the sequencer that is running this state know when to move onto the next state
      * This logic can be overridden in implementations of StateControls for specific states
-     *
      * @return true or false
      */
     boolean isDone();

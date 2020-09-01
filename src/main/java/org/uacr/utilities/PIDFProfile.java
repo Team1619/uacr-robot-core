@@ -28,22 +28,37 @@ public class PIDFProfile {
         this(0, 0, 0);
     }
 
+    /**
+     * @return the P value for this profile
+     */
     public double getP() {
         return fP;
     }
 
+    /**
+     * @return the I value for this profile
+     */
     public double getI() {
         return fI;
     }
 
+    /**
+     * @return the D value for this profile
+     */
     public double getD() {
         return fD;
     }
 
+    /**
+     * @return the F value for this profile
+     */
     public double getF() {
         return fF;
     }
 
+    /**
+     * @return if the profile that is passed in has the same values as this profile
+     */
     public boolean equals(PIDFProfile profile) {
         return fP == profile.getP() && fI == profile.fI && fD == profile.getD() && fF == profile.getF();
     }

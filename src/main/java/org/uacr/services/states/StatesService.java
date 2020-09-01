@@ -32,6 +32,14 @@ public class StatesService implements ScheduledService {
     private FMS.Mode mCurrentFmsMode;
     private long mFrameTimeThreshold;
 
+    /**
+     * @param inputValues the map that holds the values from all the inputs
+     * @param fms holds the  value of the current FMS mode (Auto, Teleop)
+     * @param robotConfiguration passed into RobotManager and StateMachine as well as used to read in general config values
+     * @param objectsDirectory objectsDirectory used to store the state objects
+     * @param stateControls used to control the state of the robot such as modes controlled by the drivers (passed into the robot manager)
+     */
+
     @Inject
     public StatesService(InputValues inputValues, FMS fms, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory, AbstractStateControls stateControls) {
         fSharedInputValues = inputValues;
@@ -124,6 +132,11 @@ public class StatesService implements ScheduledService {
             sLogger.debug("********** States Service frame time = {}", frameTime);
         }
     }
+
+    /**
+     * Shuts down the StateService
+     * @throws Exception
+     */
 
     @Override
     public void shutDown() throws Exception {

@@ -9,6 +9,11 @@ import org.uacr.utilities.logging.Logger;
 
 import java.util.concurrent.Executors;
 
+/**
+ * Handles the distribution of messages in Sim mode
+ * Objects register with the event bus and then will receive messages posted
+ */
+
 @Singleton
 public class SharedEventBus implements EventBus {
 
@@ -16,10 +21,17 @@ public class SharedEventBus implements EventBus {
 
     private final AbstractEventBus fEventBus;
 
+    /**
+     * Create a new AsyncEventBus (can handle multiple messages at the same time)
+     */
     public SharedEventBus() {
         fEventBus = new AsyncEventBus(Executors.newFixedThreadPool(4));
     }
 
+    /**
+     * Allows an object to register to receive events
+     * @param object the object registering
+     */
     @Override
     public void register(Object object) {
         sLogger.trace("Registering object '{}'", object);
@@ -27,12 +39,21 @@ public class SharedEventBus implements EventBus {
         fEventBus.register(object);
     }
 
+    /**
+     * Posts an event to the EventBus
+     * @param object the event to be posted
+     */
     @Override
     public void post(Object object) {
         sLogger.trace("Posting object '{}'", object);
 
         fEventBus.post(object);
     }
+
+    /**
+     * Allows an object to unregister to quit receiving events
+     * @param object the object unregistering
+     */
 
     @Override
     public void unregister(Object object) {
