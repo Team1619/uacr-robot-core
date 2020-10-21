@@ -46,6 +46,8 @@ public class AsyncServiceManager extends ServiceManager {
                 startUpService(service);
             }
 
+            getHealthyLatch().countDown();
+
             if (getCurrentState() != ServiceState.STOPPING) {
                 setCurrentState(ServiceState.RUNNING);
 
@@ -58,14 +60,19 @@ public class AsyncServiceManager extends ServiceManager {
                 shutDownService(service);
             }
 
+            getShutDownLatch().countDown();
+
             setCurrentState(ServiceState.STOPPED);
         });
     }
 
     @Override
     public void awaitHealthy() {
-        while (getCurrentState().equals(ServiceState.AWAITING_START) || getCurrentState().equals(ServiceState.STARTING))
-            ;
+        try {
+            getHealthyLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -73,24 +80,21 @@ public class AsyncServiceManager extends ServiceManager {
         long nextRuntime = Long.MAX_VALUE;
 
         for (ServiceWrapper service : getServices()) {
-            long serviceRuntime = service.nextRunTimeMilliseconds();
+            long serviceRuntime = service.nextRunTimeNanoseconds();
             if (serviceRuntime < nextRuntime) {
                 nextRuntime = serviceRuntime;
             }
         }
 
         try {
-            Thread.sleep(((nextRuntime - System.nanoTime()) / 1000000) - 1);
-            while (nextRuntime - System.nanoTime() > 0) ;
+            Thread.sleep(((nextRuntime - System.nanoTime()) / 1000000));
         } catch (Exception e) {
         }
 
         for (ServiceWrapper service : getServices()) {
             if (service.shouldRun()) {
                 service.setCurrentlyRunning(true);
-                getExecutor().submit(() -> {
-                    updateService(service);
-                });
+                getExecutor().submit(() -> updateService(service));
             }
         }
     }
@@ -102,6 +106,10 @@ public class AsyncServiceManager extends ServiceManager {
 
     @Override
     public void awaitStopped() {
-        while (!getCurrentState().equals(ServiceState.STOPPED)) ;
+        try {
+            getShutDownLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -70,7 +70,7 @@ public class ServiceWrapper implements Service {
     /**
      * @return the time until the next cycle should start
      */
-    public long nextRunTimeMilliseconds() {
+    public long nextRunTimeNanoseconds() {
         if (scheduler != null) {
             return scheduler.nextRunTimeNanoseconds();
         }

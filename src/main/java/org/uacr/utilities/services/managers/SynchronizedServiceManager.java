@@ -46,6 +46,8 @@ public class SynchronizedServiceManager extends ServiceManager {
                 startUpService(service);
             }
 
+            getHealthyLatch().countDown();
+
             if (getCurrentState() != ServiceState.STOPPING) {
                 setCurrentState(ServiceState.RUNNING);
 
@@ -58,18 +60,37 @@ public class SynchronizedServiceManager extends ServiceManager {
                 shutDownService(service);
             }
 
+            getShutDownLatch().countDown();
+
             setCurrentState(ServiceState.STOPPED);
         });
     }
 
     @Override
     public void awaitHealthy() {
-        while (getCurrentState().equals(ServiceState.AWAITING_START) || getCurrentState().equals(ServiceState.STARTING))
-            ;
+        try {
+            getHealthyLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void update() {
+        long nextRuntime = Long.MAX_VALUE;
+
+        for (ServiceWrapper service : getServices()) {
+            long serviceRuntime = service.nextRunTimeNanoseconds();
+            if (serviceRuntime < nextRuntime) {
+                nextRuntime = serviceRuntime;
+            }
+        }
+
+        try {
+            Thread.sleep(((nextRuntime - System.nanoTime()) / 1000000));
+        } catch (Exception e) {
+        }
+
         for (ServiceWrapper service : getServices()) {
             if (service.shouldRun()) {
                 service.setCurrentlyRunning(true);
@@ -85,6 +106,10 @@ public class SynchronizedServiceManager extends ServiceManager {
 
     @Override
     public void awaitStopped() {
-        while (!getCurrentState().equals(ServiceState.STOPPED)) ;
+        try {
+            getShutDownLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

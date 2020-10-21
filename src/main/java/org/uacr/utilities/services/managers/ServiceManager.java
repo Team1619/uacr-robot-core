@@ -7,6 +7,7 @@ import org.uacr.utilities.services.ServiceWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +19,8 @@ public abstract class ServiceManager {
 
     private final ExecutorService fExecutor;
     private final List<ServiceWrapper> fServices;
+    private final CountDownLatch fHealthyLatch;
+    private final CountDownLatch fShutDownLatch;
 
     private ServiceState mCurrentState;
 
@@ -25,6 +28,9 @@ public abstract class ServiceManager {
     public ServiceManager(List<Service> services) {
         fExecutor = Executors.newCachedThreadPool();
         fServices = Collections.synchronizedList(new ArrayList<>());
+
+        fHealthyLatch = new CountDownLatch(1);
+        fShutDownLatch = new CountDownLatch(1);
 
         mCurrentState = ServiceState.AWAITING_START;
 
@@ -59,6 +65,14 @@ public abstract class ServiceManager {
         synchronized (fExecutor) {
             return fExecutor;
         }
+    }
+
+    protected CountDownLatch getHealthyLatch() {
+        return fHealthyLatch;
+    }
+
+    protected CountDownLatch getShutDownLatch() {
+        return fShutDownLatch;
     }
 
     // Starts one service
