@@ -82,22 +82,10 @@ public abstract class NonlinearServiceManager extends ServiceManager {
             }
         }
 
-        System.out.println(((nextRuntime - System.nanoTime())));
-
         // Sleep until the next service should run
         try {
             Thread.sleep(((nextRuntime - System.nanoTime()) / 1000000));
         } catch (Exception e) {
-        }
-
-        while (getCurrentState() == ServiceState.RUNNING) {
-            for(ServiceWrapper service : getServices()) {
-                if(service.shouldRun()) {
-                    return;
-                }
-            }
-            //System.out.println("Loop");
-            Thread.yield();
         }
     }
 }
