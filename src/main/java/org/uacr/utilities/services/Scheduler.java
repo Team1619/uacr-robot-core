@@ -1,7 +1,5 @@
 package org.uacr.utilities.services;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Keeps track of the timing for services
  */
@@ -78,10 +76,10 @@ public class Scheduler {
     /**
      * @return the amount of time until the next time the service should run
       */
-    public synchronized long nanosecondsUntilNextRun() {
+    public synchronized long nanosUntilNextRun() {
         long currentTime = System.nanoTime();
 
-        long time = nextRunTimeNanoseconds() - currentTime;
+        long time = nextRunTimeNanos() - currentTime;
 
         if (time < 0) {
             return 0;
@@ -93,7 +91,7 @@ public class Scheduler {
     /**
      * @return when to start the next frame
      */
-    public synchronized long nextRunTimeNanoseconds() {
+    public synchronized long nextRunTimeNanos() {
         if (mStartTime != 0) {
             long time = (int) (mLastTime + fTimeUnit.toNanoseconds(fInitialDelay));
             if (time < 0) {

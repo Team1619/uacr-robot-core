@@ -109,14 +109,28 @@ public abstract class ServiceManager {
     public abstract void start();
 
     // Waits until every service is running
-    public abstract void awaitHealthy();
+    public void awaitHealthy() {
+        try {
+            getHealthyLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Tells the executor to use an open thread to call runUpdate
     public abstract void update();
 
     // Sets the state to stopping
-    public abstract void stop();
+    public void stop() {
+        setCurrentState(ServiceState.STOPPING);
+    }
 
     // Waits until the services are stopped
-    public abstract void awaitStopped();
+    public void awaitStopped() {
+        try {
+            getShutDownLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

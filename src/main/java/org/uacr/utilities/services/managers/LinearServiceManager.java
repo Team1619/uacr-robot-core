@@ -71,20 +71,6 @@ public class LinearServiceManager extends ServiceManager {
         }
     }
 
-    @Override
-    public void awaitHealthy() {
-        try {
-            getHealthyLatch().await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    @Override
-    public void stop() {
-        setCurrentState(ServiceState.STOPPING);
-    }
 
     //Shuts down the services
     protected void shutDown() {
@@ -97,15 +83,5 @@ public class LinearServiceManager extends ServiceManager {
         getShutDownLatch().countDown();
 
         setCurrentState(ServiceState.STOPPED);
-    }
-
-
-    @Override
-    public void awaitStopped() {
-        try {
-            getShutDownLatch().await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
