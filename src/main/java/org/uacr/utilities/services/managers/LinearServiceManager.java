@@ -54,6 +54,8 @@ public class LinearServiceManager extends ServiceManager {
         if (getCurrentState() != ServiceState.STOPPING) {
             setCurrentState(ServiceState.RUNNING);
         }
+
+        getHealthyLatch().countDown();
     }
 
     public void update() {
@@ -69,18 +71,6 @@ public class LinearServiceManager extends ServiceManager {
         }
     }
 
-    @Override
-    public void awaitHealthy() {
-        while (getCurrentState().equals(ServiceState.AWAITING_START) || getCurrentState().equals(ServiceState.STARTING)) {
-            Thread.yield();
-        }
-    }
-
-
-    @Override
-    public void stop() {
-        setCurrentState(ServiceState.STOPPING);
-    }
 
     //Shuts down the services
     protected void shutDown() {
@@ -90,12 +80,8 @@ public class LinearServiceManager extends ServiceManager {
             shutDownService(service);
         }
 
+        getShutDownLatch().countDown();
+
         setCurrentState(ServiceState.STOPPED);
-    }
-
-
-    @Override
-    public void awaitStopped() {
-        while (!getCurrentState().equals(ServiceState.STOPPED)) ;
     }
 }

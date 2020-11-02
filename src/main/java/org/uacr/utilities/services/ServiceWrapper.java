@@ -59,9 +59,9 @@ public class ServiceWrapper implements Service {
         return true;
     }
 
-    public long millisecondsUntilNextRun() {
+    public long nanosUntilNextRun() {
         if (scheduler != null) {
-            return scheduler.nanosecondsUntilNextRun();
+            return scheduler.nanosUntilNextRun();
         }
 
         return 0;
@@ -70,9 +70,9 @@ public class ServiceWrapper implements Service {
     /**
      * @return the time until the next cycle should start
      */
-    public long nextRunTimeMilliseconds() {
+    public long nextRunTimeNanos() {
         if (scheduler != null) {
-            return scheduler.nextRunTimeNanoseconds();
+            return scheduler.nextRunTimeNanos();
         }
 
         return 0;
