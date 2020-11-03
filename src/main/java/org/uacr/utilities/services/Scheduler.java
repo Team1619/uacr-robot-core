@@ -66,11 +66,11 @@ public class Scheduler {
     public synchronized boolean shouldRun() {
         long currentTime = System.nanoTime();
 
-        if (mStartTime != 0 && currentTime - mStartTime < fTimeUnit.toNanoseconds(fInitialDelay)) {
+        if (mStartTime != 0 && currentTime - mStartTime <= fTimeUnit.toNanoseconds(fInitialDelay)) {
             return false;
         }
 
-        return mLastTime == 0 || !(currentTime - mLastTime < fTimeUnit.toNanoseconds(fStandardDelay));
+        return mLastTime == 0 || currentTime - mLastTime >= fTimeUnit.toNanoseconds(fStandardDelay);
     }
 
     /**

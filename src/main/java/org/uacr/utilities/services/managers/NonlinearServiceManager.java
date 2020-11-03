@@ -41,6 +41,8 @@ public abstract class NonlinearServiceManager extends ServiceManager {
             getHealthyLatch().countDown();
 
             if (getCurrentState() != ServiceState.STOPPING) {
+                Thread.currentThread().setName("NonlinearServiceManager Dispatch");
+
                 setCurrentState(ServiceState.RUNNING);
 
                 while (getCurrentState() == ServiceState.RUNNING) {
@@ -84,7 +86,7 @@ public abstract class NonlinearServiceManager extends ServiceManager {
 
         // Sleep until the next service should run
         try {
-            Thread.sleep(((nextRuntime - System.nanoTime()) / 1000000));
+            Thread.sleep((nextRuntime - System.nanoTime()) / 1000000);
         } catch (Exception e) {
         }
     }
