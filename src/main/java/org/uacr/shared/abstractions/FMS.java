@@ -1,5 +1,9 @@
 package org.uacr.shared.abstractions;
 
+/**
+ * Stores the current FMS Mode
+ */
+
 public interface FMS {
 
     Mode getMode();

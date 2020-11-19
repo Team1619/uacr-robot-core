@@ -12,7 +12,7 @@ import java.util.Set;
 
 /**
  * A shell that runs a state until it is done or it times out
- * I'm not sure this is useful in the current version of the framework
+ * Runs a single state until it is done or times out
  */
 
 public class TimedState implements State {
@@ -25,6 +25,13 @@ public class TimedState implements State {
     private final String fStateName;
     private final String fSubStateName;
 
+    /**
+     * @param modelFactory so it can create its substate
+     * @param name of the TimedState
+     * @param parser yaml parser for the TimedState
+     * @param config for the TimedState
+     */
+
     public TimedState(AbstractModelFactory modelFactory, String name, YamlConfigParser parser, Config config) {
         fTimer = new Timer();
         fStateName = name;
@@ -34,10 +41,18 @@ public class TimedState implements State {
         fSubState = modelFactory.createState(fSubStateName, parser, parser.getConfig(fStateName));
     }
 
+    /**
+     * @return the substate
+     */
+
     @Override
     public Set<State> getSubStates() {
         return Sets.of(fSubState);
     }
+
+    /**
+     * Starts the timout timer
+     */
 
     @Override
     public void initialize() {
@@ -45,9 +60,17 @@ public class TimedState implements State {
         fTimer.start(fTimeout);
     }
 
+    /**
+     * Called every frame
+     */
+
     @Override
     public void update() {
     }
+
+    /**
+     * Resets the timout timer
+     */
 
     @Override
     public void dispose() {
@@ -55,21 +78,37 @@ public class TimedState implements State {
         fTimer.reset();
     }
 
+    /**
+     * @return true if the substate is done or the timout timer is done
+     */
+
     @Override
     public boolean isDone() {
         return fSubState.isDone() || fTimer.isDone();
     }
+
+    /**
+     * @return the subsystems used by the substate
+     */
 
     @Override
     public Set<String> getSubsystems() {
         return fSubState.getSubsystems();
     }
 
+    /**
+     * @return the name of the Timed State
+     */
+
     @Override
     public String getName() {
         return fStateName;
     }
 
+    /**
+     * This method is used so the .toString will return the name of the state if called on this object
+     * @return the name of the Timed State
+     */
     @Override
     public String toString() {
         return getName();

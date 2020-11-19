@@ -3,6 +3,12 @@ package org.uacr.robot;
 import org.uacr.shared.abstractions.*;
 import org.uacr.shared.concretions.*;
 
+/**
+ * Used by the injector to decide which concretion to use for each requested abstraction
+ * The ones listed here are the same for all versions of the code
+ * Game type, robot, and sim/robot specific pairs are listed in extensions of this class
+ */
+
 public abstract class AbstractModule extends org.uacr.utilities.injection.AbstractModule {
 
     protected void configure() {

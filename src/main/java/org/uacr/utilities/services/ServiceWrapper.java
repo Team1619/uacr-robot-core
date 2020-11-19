@@ -9,9 +9,10 @@ import javax.annotation.Nullable;
 public class ServiceWrapper implements Service {
 
     private final Service fService;
+
     @Nullable
     private final Scheduler scheduler;
-
+    @Nullable
     private ServiceState mServiceState;
     private boolean mIsCurrentlyRunning;
 
@@ -36,7 +37,9 @@ public class ServiceWrapper implements Service {
         }
     }
 
-    // Determines whether a service should run based on the service's current state and a scheduler if included in the service
+    /**
+     *  Determines whether a service should run based on the service's current state and a scheduler if included in the service
+     */
     public boolean shouldRun() {
         synchronized (mServiceState) {
             if (mServiceState == ServiceState.AWAITING_START || mServiceState == ServiceState.STOPPING) {
@@ -56,35 +59,50 @@ public class ServiceWrapper implements Service {
         return true;
     }
 
-    public long millisecondsUntilNextRun() {
+    public long nanosUntilNextRun() {
         if (scheduler != null) {
-            return scheduler.nanosecondsUntilNextRun();
+            return scheduler.nanosUntilNextRun();
         }
 
         return 0;
     }
 
-    public long nextRunTimeMilliseconds() {
+    /**
+     * @return the time until the next cycle should start
+     */
+    public long nextRunTimeNanos() {
         if (scheduler != null) {
-            return scheduler.nextRunTimeNanoseconds();
+            return scheduler.nextRunTimeNanos();
         }
 
         return 0;
     }
 
+    /**
+     * @return true if a the service is running
+     */
     public boolean isCurrentlyRunning() {
         return mIsCurrentlyRunning;
     }
 
+    /**
+     * Allows for the service managers to set whether this service is currently running
+     * @param currentlyRunning whether the service is currently running
+     */
     public void setCurrentlyRunning(boolean currentlyRunning) {
         mIsCurrentlyRunning = currentlyRunning;
     }
 
+    /**
+     * @return the name of the order
+     */
     public String getServiceName() {
         return fService.getClass().getSimpleName();
     }
 
-    //Starts the scheduler and starts the service
+    /**
+     *  Starts the scheduler and starts the service
+     */
     @Override
     public synchronized void startUp() throws Exception {
         Thread.currentThread().setName(getServiceName());
@@ -97,7 +115,9 @@ public class ServiceWrapper implements Service {
         fService.startUp();
     }
 
-    // Calls runOneIteration on the service and waits for it to complete before moving on
+    /**
+     * Calls runOneIteration on the service and waits for it to complete before moving on
+     */
     @Override
     public synchronized void runOneIteration() throws Exception {
         Thread.currentThread().setName(getServiceName());
@@ -117,7 +137,9 @@ public class ServiceWrapper implements Service {
         mIsCurrentlyRunning = false;
     }
 
-    // Shuts down the service
+    /**
+     * Shuts down the service
+     */
     @Override
     public synchronized void shutDown() throws Exception {
         Thread.currentThread().setName(getServiceName());

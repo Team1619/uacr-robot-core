@@ -34,7 +34,7 @@ public class ScheduledLinearServiceManager extends LinearServiceManager {
 
             while (getCurrentState() == ServiceState.RUNNING) {
                 try {
-                    Thread.sleep(fScheduler.nanosecondsUntilNextRun());
+                    Thread.sleep(fScheduler.nanosUntilNextRun());
                 } catch (InterruptedException e) {
                 }
                 fScheduler.run();

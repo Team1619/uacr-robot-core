@@ -7,6 +7,7 @@ import org.uacr.utilities.services.ServiceWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +19,8 @@ public abstract class ServiceManager {
 
     private final ExecutorService fExecutor;
     private final List<ServiceWrapper> fServices;
+    private final CountDownLatch fHealthyLatch;
+    private final CountDownLatch fShutDownLatch;
 
     private ServiceState mCurrentState;
 
@@ -25,6 +28,9 @@ public abstract class ServiceManager {
     public ServiceManager(List<Service> services) {
         fExecutor = Executors.newCachedThreadPool();
         fServices = Collections.synchronizedList(new ArrayList<>());
+
+        fHealthyLatch = new CountDownLatch(1);
+        fShutDownLatch = new CountDownLatch(1);
 
         mCurrentState = ServiceState.AWAITING_START;
 
@@ -61,6 +67,14 @@ public abstract class ServiceManager {
         }
     }
 
+    protected CountDownLatch getHealthyLatch() {
+        return fHealthyLatch;
+    }
+
+    protected CountDownLatch getShutDownLatch() {
+        return fShutDownLatch;
+    }
+
     // Starts one service
     protected void startUpService(ServiceWrapper service) {
         try {
@@ -95,14 +109,28 @@ public abstract class ServiceManager {
     public abstract void start();
 
     // Waits until every service is running
-    public abstract void awaitHealthy();
+    public void awaitHealthy() {
+        try {
+            getHealthyLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Tells the executor to use an open thread to call runUpdate
     public abstract void update();
 
     // Sets the state to stopping
-    public abstract void stop();
+    public void stop() {
+        setCurrentState(ServiceState.STOPPING);
+    }
 
     // Waits until the services are stopped
-    public abstract void awaitStopped();
+    public void awaitStopped() {
+        try {
+            getShutDownLatch().await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
