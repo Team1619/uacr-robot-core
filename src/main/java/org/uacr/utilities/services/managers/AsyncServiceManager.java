@@ -35,6 +35,9 @@ public class AsyncServiceManager extends NonlinearServiceManager {
         });
     }
 
+    /**
+     * Waits for the next run time or for a service to finish an update cycle.
+     */
     @Override
     public void waitUntilNextRun() {
 
