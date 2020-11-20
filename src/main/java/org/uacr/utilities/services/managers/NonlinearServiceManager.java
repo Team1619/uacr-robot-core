@@ -8,8 +8,12 @@ import java.util.List;
 
 public abstract class NonlinearServiceManager extends ServiceManager {
 
+    private final String fThreadName;
+
     public NonlinearServiceManager(List<Service> services) {
         super(services);
+
+        fThreadName = "NonlinearServiceManager Dispatch";
 
         setCurrentState(ServiceState.AWAITING_START);
     }
@@ -32,21 +36,29 @@ public abstract class NonlinearServiceManager extends ServiceManager {
     @Override
     public void start() {
         getExecutor().submit(() -> {
+
+            Thread.currentThread().setName(fThreadName);
+
             setCurrentState(ServiceState.STARTING);
 
             for (ServiceWrapper service : getServices()) {
                 startUpService(service);
             }
 
+            Thread.currentThread().setName(fThreadName);
+
             getHealthyLatch().countDown();
 
             if (getCurrentState() != ServiceState.STOPPING) {
+
                 setCurrentState(ServiceState.RUNNING);
 
                 while (getCurrentState() == ServiceState.RUNNING) {
                     update();
                 }
             }
+
+            Thread.currentThread().setName(fThreadName);
 
             for (ServiceWrapper service : getServices()) {
                 shutDownService(service);
@@ -84,7 +96,7 @@ public abstract class NonlinearServiceManager extends ServiceManager {
 
         // Sleep until the next service should run
         try {
-            Thread.sleep(((nextRuntime - System.nanoTime()) / 1000000));
+            Thread.sleep((nextRuntime - System.nanoTime()) / 1000000);
         } catch (Exception e) {
         }
     }

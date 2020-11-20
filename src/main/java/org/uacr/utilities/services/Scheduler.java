@@ -8,8 +8,8 @@ package org.uacr.utilities.services;
 public class Scheduler {
 
     private final TimeUnit fTimeUnit;
-    private final double fInitialDelay;
-    private final double fStandardDelay;
+    private final double fInitialDelayNanos;
+    private final double fStandardDelayNanos;
 
     private long mStartTime = 0;
     private long mLastTime = 0;
@@ -38,8 +38,8 @@ public class Scheduler {
 
     public Scheduler(double initialDelay, double standardDelay, TimeUnit timeUnit) {
         fTimeUnit = timeUnit;
-        fInitialDelay = initialDelay;
-        fStandardDelay = standardDelay;
+        fInitialDelayNanos = fTimeUnit.toNanoseconds(initialDelay);
+        fStandardDelayNanos = fTimeUnit.toNanoseconds(standardDelay);
 
         mStartTime = -1;
         mLastTime = -1;
@@ -66,11 +66,13 @@ public class Scheduler {
     public synchronized boolean shouldRun() {
         long currentTime = System.nanoTime();
 
-        if (mStartTime != 0 && currentTime - mStartTime < fTimeUnit.toNanoseconds(fInitialDelay)) {
+        long nanosSinceLastRun = currentTime - mStartTime;
+
+        if (mStartTime != 0 && nanosSinceLastRun < fInitialDelayNanos) {
             return false;
         }
 
-        return mLastTime == 0 || !(currentTime - mLastTime < fTimeUnit.toNanoseconds(fStandardDelay));
+        return mLastTime == 0 || nanosSinceLastRun >= fStandardDelayNanos;
     }
 
     /**
@@ -93,14 +95,14 @@ public class Scheduler {
      */
     public synchronized long nextRunTimeNanos() {
         if (mStartTime != 0) {
-            long time = (int) (mLastTime + fTimeUnit.toNanoseconds(fInitialDelay));
+            long time = (int) (mLastTime + fInitialDelayNanos);
             if (time < 0) {
                 return 0;
             }
             return time;
         }
 
-        long time = (long) (mLastTime + fTimeUnit.toNanoseconds(fStandardDelay));
+        long time = (long) (mLastTime + fStandardDelayNanos);
         if (time < 0) {
             return 0;
         }
