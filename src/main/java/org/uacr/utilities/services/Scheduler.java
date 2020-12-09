@@ -72,6 +72,8 @@ public class Scheduler {
             return false;
         }
 
+        nanosSinceLastRun = currentTime - mLastTime;
+
         return mLastTime == 0 || nanosSinceLastRun >= fStandardDelayNanos;
     }
 
