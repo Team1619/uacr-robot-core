@@ -32,19 +32,15 @@ public class ServiceWrapper implements Service {
 
     // Returns the current state of the service
     public ServiceState getServiceState() {
-        synchronized (mServiceState) {
-            return mServiceState;
-        }
+        return mServiceState;
     }
 
     /**
      * Determines whether a service should run based on the service's current state and a scheduler if included in the service
      */
     public boolean shouldRun() {
-        synchronized (mServiceState) {
-            if (mServiceState == ServiceState.AWAITING_START || mServiceState == ServiceState.STOPPING) {
-                return false;
-            }
+        if (mServiceState == ServiceState.AWAITING_START || mServiceState == ServiceState.STOPPING) {
+            return false;
         }
 
         // Do nothing if runOneIteration in the service is currently running
@@ -113,9 +109,7 @@ public class ServiceWrapper implements Service {
     public synchronized void startUp() throws Exception {
         Thread.currentThread().setName(getServiceName());
 
-        synchronized (mServiceState) {
-            mServiceState = ServiceState.STARTING;
-        }
+        mServiceState = ServiceState.STARTING;
 
         if (scheduler != null) {
             scheduler.start();
@@ -137,14 +131,10 @@ public class ServiceWrapper implements Service {
             scheduler.run();
         }
 
-        synchronized (mServiceState) {
-            mServiceState = ServiceState.RUNNING;
-        }
+        mServiceState = ServiceState.RUNNING;
 
         try {
             fService.runOneIteration();
-        } catch (Exception e) {
-            throw e;
         } finally {
             mIsCurrentlyRunning = false;
         }
@@ -157,14 +147,10 @@ public class ServiceWrapper implements Service {
     public synchronized void shutDown() throws Exception {
         Thread.currentThread().setName(getServiceName());
 
-        synchronized (mServiceState) {
-            mServiceState = ServiceState.STOPPING;
-        }
+        mServiceState = ServiceState.STOPPING;
 
         fService.shutDown();
 
-        synchronized (mServiceState) {
-            mServiceState = ServiceState.STOPPED;
-        }
+        mServiceState = ServiceState.STOPPED;
     }
 }
