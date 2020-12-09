@@ -162,7 +162,7 @@ public class OutputService implements ScheduledService {
      * @param outputNumericsParser holds the information from the OutputNumerics yaml file
      */
 
-    protected void createAllOutputs(YamlConfigParser outputsBooleanParser, YamlConfigParser outputNumericsParser) {
+    private void createAllOutputs(YamlConfigParser outputsBooleanParser, YamlConfigParser outputNumericsParser) {
         for (String outputBooleanName : fRobotConfiguration.getOutputBooleanNames()) {
             Config outputBooleanConfig = outputsBooleanParser.getConfig(outputBooleanName);
             createOutputBoolean(outputBooleanName, outputBooleanConfig, outputsBooleanParser);
@@ -182,7 +182,7 @@ public class OutputService implements ScheduledService {
      * @param config the yaml configuration for the output
      */
 
-    protected void createOutputBoolean(String name, Config config, YamlConfigParser parser) {
+    private void createOutputBoolean(String name, Config config, YamlConfigParser parser) {
         fSharedOutputsDirectory.registerOutputBoolean(name, fModelFactory.createOutputBoolean(name, config, parser));
     }
 
@@ -192,7 +192,7 @@ public class OutputService implements ScheduledService {
      * @param config the yaml configuration for the output
      */
 
-    protected void createOutputNumeric(String name, Config config, YamlConfigParser parser) {
+    private void createOutputNumeric(String name, Config config, YamlConfigParser parser) {
         fSharedOutputsDirectory.registerOutputNumeric(name, fModelFactory.createOutputNumeric(name, config, parser));
     }
 }

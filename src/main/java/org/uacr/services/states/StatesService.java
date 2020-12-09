@@ -158,7 +158,7 @@ public class StatesService implements ScheduledService {
      * @param statesParser holds the information from the States yaml file
      */
 
-    public void createAllStates(YamlConfigParser statesParser) {
+    private void createAllStates(YamlConfigParser statesParser) {
         for (String stateName : fRobotConfiguration.getStateNames()) {
             Config config = statesParser.getConfig(stateName);
             createState(stateName, statesParser, config);
@@ -172,7 +172,7 @@ public class StatesService implements ScheduledService {
      * @param config for the state
      */
 
-    public void createState(String name, YamlConfigParser statesParser, Config config) {
+    private void createState(String name, YamlConfigParser statesParser, Config config) {
         fModelFactory.createState(name, statesParser, config);
     }
 }

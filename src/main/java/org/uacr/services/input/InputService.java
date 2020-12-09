@@ -195,7 +195,7 @@ public class InputService implements ScheduledService {
      * @param inputVectorsParser holds the information from the InputVectors yaml file
      */
 
-    protected void createAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser) {
+    private void createAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser) {
         Set<String> allInputBooleanNames = fRobotConfiguration.getInputBooleanNames();
         Set<String> allInputNumericNames = fRobotConfiguration.getInputNumericNames();
         Set<String> allInputVectorNames = fRobotConfiguration.getInputVectorNames();
@@ -232,7 +232,7 @@ public class InputService implements ScheduledService {
      * @param config the yaml configuration for the input
      */
 
-    protected void createInputBoolean(String name, Config config) {
+    private void createInputBoolean(String name, Config config) {
         fSharedObjectsDirectory.registerInputBoolean(name, fModelFactory.createInputBoolean(name, config));
     }
 
@@ -242,7 +242,7 @@ public class InputService implements ScheduledService {
      * @param config the yaml configuration for the input
      */
 
-    protected void createInputNumeric(String name, Config config) {
+    private void createInputNumeric(String name, Config config) {
         fSharedObjectsDirectory.registerInputNumeric(name, fModelFactory.createInputNumeric(name, config));
     }
 
@@ -252,7 +252,7 @@ public class InputService implements ScheduledService {
      * @param config the yaml configuration for the input
      */
 
-    protected void createInputVector(String name, Config config) {
+    private void createInputVector(String name, Config config) {
         fSharedObjectsDirectory.registerInputVector(name, fModelFactory.createInputVector(name, config));
     }
 }
