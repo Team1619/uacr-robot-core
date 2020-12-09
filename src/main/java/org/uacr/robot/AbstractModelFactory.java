@@ -200,7 +200,7 @@ public abstract class AbstractModelFactory {
                 default:
                     throw new ConfigurationException("State of name " + name + " does not exist.");
             }
-            fSharedObjectDirectory.setStateObject(name, state);
+            fSharedObjectDirectory.registerStateObject(name, state);
         }
         return state;
     }

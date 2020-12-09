@@ -11,6 +11,8 @@ import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 
 import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Handles the creation (using the ModelFactory) of the input, output, state and behavior objects
@@ -19,13 +21,11 @@ import javax.annotation.Nullable;
 public interface ObjectsDirectory {
 
     // Inputs
-    void registerAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser);
+    void registerInputBoolean(String name, InputBoolean inputBoolean);
 
-    void registerInputBoolean(String name, Config config);
+    void registerInputNumeric(String name, InputNumeric inputNumeric);
 
-    void registerInputNumeric(String name, Config config);
-
-    void registerInputVector(String name, Config config);
+    void registerInputVector(String name, InputVector inputVector);
 
     InputBoolean getInputBooleanObject(String name);
 
@@ -42,21 +42,15 @@ public interface ObjectsDirectory {
 
 
     // States
-    void registerAllStates(YamlConfigParser parser);
-
-    void registerStates(String name, YamlConfigParser statesParser, Config config);
+    void registerStateObject(String name, State state);
 
     State getStateObject(String name);
 
-    void setStateObject(String name, State state);
-
 
     // Outputs
-    void registerAllOutputs(YamlConfigParser outputNumericsParser, YamlConfigParser outputBooleansParser);
+    void registerOutputBoolean(String name, OutputBoolean outputBoolean);
 
-    void registerOutputNumeric(String name, Config config, YamlConfigParser parser);
-
-    void registerOutputBoolean(String name, Config config, YamlConfigParser parser);
+    void registerOutputNumeric(String name, OutputNumeric outputNumeric);
 
     OutputBoolean getOutputBooleanObject(String name);
 
