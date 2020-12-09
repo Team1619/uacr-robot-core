@@ -1,11 +1,13 @@
 package org.uacr.services.states;
 
+import org.uacr.robot.AbstractModelFactory;
 import org.uacr.robot.AbstractStateControls;
 import org.uacr.robot.RobotManager;
 import org.uacr.shared.abstractions.FMS;
 import org.uacr.shared.abstractions.InputValues;
 import org.uacr.shared.abstractions.ObjectsDirectory;
 import org.uacr.shared.abstractions.RobotConfiguration;
+import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Inject;
 import org.uacr.utilities.logging.LogManager;
@@ -21,6 +23,7 @@ public class StatesService implements ScheduledService {
 
     private static final Logger sLogger = LogManager.getLogger(StatesService.class);
 
+    private final AbstractModelFactory fModelFactory;
     private final InputValues fSharedInputValues;
     private final ObjectsDirectory fSharedObjectsDirectory;
     private final FMS fFms;
@@ -41,7 +44,8 @@ public class StatesService implements ScheduledService {
      */
 
     @Inject
-    public StatesService(InputValues inputValues, FMS fms, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory, AbstractStateControls stateControls) {
+    public StatesService(AbstractModelFactory modelFactory, InputValues inputValues, FMS fms, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory, AbstractStateControls stateControls) {
+        fModelFactory = modelFactory;
         fSharedInputValues = inputValues;
         fSharedObjectsDirectory = objectsDirectory;
         fFms = fms;
@@ -66,7 +70,7 @@ public class StatesService implements ScheduledService {
         mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_state_service");
 
         fStatesParser.loadWithFolderName("states.yaml");
-        fSharedObjectsDirectory.registerAllStates(fStatesParser);
+        createAllStates(fStatesParser);
 
         fSharedInputValues.setBoolean("ipb_robot_has_been_zeroed", false);
 
@@ -146,5 +150,29 @@ public class StatesService implements ScheduledService {
     @Override
     public void shutDown() throws Exception {
 
+    }
+
+
+    /**
+     * Loops through all states and calls the method to create them and store them
+     * @param statesParser holds the information from the States yaml file
+     */
+
+    public void createAllStates(YamlConfigParser statesParser) {
+        for (String stateName : fRobotConfiguration.getStateNames()) {
+            Config config = statesParser.getConfig(stateName);
+            createState(stateName, statesParser, config);
+        }
+    }
+
+    /**
+     * Uses the ModelFactory to create the desired state
+     * @param name of the state to be created
+     * @param statesParser holds the information from the States yaml file
+     * @param config for the state
+     */
+
+    public void createState(String name, YamlConfigParser statesParser, Config config) {
+        fModelFactory.createState(name, statesParser, config);
     }
 }
