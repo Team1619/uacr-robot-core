@@ -10,6 +10,7 @@ import java.util.Set;
 
 public interface RobotConfiguration {
 
+    @Deprecated
     void initialize();
 
     Map<String, Set<String>> getStateNamesWithPriority();

@@ -23,7 +23,13 @@ public class SharedRobotConfiguration implements RobotConfiguration {
     private Map<String, Map<String, Object>> mData;
 
     public SharedRobotConfiguration() {
-        mData = new HashMap<>();
+        sLogger.trace("Loading robot-configuration.yaml file");
+
+        YamlConfigParser parser = new YamlConfigParser();
+        parser.loadWithFolderName("robot-configuration.yaml");
+        mData = parser.getData();
+
+        sLogger.trace("Loaded");
     }
 
     /**
@@ -32,13 +38,7 @@ public class SharedRobotConfiguration implements RobotConfiguration {
 
     @Override
     public void initialize() {
-        sLogger.trace("Loading robot-configuration.yaml file");
-
-        YamlConfigParser parser = new YamlConfigParser();
-        parser.loadWithFolderName("robot-configuration.yaml");
-        mData = parser.getData();
-
-        sLogger.trace("Loaded");
+        // no longer used
     }
 
     /**
