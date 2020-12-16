@@ -4,6 +4,7 @@ import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
 import org.uacr.robot.AbstractModelFactory;
 import org.uacr.shared.abstractions.*;
+import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Inject;
 import org.uacr.utilities.logging.LogManager;
@@ -23,17 +24,18 @@ public class OutputService implements ScheduledService {
 
     private static final Logger sLogger = LogManager.getLogger(OutputService.class);
 
+    private final AbstractModelFactory fModelFactory;
     private final FMS fFms;
     private final InputValues fSharedInputValues;
     private final OutputValues fSharedOutputValues;
     private final ObjectsDirectory fSharedOutputsDirectory;
     private final RobotConfiguration fRobotConfiguration;
-    private final YamlConfigParser fOutputNumericsParser;
     private final YamlConfigParser fOutputBooleansParser;
+    private final YamlConfigParser fOutputNumericsParser;
 
     private FMS.Mode mCurrentFmsMode;
-    private Set<String> mOutputNumericNames;
     private Set<String> mOutputBooleanNames;
+    private Set<String> mOutputNumericNames;
     private long mFrameTimeThreshold;
 
     /**
@@ -46,13 +48,14 @@ public class OutputService implements ScheduledService {
 
     @Inject
     public OutputService(AbstractModelFactory modelFactory, FMS fms, InputValues inputValues, OutputValues outputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+        fModelFactory = modelFactory;
         fFms = fms;
         fSharedInputValues = inputValues;
         fSharedOutputValues = outputValues;
         fRobotConfiguration = robotConfiguration;
         fSharedOutputsDirectory = objectsDirectory;
-        fOutputNumericsParser = new YamlConfigParser();
         fOutputBooleansParser = new YamlConfigParser();
+        fOutputNumericsParser = new YamlConfigParser();
 
         mCurrentFmsMode = FMS.Mode.DISABLED;
         mOutputNumericNames = new HashSet<>();
@@ -77,9 +80,9 @@ public class OutputService implements ScheduledService {
         mOutputBooleanNames = fRobotConfiguration.getOutputBooleanNames();
         mFrameTimeThreshold = fRobotConfiguration.getInt("global_timing", "frame_time_threshold_output_service");
 
-        fOutputNumericsParser.loadWithFolderName("output-numerics.yaml");
         fOutputBooleansParser.loadWithFolderName("output-booleans.yaml");
-        fSharedOutputsDirectory.registerAllOutputs(fOutputNumericsParser, fOutputBooleansParser);
+        fOutputNumericsParser.loadWithFolderName("output-numerics.yaml");
+        createAllOutputs(fOutputBooleansParser, fOutputNumericsParser);
 
         sLogger.trace("OutputService started");
     }
@@ -151,5 +154,45 @@ public class OutputService implements ScheduledService {
     @Override
     public Scheduler scheduler() {
         return new Scheduler(1000 / 60);
+    }
+
+    /**
+     * Loops through all outputs and calls the appropriate method to create them and store them in the appropriate map
+     * @param outputsBooleanParser holds the information from the OutputBooleans yaml file
+     * @param outputNumericsParser holds the information from the OutputNumerics yaml file
+     */
+
+    private void createAllOutputs(YamlConfigParser outputsBooleanParser, YamlConfigParser outputNumericsParser) {
+        for (String outputBooleanName : fRobotConfiguration.getOutputBooleanNames()) {
+            Config outputBooleanConfig = outputsBooleanParser.getConfig(outputBooleanName);
+            createOutputBoolean(outputBooleanName, outputBooleanConfig, outputsBooleanParser);
+            sLogger.trace("Registered {} in Output Booleans", outputBooleanName);
+        }
+
+        for (String outputNumericName : fRobotConfiguration.getOutputNumericNames()) {
+            Config outputNumericConfig = outputNumericsParser.getConfig(outputNumericName);
+            createOutputNumeric(outputNumericName, outputNumericConfig, outputNumericsParser);
+            sLogger.trace("Registered {} in Output Numerics", outputNumericName);
+        }
+    }
+
+    /**
+     * Uses the ModelFactory to create the desired OutputBoolean and stores it in the OutputBooleanObjects map
+     * @param name of the output to be created
+     * @param config the yaml configuration for the output
+     */
+
+    private void createOutputBoolean(String name, Config config, YamlConfigParser parser) {
+        fSharedOutputsDirectory.registerOutputBoolean(name, fModelFactory.createOutputBoolean(name, config, parser));
+    }
+
+    /**
+     * Uses the ModelFactory to create the desired OutputNumeric and stores it in the OutputNumericObjects map
+     * @param name of the output to be created
+     * @param config the yaml configuration for the output
+     */
+
+    private void createOutputNumeric(String name, Config config, YamlConfigParser parser) {
+        fSharedOutputsDirectory.registerOutputNumeric(name, fModelFactory.createOutputNumeric(name, config, parser));
     }
 }

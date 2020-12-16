@@ -7,6 +7,7 @@ import org.uacr.robot.AbstractModelFactory;
 import org.uacr.shared.abstractions.InputValues;
 import org.uacr.shared.abstractions.ObjectsDirectory;
 import org.uacr.shared.abstractions.RobotConfiguration;
+import org.uacr.utilities.Config;
 import org.uacr.utilities.YamlConfigParser;
 import org.uacr.utilities.injection.Inject;
 import org.uacr.utilities.logging.LogManager;
@@ -25,6 +26,7 @@ public class InputService implements ScheduledService {
 
     private static final Logger sLogger = LogManager.getLogger(InputService.class);
 
+    private final AbstractModelFactory fModelFactory;
     private final InputValues fSharedInputValues;
     private final ObjectsDirectory fSharedObjectsDirectory;
     private final RobotConfiguration fRobotConfiguration;
@@ -48,6 +50,7 @@ public class InputService implements ScheduledService {
 
     @Inject
     public InputService(AbstractModelFactory modelFactory, InputValues inputValues, RobotConfiguration robotConfiguration, ObjectsDirectory objectsDirectory) {
+        fModelFactory = modelFactory;
         fSharedInputValues = inputValues;
         fSharedObjectsDirectory = objectsDirectory;
         fRobotConfiguration = robotConfiguration;
@@ -85,7 +88,7 @@ public class InputService implements ScheduledService {
         fInputBooleanParser.loadWithFolderName("input-booleans.yaml");
         fInputNumericParser.loadWithFolderName("input-numerics.yaml");
         fInputVectorParser.loadWithFolderName("input-vectors.yaml");
-        fSharedObjectsDirectory.registerAllInputs(fInputBooleanParser, fInputNumericParser, fInputVectorParser);
+        createAllInputs(fInputBooleanParser, fInputNumericParser, fInputVectorParser);
 
         fSharedInputValues.setString("active states", "");
 
@@ -182,5 +185,74 @@ public class InputService implements ScheduledService {
     @Override
     public Scheduler scheduler() {
         return new Scheduler(1000 / 60);
+    }
+
+    /**
+     * Loops through all inputs and calls the appropriate method to create them and store them in the appropriate map
+     * Once all inputs have been created, calls initialize on all inputs
+     * @param inputBooleansParser holds the information from the InputBooleans yaml file
+     * @param inputNumericsParser holds the information from the InputNumerics yaml file
+     * @param inputVectorsParser holds the information from the InputVectors yaml file
+     */
+
+    private void createAllInputs(YamlConfigParser inputBooleansParser, YamlConfigParser inputNumericsParser, YamlConfigParser inputVectorsParser) {
+        Set<String> allInputBooleanNames = fRobotConfiguration.getInputBooleanNames();
+        Set<String> allInputNumericNames = fRobotConfiguration.getInputNumericNames();
+        Set<String> allInputVectorNames = fRobotConfiguration.getInputVectorNames();
+
+        for (String inputBooleanName : allInputBooleanNames) {
+            Config config = inputBooleansParser.getConfig(inputBooleanName);
+            createInputBoolean(inputBooleanName, config);
+        }
+
+        for (String inputNumericName : allInputNumericNames) {
+            Config config = inputNumericsParser.getConfig(inputNumericName);
+            createInputNumeric(inputNumericName, config);
+        }
+
+        for (String inputVectorName : allInputVectorNames) {
+            Config config = inputVectorsParser.getConfig(inputVectorName);
+            createInputVector(inputVectorName, config);
+        }
+
+        allInputBooleanNames.stream().map(fSharedObjectsDirectory::getInputBooleanObject).forEach(InputBoolean::initialize);
+        sLogger.trace("Input Booleans initialized");
+
+        allInputNumericNames.stream().map(fSharedObjectsDirectory::getInputNumericObject).forEach(InputNumeric::initialize);
+        sLogger.trace("Input Numerics initialized");
+
+        allInputVectorNames.stream().map(fSharedObjectsDirectory::getInputVectorObject).forEach(InputVector::initialize);
+        sLogger.trace("Input Vectors initialized");
+
+    }
+
+    /**
+     * Uses the ModelFactory to create the desired InputBoolean and stores it in the ObjectsDirectory
+     * @param name of the input to be created
+     * @param config the yaml configuration for the input
+     */
+
+    private void createInputBoolean(String name, Config config) {
+        fSharedObjectsDirectory.registerInputBoolean(name, fModelFactory.createInputBoolean(name, config));
+    }
+
+    /**
+     * Uses the ModelFactory to create the desired InputNumeric and stores it in the ObjectsDirectory
+     * @param name of the input to be created
+     * @param config the yaml configuration for the input
+     */
+
+    private void createInputNumeric(String name, Config config) {
+        fSharedObjectsDirectory.registerInputNumeric(name, fModelFactory.createInputNumeric(name, config));
+    }
+
+    /**
+     * Uses the ModelFactory to create the desired InputVector and stores it in the ObjectsDirectory
+     * @param name of the input to be created
+     * @param config the yaml configuration for the input
+     */
+
+    private void createInputVector(String name, Config config) {
+        fSharedObjectsDirectory.registerInputVector(name, fModelFactory.createInputVector(name, config));
     }
 }
