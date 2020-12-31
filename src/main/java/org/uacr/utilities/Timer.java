@@ -4,7 +4,7 @@ package org.uacr.utilities;
  * Tracks the amount of elapsed time in milliseconds after timer has been started
  * Can be reset and used again
  */
-
+@Deprecated
 public class Timer {
 
     private long mStartTime;
