@@ -6,7 +6,9 @@ import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,7 +27,7 @@ public class SharedInputValues implements InputValues {
     private final Map<String, Double> fInputNumerics;
     private final Map<String, Map<String, Double>> fInputVectors;
     private final Map<String, String> fInputStrings;
-    private final Map<String, String> fInputFlags;
+    private final Map<String, Set<String>> fInputFlags;
 
     /**
      * Creates maps to store the values of each input by input type and value type
@@ -123,7 +125,11 @@ public class SharedInputValues implements InputValues {
 
     @Override
     public void setInputFlag(String name, String flag) {
-        fInputFlags.put(name, flag);
+
+        if(!fInputFlags.containsKey(name)){
+            fInputFlags.put(name, new HashSet<>());
+        }
+        fInputFlags.get(name).add(flag);
     }
 
     /**
@@ -133,10 +139,10 @@ public class SharedInputValues implements InputValues {
      */
 
     @Override
-    public String getInputFlag(String name) {
-        String flag = fInputFlags.getOrDefault(name, "none");
+    public Set<String> getInputFlag(String name) {
+        Set<String> flags = fInputFlags.getOrDefault(name, Set.of());
         fInputFlags.remove(name);
-        return flag;
+        return flags;
     }
 
     /**

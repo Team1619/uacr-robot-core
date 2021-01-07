@@ -145,7 +145,7 @@ public class InputService implements ScheduledService {
 
         for (String name : mInputVectorNames) {
             InputVector inputVector = fSharedObjectsDirectory.getInputVectorObject(name);
-            inputVector.processFlag(fSharedInputValues.getInputFlag(name));
+            inputVector.processFlags(fSharedInputValues.getInputFlag(name));
             inputVector.update();
             fSharedInputValues.setVector(name, inputVector.get());
         }

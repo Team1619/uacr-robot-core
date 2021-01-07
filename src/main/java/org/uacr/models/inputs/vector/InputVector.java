@@ -3,6 +3,7 @@ package org.uacr.models.inputs.vector;
 import org.uacr.utilities.Config;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base class for all vectors in the InputService
@@ -41,9 +42,9 @@ public abstract class InputVector {
     /**
      * Called by the InputService to tell the InputVector to handle a flag.
      * Flags allow other parts of the code such as Behaviors to update the InputVectors settings.
-     * @param flag the string for the InputVector to handle.
+     * @param flags the string for the InputVector to handle.
      */
-    public abstract void processFlag(String flag);
+    public abstract void processFlags(Set<String> flags);
 
     /**
      * @return the name of the InputVector
