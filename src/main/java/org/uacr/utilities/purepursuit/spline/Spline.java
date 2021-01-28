@@ -1,16 +1,16 @@
 package org.uacr.utilities.purepursuit.spline;
 
-import java.util.Arrays;
-
+/**
+ * Mathematically describes a spline and creates it from a set of waypoints.
+ */
 public class Spline {
+    // isNaturalSpline refers to whether it is a "natural spline" (2nd derivative is zero at ends)
+    private final boolean isNaturalSpline;
+    // If it is not a naturalSpline, the starting and ending angles should be specified
+    private final double startingAngle;
+    private final double endingAngle;
 
-    private double[] x;
-    private double[] y;
-
-    private boolean isNaturalSpline;
-    private double startingAngle;
-    private double endingAngle;
-
+    // Set of polynomials that make up the spline
     public Polynomial[] curves;
 
     private Spline(double[] x, double[] y, boolean isNaturalSpline, double startingAngle, double endingAngle) {
@@ -18,15 +18,12 @@ public class Spline {
             throw new IllegalArgumentException("Must provide same number of x and y values.");
         }
 
-        this.x = x;
-        this.y = y;
-
         this.startingAngle = startingAngle;
         this.endingAngle = endingAngle;
 
         this.isNaturalSpline = isNaturalSpline;
 
-        this.curves = generatePolynomials(this.x, this.y);
+        this.curves = generatePolynomials(x, y);
     }
 
     public Spline(double[] x, double[] y) {
@@ -37,6 +34,9 @@ public class Spline {
         this(x, y, false, startingAngle, endingAngle);
     }
 
+    /**
+     * Returns the Polynomial object that describes the spline at the region of an x coordinate.
+     */
     public Polynomial getCurve(double x) {
         for (Polynomial curve : curves) {
             if (x >= curve.getLowerBound() && x <= curve.getUpperBound()) {
@@ -47,14 +47,23 @@ public class Spline {
         throw new IllegalArgumentException("Input not in domain of spline");
     }
 
+    /**
+     * Returns the lower bound of the spline (min x-value).
+    */
     public double getLowerBound() {
         return curves[0].getLowerBound();
     }
 
+    /**
+     * Returns the upper bound of the spline (max x-value).
+    */
     public double getUpperBound() {
         return curves[curves.length - 1].getUpperBound();
     }
 
+    /**
+     * Returns the y-value of the point on the spline with a certain x-coordinate.
+     */
     public double eval(double input) {
         for (Polynomial curve : curves) {
             if (input >= curve.getLowerBound() && input <= curve.getUpperBound()) {
@@ -65,6 +74,9 @@ public class Spline {
         throw new IllegalArgumentException("Input not in domain of spline");
     }
 
+    /**
+     * Returns array of y-values for an array of input x-coordinates.
+     */
     public double[] eval(double[] inputs) {
         double[] results = new double[inputs.length];
         for (int i = 0; i < inputs.length; i++) {
@@ -73,6 +85,11 @@ public class Spline {
         return results;
     }
 
+    /**
+     * Creates the polynomials for the spline given the x and y coordinates of the waypoints.
+     *
+     * The x and y coordinates are given as two arrays, which must be of the same length (same index corresponds to one point).
+     */
     private Polynomial[] generatePolynomials(double[] x, double[] y) {
         final int n = x.length;
         int currentRow = 0;
@@ -100,6 +117,7 @@ public class Spline {
             equationsMatrix[currentRow][4 * (n - 2) + 3] = 3 * Math.pow(x[n - 1] - x[n - 2], 2);
             equationsMatrix[currentRow++][4 * n - 4] = endingDerivative;
         }
+        // Equations to set the endpoints of each polynomial
         for (int i = 0; i < n - 1; i++) {
             // y_i = a_i
             equationsMatrix[currentRow][4 * i] = 1;
@@ -111,6 +129,7 @@ public class Spline {
             equationsMatrix[currentRow][4 * i + 3] = Math.pow(x[i + 1] - x[i], 3);
             equationsMatrix[currentRow++][4 * n - 4] = y[i + 1];
         }
+        // Equations to set derivatives and second derivatives equal
         for (int i = 0; i < n - 2; i++) {
             // 0 = b_i + 2c_i (x_i+1 - x_i) + 3d_i (x_i+1 - x_i)^2 - b_i+1
             equationsMatrix[currentRow][4 * i + 1] = 1;
@@ -123,6 +142,7 @@ public class Spline {
             equationsMatrix[currentRow++][4 * (i + 1) + 2] = -2;
         }
 
+        // Solve the system to get the resultant polynomials and create the Polynomial objects
         Polynomial[] result = new Polynomial[n - 1];
         double[] coefficients = solveMatrix(equationsMatrix);
         for (int i = 0; i < n - 1; i++) {
@@ -134,6 +154,9 @@ public class Spline {
         return result;
     }
 
+    /**
+     * Returns a 2-d array of a specified size filled with zeros.
+     */
     private static double[][] getZeros(int rows, int columns) {
         double[][] result = new double[rows][columns];
         for (int i = 0; i < rows; i++) {
@@ -145,15 +168,9 @@ public class Spline {
         return result;
     }
 
-    private static void printArray(double[][] array) {
-        for (double[] doubles : array) {
-            for (double aDouble : doubles) {
-                System.out.print(aDouble + " ");
-            }
-            System.out.println();
-        }
-    }
-
+    /**
+     * Solves a matrix (2-d array) of linear equations using Gaussian elimination.
+     */
     private static double[] solveMatrix(double[][] matrix) {
         for (int k = 0; k < matrix.length; k++) {
             // Find row with greatest value after current row
@@ -191,22 +208,12 @@ public class Spline {
         return solution;
     }
 
+    /**
+     * Swaps two rows of an array in place. Used for solving linear systems in matrices.
+     */
     private static void swapRows(double[][] matrix, int row1, int row2) {
         double[] temp = matrix[row1];
         matrix[row1] = matrix[row2];
         matrix[row2] = temp;
-    }
-
-    public static void main(String[] args) {
-        double[] x = new double[]{0, 1, 2, 3, 4, 5};
-        double[] y = new double[]{0, 2, 4, 6, 4, 0};
-        Spline s = new Spline(x, y, 30, 30);
-        double[] testX = new double[500];
-        for (int i = 0; i < 500; i++) {
-            testX[i] = ((double) i) / 100;
-        }
-        System.out.println(Arrays.toString(testX));
-        System.out.println(Arrays.toString(s.eval(testX)));
-        System.out.println(Arrays.toString(s.curves));
     }
 }

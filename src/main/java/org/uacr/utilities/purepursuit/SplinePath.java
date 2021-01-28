@@ -5,9 +5,14 @@ import org.uacr.utilities.purepursuit.spline.ParametricSpline;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Class to represent a path that is created using splines.
+ */
 public class SplinePath extends Path {
 
-    private boolean isNaturalSpline;
+    // isNaturalSpline refers to whether it is a "natural spline" (2nd derivative is zero at ends)
+    private final boolean isNaturalSpline;
+    // If it is not a naturalSpline, the starting and ending angles should be specified
     private Double startingAngle = null;
     private Double endingAngle = null;
 
@@ -37,6 +42,9 @@ public class SplinePath extends Path {
         this(startingAngle, endingAngle, new ArrayList<>(Arrays.asList(points)));
     }
 
+    /**
+     * Uses a parametric spline to interpolate points and fill the path.
+     */
     @Override
     protected void fill() {
         ParametricSpline spline;
