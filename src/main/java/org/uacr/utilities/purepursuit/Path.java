@@ -82,7 +82,7 @@ public class Path {
     /**
      * Waypoints along path specified by behavior
      */
-    private ArrayList<Point> mPoints;
+    protected ArrayList<Point> mPoints;
 
     /**
      * All the points along the path, created from the waypoints (fPoints)
@@ -445,7 +445,7 @@ public class Path {
     /**
      * Fills the spaces between waypoints (fPoints) with a point fPointSpacing inches.
      */
-    private void fill() {
+    protected void fill() {
         ArrayList<Point> newPoints = new ArrayList<>();
 
         for (int s = 1; s < mPoints.size(); s++) {
@@ -468,7 +468,7 @@ public class Path {
     /**
      * Smooths the straight lines of points into a curved path.
      */
-    private void smooth() {
+    protected void smooth() {
         double change = 0.5;
         double changedPoints = 1;
         while (change / changedPoints >= 0.01) {
@@ -479,6 +479,10 @@ public class Path {
 
             for (int i = 1; i < mPoints.size() - 1; i++) {
                 Point point = mPoints.get(i);
+//
+//                if (point instanceof WayPathPoint) {
+//                    continue;
+//                }
 
                 Vector middle = new Vector(mPoints.get(i + 1).subtract(mPoints.get(i - 1)));
 
