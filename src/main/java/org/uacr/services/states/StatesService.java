@@ -118,11 +118,11 @@ public class StatesService implements ScheduledService {
                 }
             } else if (nextFmsMode == FMS.Mode.DISABLED) {
                 sLogger.info("Current mode {} next mode {}", mCurrentFmsMode, nextFmsMode);
-                if (mCurrentFmsMode != FMS.Mode.AUTONOMOUS) {
+  //              if (mCurrentFmsMode != FMS.Mode.AUTONOMOUS) {
                     fRobotManager.dispose();
                     fStateMachine.dispose();
                     fSharedInputValues.setBoolean("ipb_robot_has_been_zeroed", false);
-                }
+  //              }
             }
         }
 
