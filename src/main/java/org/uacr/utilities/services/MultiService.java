@@ -1,6 +1,7 @@
 package org.uacr.utilities.services;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -11,8 +12,12 @@ public class MultiService implements Service {
 
     private final List<Service> fServices;
 
+    public MultiService(List<Service> services) {
+        fServices = services;
+    }
+
     public MultiService(Service... services) {
-        fServices = Arrays.asList(services);
+        this(Arrays.asList(services));
     }
 
     /**
