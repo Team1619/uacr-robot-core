@@ -1,5 +1,6 @@
 package org.uacr.services.output;
 
+import org.uacr.models.inputs.numeric.InputNumeric;
 import org.uacr.models.outputs.bool.OutputBoolean;
 import org.uacr.models.outputs.numeric.OutputNumeric;
 import org.uacr.robot.AbstractModelFactory;
@@ -115,17 +116,20 @@ public class OutputService implements ScheduledService {
 
         mCurrentFmsMode = nextFmsMode;
 
-        for (String outputNumericName : mOutputNumericNames) {
-            OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
-            Map<String, Object> outputNumericOutputs = fSharedOutputValues.getOutputNumericValue(outputNumericName);
-            outputNumericObject.processFlag(fSharedOutputValues.getOutputFlag(outputNumericName));
-            outputNumericObject.setHardware((String) outputNumericOutputs.get("type"), (double) outputNumericOutputs.get("value"), (String) outputNumericOutputs.get("profile"));
+        for (String name : mOutputNumericNames) {
+            InputNumeric inputNumeric = fSharedOutputsDirectory.getInputNumericObject(name);
+            inputNumeric.processFlag(fSharedInputValues.getInputFlag(name));
+            inputNumeric.update();
+            fSharedInputValues.setNumeric(name, inputNumeric.get());
         }
-        for (String outputBooleanName : mOutputBooleanNames) {
-            OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(outputBooleanName);
-            outputBooleanObject.processFlag(fSharedOutputValues.getOutputFlag(outputBooleanName));
-            outputBooleanObject.setHardware(fSharedOutputValues.getBoolean(outputBooleanName));
+
+        for (String name : mOutputBooleanNames) {
+            InputNumeric inputNumeric = fSharedOutputsDirectory.getInputNumericObject(name);
+            inputNumeric.processFlag(fSharedInputValues.getInputFlag(name));
+            inputNumeric.update();
+            fSharedInputValues.setNumeric(name, inputNumeric.get());
         }
+        
 
         // Check for delayed frames
         long currentTime = System.currentTimeMillis();
