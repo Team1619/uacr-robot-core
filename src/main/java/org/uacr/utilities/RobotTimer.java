@@ -1,27 +1,33 @@
 package org.uacr.utilities;
 
+import org.uacr.shared.abstractions.InputValues;
+
 /**
  * Tracks the amount of elapsed time in milliseconds after timer has been started
  * Can be reset and used again
  */
-@Deprecated
-public class Timer {
 
-    private long mStartTime;
-    private long mTime;
+public class RobotTimer {
 
-    public Timer() {
+    private double mStartTime;
+    private double mDuration;
+
+    private final InputValues fSharedInputValues;
+
+    public RobotTimer(InputValues inputValues) {
         mStartTime = -1;
-        mTime = 0;
+        mDuration = 0;
+
+        fSharedInputValues = inputValues;
     }
 
     /**
      * Stores the system time when the timer is started
-     * @param timeMs the duration of time to elapse before the timer is complete in milliseconds
+     * @param durationMs the duration of time to elapse before the timer is complete in milliseconds
      */
-    public void start(long timeMs) {
-        mTime = timeMs;
-        mStartTime = System.currentTimeMillis();
+    public void start(long durationMs) {
+        mDuration = durationMs;
+        mStartTime = fSharedInputValues.getNumeric("ipn_frame_start_time");
     }
 
     /**
@@ -45,6 +51,6 @@ public class Timer {
      */
 
     public boolean isDone() {
-        return mStartTime != -1 && System.currentTimeMillis() - mStartTime >= mTime;
+        return isStarted() && fSharedInputValues.getNumeric("ipn_frame_start_time") - mStartTime >= mDuration;
     }
 }

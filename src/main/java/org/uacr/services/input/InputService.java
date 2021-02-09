@@ -106,6 +106,7 @@ public class InputService implements ScheduledService {
     public void runOneIteration() throws Exception {
 
         long frameStartTime = System.currentTimeMillis();
+        fSharedInputValues.setNumeric("ipn_frame_start_time", frameStartTime);
 
         for (String name : mInputBooleanNames) {
             InputBoolean inputBoolean = fSharedObjectsDirectory.getInputBooleanObject(name);
