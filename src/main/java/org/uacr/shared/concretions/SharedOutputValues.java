@@ -7,7 +7,9 @@ import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -22,7 +24,7 @@ public class SharedOutputValues implements OutputValues {
 
     private final Map<String, Map<String, Object>> fOutputNumerics;
     private final Map<String, Boolean> fOutputBooleans;
-    private final Map<String, String> fOutputFlags;
+    private final Map<String, Set<String>> fOutputFlags;
 
     /**
      * Creates maps to store the values to be set to each output by output type and value type
@@ -54,25 +56,29 @@ public class SharedOutputValues implements OutputValues {
     /**
      * Output flags are used to pass extra information to the outputs
      * Output flags are cleared after one reading
-     * @param outputName of the output to set the flag on
+     * @param name of the output to set the flag on
      * @param flag the value to be set
      */
 
     @Override
-    public void setOutputFlag(String outputName, String flag) {
-        fOutputFlags.put(outputName, flag);
-    }
+    public void setOutputFlag(String name, String flag) {
+
+
+        if (!fOutputFlags.containsKey(name)) {
+            fOutputFlags.put(name, new HashSet<String>());
+        }
+        fOutputFlags.get(name);    }
 
     /**
      * Output flags are used to pass extra information to the outputs
-     * @param outputName of the output read the flag on
+     * @param name of the output read the flag on
      * @return the value of the flag after removing the flag from the map
      */
     @Override
-    public String getOutputFlag(String outputName) {
-        String flag = fOutputFlags.getOrDefault(outputName, "none");
-        fOutputFlags.remove(outputName);
-        return flag;
+    public Set<String> getOutputFlags(String name) {
+        Set<String> flags = fOutputFlags.getOrDefault(name, Set.of());
+        fOutputFlags.remove(name);
+        return flags;
     }
 
 

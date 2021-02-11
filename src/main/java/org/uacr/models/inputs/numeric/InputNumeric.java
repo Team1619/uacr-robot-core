@@ -2,6 +2,8 @@ package org.uacr.models.inputs.numeric;
 
 import org.uacr.utilities.Config;
 
+import java.util.Set;
+
 /**
  * Base class for all numerics in the InputService
  **/
@@ -48,7 +50,7 @@ public abstract class InputNumeric {
      * Flags allow other parts of the code such as Behaviors to update the InputNumerics settings.
      * @param flag the string for the InputNumeric to handle.
      */
-    public abstract void processFlag(String flag);
+    public abstract void processFlags(Set<String> flag);
 }
 
 
