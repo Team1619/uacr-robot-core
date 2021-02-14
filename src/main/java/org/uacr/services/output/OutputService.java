@@ -118,7 +118,9 @@ public class OutputService implements ScheduledService {
         for (String name : mOutputNumericNames) {
             OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(name);
             Map<String, Object> outputNumericOutputs = fSharedOutputValues.getOutputNumericValue(name);
-            outputNumericObject.processFlags(fSharedOutputValues.getOutputFlags(name));
+            for(String flag : fSharedOutputValues.getOutputFlags(name)) {
+                outputNumericObject.processFlag(flag);
+            }
             outputNumericObject.setHardware((String) outputNumericOutputs.get("type"), (double) outputNumericOutputs.get("value"), (String) outputNumericOutputs.get("profile"));
         }
         for (String name : mOutputBooleanNames) {

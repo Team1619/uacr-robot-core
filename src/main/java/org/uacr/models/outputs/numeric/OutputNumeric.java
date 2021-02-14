@@ -2,8 +2,6 @@ package org.uacr.models.outputs.numeric;
 
 import org.uacr.utilities.Config;
 
-import java.util.Set;
-
 /**
  * Base class for all numerics in the OutputService
  */
@@ -38,9 +36,9 @@ public abstract class OutputNumeric {
     /**
      * Called by the OutputNumeric to tell the OutputNumeric to handle a flag.
      * Flags allow other parts of the code such as Behaviors to update the OutputNumeric settings.
-     * @param flags the string for the OutputNumeric to handle.
+     * @param flag the string for the OutputNumeric to handle.
      */
-    public abstract void processFlags(Set<String> flags);
+    public abstract void processFlag(String flag);
 }
 
 
