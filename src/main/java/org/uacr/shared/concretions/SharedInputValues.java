@@ -129,7 +129,8 @@ public class SharedInputValues implements InputValues {
         if (!fInputFlags.containsKey(name)) {
             fInputFlags.put(name, new HashSet<String>());
         }
-        fInputFlags.get(name);
+        fInputFlags.get(name).add(flag);
+
     }
 
     /**

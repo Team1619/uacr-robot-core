@@ -44,7 +44,7 @@ public abstract class InputVector {
      * Flags allow other parts of the code such as Behaviors to update the InputVectors settings.
      * @param flags the string for the InputVector to handle.
      */
-    public abstract void processFlags(Set<String> flags);
+    public abstract void processFlag(Set<String> flags);
 
     /**
      * @return the name of the InputVector

@@ -67,7 +67,8 @@ public class SharedOutputValues implements OutputValues {
         if (!fOutputFlags.containsKey(name)) {
             fOutputFlags.put(name, new HashSet<String>());
         }
-        fOutputFlags.get(name);    }
+        fOutputFlags.get(name).add(flag);
+    }
 
     /**
      * Output flags are used to pass extra information to the outputs

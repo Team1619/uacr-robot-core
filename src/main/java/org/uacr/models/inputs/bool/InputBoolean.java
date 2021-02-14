@@ -2,8 +2,6 @@ package org.uacr.models.inputs.bool;
 
 import org.uacr.utilities.Config;
 
-import java.util.Set;
-
 /**
  * Base class for all booleans in the InputService
  **/
@@ -49,9 +47,9 @@ public abstract class InputBoolean {
     /**
      * Called by the InputService to tell the InputBoolean to handle a flag.
      * Flags allow other parts of the code such as Behaviors to update the InputBoolean's settings.
-     * @param flags the string for the InputBoolean to handle.
+     * @param flag the string for the InputBoolean to handle.
      */
-    public abstract void processFlags(Set<String> flags);
+    public abstract void processFlag(String flag);
 
     /**
      * The types of deltas for an InputBoolean
