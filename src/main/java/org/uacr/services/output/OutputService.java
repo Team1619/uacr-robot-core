@@ -123,7 +123,9 @@ public class OutputService implements ScheduledService {
         }
         for (String name : mOutputBooleanNames) {
             OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(name);
-            outputBooleanObject.processFlags(fSharedOutputValues.getOutputFlags(name));
+            for(String flag : fSharedOutputValues.getOutputFlags(name)) {
+                outputBooleanObject.processFlag(flag);
+            }
             outputBooleanObject.setHardware(fSharedOutputValues.getBoolean(name));
         }
 

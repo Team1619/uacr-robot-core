@@ -2,8 +2,6 @@ package org.uacr.models.outputs.bool;
 
 import org.uacr.utilities.Config;
 
-import java.util.Set;
-
 /**
  * Base class for all booleans in the OutputService
  */
@@ -40,5 +38,5 @@ public abstract class OutputBoolean {
      * Flags allow other parts of the code such as Behaviors to update the OutputBoolean settings.
      * @param flag the string for the OutputBoolean to handle.
      */
-    public abstract void processFlags(Set<String> flag);
+    public abstract void processFlag(String flag);
 }
