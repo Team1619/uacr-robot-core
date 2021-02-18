@@ -5,10 +5,7 @@ import org.uacr.utilities.injection.Singleton;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -141,7 +138,7 @@ public class SharedInputValues implements InputValues {
 
     @Override
     public Set<String> getInputFlag(String name) {
-        Set<String> flags = fInputFlags.getOrDefault(name, Set.of());
+        Set<String> flags = fInputFlags.getOrDefault(name, Collections.emptySet());
         fInputFlags.remove(name);
         return flags;
     }

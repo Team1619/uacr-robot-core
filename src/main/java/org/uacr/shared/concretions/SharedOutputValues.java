@@ -6,10 +6,7 @@ import org.uacr.utilities.injection.Singleton;
 import org.uacr.utilities.logging.LogManager;
 import org.uacr.utilities.logging.Logger;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -77,7 +74,7 @@ public class SharedOutputValues implements OutputValues {
      */
     @Override
     public Set<String> getOutputFlags(String name) {
-        Set<String> flags = fOutputFlags.getOrDefault(name, Set.of());
+        Set<String> flags = fOutputFlags.getOrDefault(name, Collections.emptySet());
         fOutputFlags.remove(name);
         return flags;
     }
