@@ -110,7 +110,9 @@ public class InputService implements ScheduledService {
 
         for (String name : mInputBooleanNames) {
             InputBoolean inputBoolean = fSharedObjectsDirectory.getInputBooleanObject(name);
-            inputBoolean.processFlag(fSharedInputValues.getInputFlag(name));
+            for(String flag : fSharedInputValues.getInputFlags(name)){
+                inputBoolean.processFlag(flag);
+            }
             inputBoolean.update();
             fSharedInputValues.setBoolean(name, inputBoolean.get());
             switch (inputBoolean.getDelta()) {
@@ -137,7 +139,9 @@ public class InputService implements ScheduledService {
 
         for (String name : mInputNumericNames) {
             InputNumeric inputNumeric = fSharedObjectsDirectory.getInputNumericObject(name);
-            inputNumeric.processFlag(fSharedInputValues.getInputFlag(name));
+            for (String flag : fSharedInputValues.getInputFlags(name)){
+                inputNumeric.processFlag(flag);
+            }
             inputNumeric.update();
             fSharedInputValues.setNumeric(name, inputNumeric.get());
         }
@@ -146,7 +150,9 @@ public class InputService implements ScheduledService {
 
         for (String name : mInputVectorNames) {
             InputVector inputVector = fSharedObjectsDirectory.getInputVectorObject(name);
-            inputVector.processFlag(fSharedInputValues.getInputFlag(name));
+            for (String flag : fSharedInputValues.getInputFlags(name)){
+                inputVector.processFlag(flag);
+            }
             inputVector.update();
             fSharedInputValues.setVector(name, inputVector.get());
         }

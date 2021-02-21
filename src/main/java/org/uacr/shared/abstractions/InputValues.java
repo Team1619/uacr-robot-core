@@ -5,6 +5,7 @@ package org.uacr.shared.abstractions;
  */
 
 import java.util.Map;
+import java.util.Set;
 
 public interface InputValues {
 
@@ -24,7 +25,7 @@ public interface InputValues {
 
     void setInputFlag(String name, String flag);
 
-    String getInputFlag(String name);
+    Set<String> getInputFlags(String name);
 
     Map<String, Map<String, Double>> getAllVectors();
 

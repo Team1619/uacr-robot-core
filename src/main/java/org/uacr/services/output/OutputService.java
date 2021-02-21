@@ -115,16 +115,20 @@ public class OutputService implements ScheduledService {
 
         mCurrentFmsMode = nextFmsMode;
 
-        for (String outputNumericName : mOutputNumericNames) {
-            OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(outputNumericName);
-            Map<String, Object> outputNumericOutputs = fSharedOutputValues.getOutputNumericValue(outputNumericName);
-            outputNumericObject.processFlag(fSharedOutputValues.getOutputFlag(outputNumericName));
+        for (String name : mOutputNumericNames) {
+            OutputNumeric outputNumericObject = fSharedOutputsDirectory.getOutputNumericObject(name);
+            Map<String, Object> outputNumericOutputs = fSharedOutputValues.getOutputNumericValue(name);
+            for(String flag : fSharedOutputValues.getOutputFlags(name)) {
+                outputNumericObject.processFlag(flag);
+            }
             outputNumericObject.setHardware((String) outputNumericOutputs.get("type"), (double) outputNumericOutputs.get("value"), (String) outputNumericOutputs.get("profile"));
         }
-        for (String outputBooleanName : mOutputBooleanNames) {
-            OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(outputBooleanName);
-            outputBooleanObject.processFlag(fSharedOutputValues.getOutputFlag(outputBooleanName));
-            outputBooleanObject.setHardware(fSharedOutputValues.getBoolean(outputBooleanName));
+        for (String name : mOutputBooleanNames) {
+            OutputBoolean outputBooleanObject = fSharedOutputsDirectory.getOutputBooleanObject(name);
+            for(String flag : fSharedOutputValues.getOutputFlags(name)) {
+                outputBooleanObject.processFlag(flag);
+            }
+            outputBooleanObject.setHardware(fSharedOutputValues.getBoolean(name));
         }
 
         // Check for delayed frames

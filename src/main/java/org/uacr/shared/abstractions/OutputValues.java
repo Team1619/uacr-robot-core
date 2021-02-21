@@ -5,6 +5,7 @@ package org.uacr.shared.abstractions;
  */
 
 import java.util.Map;
+import java.util.Set;
 
 public interface OutputValues {
 
@@ -13,7 +14,7 @@ public interface OutputValues {
 
     void setOutputFlag(String name, String flag);
 
-    String getOutputFlag(String name);
+    Set<String> getOutputFlags(String name);
 
     // Output Numeric
     void setNumeric(String outputNumericName, String outputType, double outputValue);
