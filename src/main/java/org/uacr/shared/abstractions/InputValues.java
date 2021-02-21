@@ -25,7 +25,7 @@ public interface InputValues {
 
     void setInputFlag(String name, String flag);
 
-    Set<String> getInputFlag(String name);
+    Set<String> getInputFlags(String name);
 
     Map<String, Map<String, Double>> getAllVectors();
 

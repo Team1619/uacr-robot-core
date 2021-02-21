@@ -137,7 +137,7 @@ public class SharedInputValues implements InputValues {
      */
 
     @Override
-    public Set<String> getInputFlag(String name) {
+    public Set<String> getInputFlags(String name) {
         Set<String> flags = fInputFlags.getOrDefault(name, Collections.emptySet());
         fInputFlags.remove(name);
         return flags;
