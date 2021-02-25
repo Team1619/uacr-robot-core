@@ -42,12 +42,16 @@ public class RobotManager {
         fStateControls.update();
     }
 
+    public void updateStatus() {
+        // Updates the robot status
+        fStateControls.getRobotStatus().update();
+    }
+
     /**
      * Called every frame to update robot status and current mode logic
      */
     public void update() {
-        // Updates the robot status
-        fStateControls.getRobotStatus().update();
+        updateStatus();
 
         // Updates state controls to select the correct mode logic
         fStateControls.update();
