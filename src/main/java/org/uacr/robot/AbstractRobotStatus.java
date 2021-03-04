@@ -31,6 +31,14 @@ public abstract class AbstractRobotStatus {
     public abstract void update();
 
     /**
+     * Called every frame when FMS Mode is Disabled
+     * This is a place for any code that has to run even when disabled (for example selecting path when disabled)
+     */
+
+    public void updateWhenDisabled() {
+    }
+
+    /**
      * Called when switching between Auto, Teleop and Disabled
      * This is a place for any clean up, clearing variables...
      */
