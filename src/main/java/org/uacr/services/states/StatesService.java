@@ -129,7 +129,7 @@ public class StatesService implements ScheduledService {
         //Update the current RobotManger and update the StateMachine
         mCurrentFmsMode = nextFmsMode;
         if (mCurrentFmsMode == FMS.Mode.DISABLED) {
-            fRobotManager.updateWhenDisabled();
+            fRobotManager.disabledUpdate();
         }
         else {
             fRobotManager.update();

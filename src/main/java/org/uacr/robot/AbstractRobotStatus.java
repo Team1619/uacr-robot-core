@@ -35,7 +35,7 @@ public abstract class AbstractRobotStatus {
      * This is a place for any code that has to run even when disabled (for example selecting path when disabled)
      */
 
-    public void updateWhenDisabled() {
+    public void disabledUpdate() {
     }
 
     /**

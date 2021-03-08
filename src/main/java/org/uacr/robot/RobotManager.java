@@ -42,13 +42,9 @@ public class RobotManager {
         fStateControls.update();
     }
 
-    public void updateStatus() {
-        // Updates the robot status
-        fStateControls.getRobotStatus().update();
-    }
 
-    public void updateWhenDisabled() {
-        fStateControls.getRobotStatus().updateWhenDisabled();
+    public void disabledUpdate() {
+        fStateControls.getRobotStatus().disabledUpdate();
     }
 
     /**
