@@ -20,7 +20,7 @@ public class SplinePath extends Path {
      * Pass in an ArrayList of waypoints
      */
     public SplinePath(ArrayList<Point> points) {
-        mPoints = points;
+        super(points);
         isNaturalSpline = true;
     }
 
@@ -32,7 +32,7 @@ public class SplinePath extends Path {
     }
 
     public SplinePath(Double startingAngle, Double endingAngle, ArrayList<Point> points) {
-        mPoints = points;
+        super(points);
         this.startingAngle = startingAngle;
         this.endingAngle = endingAngle;
         isNaturalSpline = false;
@@ -53,7 +53,7 @@ public class SplinePath extends Path {
         } else {
             spline = new ParametricSpline(mPoints, startingAngle, endingAngle);
         }
-        mPoints = spline.getPoints(getPointSpacing());
+        mGeneratedPoints = spline.getPoints(getPointSpacing());
     }
 
     @Override

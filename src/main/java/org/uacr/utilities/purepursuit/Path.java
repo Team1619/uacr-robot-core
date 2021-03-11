@@ -82,7 +82,10 @@ public class Path {
     /**
      * Waypoints along path specified by behavior
      */
-    protected ArrayList<Point> mPoints;
+    protected final ArrayList<Point> mPoints;
+
+    @Nullable
+    protected ArrayList<Point> mGeneratedPoints;
 
     /**
      * All the points along the path, created from the waypoints (fPoints)
@@ -223,6 +226,19 @@ public class Path {
         }
         build();
         return getPoints();
+    }
+
+    /**
+     * Returns all points in path (fPath).
+     *
+     * @return a PathPoint ArrayList
+     */
+    public ArrayList<Point> getWayPoints() {
+        if (mPoints != null) {
+            return (ArrayList<Point>) mPoints.clone();
+        }
+        build();
+        return getWayPoints();
     }
 
     /**
@@ -448,21 +464,23 @@ public class Path {
     protected void fill() {
         ArrayList<Point> newPoints = new ArrayList<>();
 
-        for (int s = 1; s < mPoints.size(); s++) {
-            Vector vector = new Vector(mPoints.get(s - 1), mPoints.get(s));
+        mGeneratedPoints = (ArrayList<Point>) mPoints.clone();
+
+        for (int s = 1; s < mGeneratedPoints.size(); s++) {
+            Vector vector = new Vector(mGeneratedPoints.get(s - 1), mGeneratedPoints.get(s));
 
             int numPointsFit = (int) Math.ceil(vector.magnitude() / mPointSpacing);
 
             vector = vector.normalize().scale(mPointSpacing);
 
             for (int i = 0; i < numPointsFit; i++) {
-                newPoints.add(mPoints.get(s - 1).add(vector.scale(i)));
+                newPoints.add(mGeneratedPoints.get(s - 1).add(vector.scale(i)));
             }
         }
 
-        newPoints.add(mPoints.get(mPoints.size() - 1));
+        newPoints.add(mGeneratedPoints.get(mGeneratedPoints.size() - 1));
 
-        mPoints = newPoints;
+        mGeneratedPoints = newPoints;
     }
 
     /**
@@ -475,18 +493,18 @@ public class Path {
             change = 0;
             changedPoints = 0;
 
-            ArrayList<Point> newPoints = (ArrayList<Point>) mPoints.clone();
+            ArrayList<Point> newPoints = (ArrayList<Point>) mGeneratedPoints.clone();
 
-            for (int i = 1; i < mPoints.size() - 1; i++) {
-                Point point = mPoints.get(i);
+            for (int i = 1; i < mGeneratedPoints.size() - 1; i++) {
+                Point point = mGeneratedPoints.get(i);
 //
 //                if (point instanceof WayPathPoint) {
 //                    continue;
 //                }
 
-                Vector middle = new Vector(mPoints.get(i + 1).subtract(mPoints.get(i - 1)));
+                Vector middle = new Vector(mGeneratedPoints.get(i + 1).subtract(mGeneratedPoints.get(i - 1)));
 
-                middle = new Vector(mPoints.get(i - 1).add(middle.normalize().scale(middle.magnitude() / 2)));
+                middle = new Vector(mGeneratedPoints.get(i - 1).add(middle.normalize().scale(middle.magnitude() / 2)));
 
                 Vector delta = new Vector(middle.subtract(point));
 
@@ -499,7 +517,7 @@ public class Path {
                 }
             }
 
-            mPoints = newPoints;
+            mGeneratedPoints = newPoints;
         }
     }
 
@@ -510,11 +528,11 @@ public class Path {
 
         mPath = new ArrayList<>();
 
-        for (int p = 0; p < mPoints.size(); p++) {
-            mPath.add(new PathPoint(mPoints.get(p), getPointDistance(p), getPointCurvature(p), getPointVelocity(p)));
+        for (int p = 0; p < mGeneratedPoints.size(); p++) {
+            mPath.add(new PathPoint(mGeneratedPoints.get(p), getPointDistance(p), getPointCurvature(p), getPointVelocity(p)));
         }
 
-        for (int p = mPoints.size() - 2; p >= 0; p--) {
+        for (int p = mGeneratedPoints.size() - 2; p >= 0; p--) {
             getPathPoint(p).setVelocity(getPointNewVelocity(p));
         }
     }
@@ -527,7 +545,7 @@ public class Path {
      */
     private double getPointDistance(int p) {
         if (p == 0) return 0.0;
-        return mPoints.get(p).distance(mPoints.get(p - 1)) + getPathPoint(p - 1).getDistance();
+        return mGeneratedPoints.get(p).distance(mGeneratedPoints.get(p - 1)) + getPathPoint(p - 1).getDistance();
     }
 
     /**
@@ -539,8 +557,8 @@ public class Path {
      * @return the curvature of the path at the point, represent as 1 / radius of the circle made by the amount of curvature
      */
     private double getPointCurvature(int p) {
-        if (p <= 0 || p >= mPoints.size() - 1) return 0.0;
-        return getCurvature(mPoints.get(p), mPoints.get(p - 1), mPoints.get(p + 1));
+        if (p <= 0 || p >= mGeneratedPoints.size() - 1) return 0.0;
+        return getCurvature(mGeneratedPoints.get(p), mGeneratedPoints.get(p - 1), mGeneratedPoints.get(p + 1));
     }
 
     /**
@@ -578,9 +596,9 @@ public class Path {
      * @return the first calculation of velocity
      */
     private double getPointVelocity(int p) {
-        if (p >= mPoints.size() - 2) return mMinSpeed;
+        if (p >= mGeneratedPoints.size() - 2) return mMinSpeed;
 
-        double d = mPoints.get(p).distance(mPoints.get(p + 1));
+        double d = mGeneratedPoints.get(p).distance(mGeneratedPoints.get(p + 1));
 
         if (p <= 0) return Math.max(Math.min(2 * mMaxAcceleration * d, mTurnSpeed / getPointCurvature(p)), mMinSpeed);
 
@@ -596,9 +614,9 @@ public class Path {
      * @return the second/final calculation of velocity
      */
     private double getPointNewVelocity(int p) {
-        if (p >= mPoints.size() - 2) return mMinSpeed;
+        if (p >= mGeneratedPoints.size() - 2) return mMinSpeed;
 
-        double d = mPoints.get(p).distance(mPoints.get(p + 1));
+        double d = mGeneratedPoints.get(p).distance(mGeneratedPoints.get(p + 1));
 
         return Math.min(getPathPoint(p).getVelocity(), Math.min(getPathPoint(p + 1).getVelocity() + 2 * mMaxDeceleration * d, mMaxSpeed));
     }
