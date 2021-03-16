@@ -62,7 +62,7 @@ public abstract class RobotCore {
                 fOutputValues, fRobotConfiguration, fObjectsDirectory);
 
         fServiceManager = new AsyncServiceManager(
-                new ScheduledMultiService(new Scheduler(10), inputService, statesService, outputService),
+                new ScheduledMultiService(new Scheduler(3), inputService, statesService, outputService),
                 new ScheduledMultiService(new Scheduler(30), createInfoServices()));
     }
 
