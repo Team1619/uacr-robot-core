@@ -42,6 +42,11 @@ public class RobotManager {
         fStateControls.update();
     }
 
+
+    public void disabledUpdate() {
+        fStateControls.getRobotStatus().disabledUpdate();
+    }
+
     /**
      * Called every frame to update robot status and current mode logic
      */
