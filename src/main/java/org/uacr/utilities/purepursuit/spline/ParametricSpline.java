@@ -24,7 +24,7 @@ public class ParametricSpline {
             y[i] = points.get(i).getY();
         }
 
-        splineX = new Spline(t, x, startingHeading, endingHeading);
+        splineX = new Spline(t, x, 45, 45);
         splineY = new Spline(t, y, startingHeading, endingHeading);
     }
 
