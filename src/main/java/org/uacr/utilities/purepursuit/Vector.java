@@ -1,6 +1,7 @@
 package org.uacr.utilities.purepursuit;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Vector is an add on to the Point class,
@@ -70,6 +71,20 @@ public class Vector extends Point {
 
     public double dot(Vector vector) {
         return fX * vector.getX() + fY * vector.getY();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Vector vector = (Vector) o;
+        return Double.compare(vector.fMagnitude, fMagnitude) == 0 && Double.compare(vector.fAngle, fAngle) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), fMagnitude, fAngle);
     }
 
     public String toString() {
