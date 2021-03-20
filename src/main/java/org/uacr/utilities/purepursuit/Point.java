@@ -1,6 +1,7 @@
 package org.uacr.utilities.purepursuit;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Point is a simple class which stores an x and y value for a point,
@@ -55,6 +56,19 @@ public class Point {
 
     public double distance(Point point) {
         return Math.sqrt(Math.pow(point.fX - fX, 2) + Math.pow(point.fY - fY, 2));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return Double.compare(point.fX, fX) == 0 && Double.compare(point.fY, fY) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fX, fY);
     }
 
     public String toString() {
