@@ -24,38 +24,37 @@ public class StateMachine {
     private final ObjectsDirectory fSharedObjectsDirectory;
     private final RobotManager fRobotManager;
 
-    private Set<String> fAllSubsystemNames = new LinkedHashSet<>();
-    private Set<String> fAllStateNames = new LinkedHashSet<>();
-    private List<String> fPriorityKeys = new ArrayList<>();
-    private Map<String, Set<String>> fAllStateNamesWithPriority = new HashMap<>();
-    private Set<String> fDoNotInterruptStateNames = new LinkedHashSet<>();
-    private Set<String> fDefaultStateNames = new LinkedHashSet<>();
-    private Set<State> fPrimaryActiveStates = new LinkedHashSet<>();
-    private Set<State> fActiveStates = new LinkedHashSet<>();
+    private final Set<String> fAllSubsystemNames;
+    private final Set<String> fAllStateNames;
+    private final List<String> fPriorityKeys;
+    private final Map<String, Set<String>> fAllStateNamesWithPriority;
+    private final Set<String> fDoNotInterruptStateNames;
+    private final Set<String> fDefaultStateNames;
+
+    private Set<State> fPrimaryActiveStates;
+    private Set<State> fActiveStates;
 
     public StateMachine(ObjectsDirectory objectsDirectory, RobotManager robotManager, RobotConfiguration robotConfiguration, InputValues inputValues) {
         fSharedInputValues = inputValues;
         fRobotConfiguration = robotConfiguration;
         fSharedObjectsDirectory = objectsDirectory;
         fRobotManager = robotManager;
-    }
 
-    /**
-     * Allows the instance of StateControls to be changed out when switching from Auto to Teleop
-     */
-    public void initialize() {
         fAllSubsystemNames = fRobotConfiguration.getSubsystemNames();
         fAllStateNames = fRobotConfiguration.getStateNames();
         fAllStateNamesWithPriority = fRobotConfiguration.getStateNamesWithPriority();
 
+        fPriorityKeys = new ArrayList<>();
         for (Map.Entry<String, Set<String>> priority : fAllStateNamesWithPriority.entrySet()) {
             fPriorityKeys.add(priority.getKey());
         }
 
+        fDoNotInterruptStateNames = new LinkedHashSet<>();
         if (fPriorityKeys.contains("do_not_interrupt")) {
             fDoNotInterruptStateNames.addAll(fAllStateNamesWithPriority.get("do_not_interrupt"));
         }
 
+        fDefaultStateNames = new LinkedHashSet<>();
         if (fPriorityKeys.contains("default")) {
             fDefaultStateNames.addAll(fAllStateNamesWithPriority.get("default"));
         }
@@ -66,6 +65,13 @@ public class StateMachine {
         fPriorityKeys.remove("default");
 
         Collections.reverse(fPriorityKeys);
+
+        fPrimaryActiveStates = new LinkedHashSet<>();
+        fActiveStates = new LinkedHashSet<>();
+    }
+
+    public void initialize() {
+
     }
 
     /**
