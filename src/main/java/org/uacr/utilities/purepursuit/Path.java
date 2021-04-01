@@ -3,6 +3,7 @@ package org.uacr.utilities.purepursuit;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * PursuitPath is a class which stores points and calculates values to run pure pursuit
@@ -79,10 +80,27 @@ public class Path {
     private double mDeltaAngle = 0;
     private double mCurvature = 0.000001;
 
+    @Nullable
+    private ValueInterpolator turnSpeedInterpolator;
+    @Nullable
+    private ValueInterpolator maxAccelerationInterpolator;
+    @Nullable
+    private ValueInterpolator maxDecelerationInterpolator;
+    @Nullable
+    private ValueInterpolator minSpeedInterpolator;
+    @Nullable
+    private ValueInterpolator maxSpeedInterpolator;
+    @Nullable
+    private ValueInterpolator lookAheadDistanceInterpolator;
+    @Nullable
+    private ValueInterpolator velocityLookAheadPointsInterpolator;
+
     /**
      * Waypoints along path specified by behavior
      */
     protected final ArrayList<Point> mPoints;
+
+    protected final ArrayList<PathDeviationConfig> deviations;
 
     @Nullable
     protected ArrayList<Point> mGeneratedPoints;
@@ -98,6 +116,7 @@ public class Path {
      */
     public Path(ArrayList<Point> points) {
         mPoints = points;
+        deviations = new ArrayList<>();
     }
 
     /**
@@ -135,6 +154,13 @@ public class Path {
         return mTurnSpeed;
     }
 
+    public double getTurnSpeed(double distance) {
+        if(null != turnSpeedInterpolator) {
+            return turnSpeedInterpolator.getValue(distance);
+        }
+        return getTurnSpeed();
+    }
+
     public void setTurnSpeed(double turnSpeed) {
         mTurnSpeed = turnSpeed;
     }
@@ -159,12 +185,26 @@ public class Path {
         return mMaxAcceleration;
     }
 
+    public double getMaxAcceleration(double distance) {
+        if(null != maxAccelerationInterpolator) {
+            return maxAccelerationInterpolator.getValue(distance);
+        }
+        return getMaxAcceleration();
+    }
+
     public void setMaxAcceleration(double maxAcceleration) {
         mMaxAcceleration = maxAcceleration;
     }
 
     public double getMaxDeceleration() {
         return mMaxDeceleration;
+    }
+
+    public double getMaxDeceleration(double distance) {
+        if(null != maxDecelerationInterpolator) {
+            return maxDecelerationInterpolator.getValue(distance);
+        }
+        return getMaxDeceleration();
     }
 
     public void setMaxDeceleration(double maxDeceleration) {
@@ -175,12 +215,26 @@ public class Path {
         return mMinSpeed;
     }
 
+    public double getMinSpeed(double distance) {
+        if(null != minSpeedInterpolator) {
+            return minSpeedInterpolator.getValue(distance);
+        }
+        return getMinSpeed();
+    }
+
     public void setMinSpeed(double minSpeed) {
         mMinSpeed = minSpeed;
     }
 
     public double getMaxSpeed() {
         return mMaxSpeed;
+    }
+
+    public double getMaxSpeed(double distance) {
+        if(null != maxSpeedInterpolator) {
+            return maxSpeedInterpolator.getValue(distance);
+        }
+        return getMaxSpeed();
     }
 
     public void setMaxSpeed(double maxSpeed) {
@@ -191,6 +245,13 @@ public class Path {
         return mLookAheadDistance;
     }
 
+    public double getLookAheadDistance(double distance) {
+        if(null != lookAheadDistanceInterpolator) {
+            return lookAheadDistanceInterpolator.getValue(distance);
+        }
+        return getLookAheadDistance();
+    }
+
     public void setLookAheadDistance(double lookAheadDistance) {
         mLookAheadDistance = lookAheadDistance;
     }
@@ -199,8 +260,23 @@ public class Path {
         return mVelocityLookAheadPoints;
     }
 
+    public double getVelocityLookAheadPoints(double distance) {
+        if(null != velocityLookAheadPointsInterpolator) {
+            return velocityLookAheadPointsInterpolator.getValue(distance);
+        }
+        return getVelocityLookAheadPoints();
+    }
+
     public void setVelocityLookAheadPoints(int lookAheadPoints) {
         mVelocityLookAheadPoints = lookAheadPoints;
+    }
+
+    public ArrayList<PathDeviationConfig> getDeviations() {
+        return deviations;
+    }
+
+    public void addDeviation(PathDeviationConfig deviation) {
+        deviations.add(deviation);
     }
 
     /**Methods for path following*/
@@ -314,8 +390,10 @@ public class Path {
      */
     public double getPathPointVelocity(int index, Pose2d currentLocation) {
         double speed = mMaxSpeed;
-        for (int i = index; i < index + mVelocityLookAheadPoints && i < getPoints().size(); i++) {
-            speed = Math.min(speed, range(getPathPoint(i).getVelocity() / range(getTrackingError(currentLocation) / mTrackingErrorSpeed, 1, 3), mMinSpeed, mMaxSpeed));
+        double pathDistance = getPathPoint(index).getDistance();
+        double velocityLookAheadPoints = getVelocityLookAheadPoints(pathDistance);
+        for (int i = index; i < index + velocityLookAheadPoints && i < getPoints().size(); i++) {
+            speed = Math.min(speed, range(getPathPoint(i).getVelocity() / range(getTrackingError(currentLocation) / mTrackingErrorSpeed, 1, 3), getMinSpeed(pathDistance), getMaxSpeed(pathDistance)));
         }
         return speed;
     }
@@ -330,16 +408,18 @@ public class Path {
     public int getClosestPointIndex(Point currentPosition) {
         if (mPath == null || mPath.size() == 0) return -1;
 
-        double distance = 1000000;
+        double distance = Double.POSITIVE_INFINITY;
         int index = -1;
 
         for (int i = mLastCurrentPointIndex; i < getPath().size(); i++) {
-            if(getPathPoint(i).getDistance() - getPathPoint(mLastCurrentPointIndex).getDistance() > mLookAheadDistance) {
+            if(getPathPoint(i).getDistance() - getPathPoint(mLastCurrentPointIndex).getDistance() > getLookAheadDistance(getPathPoint(mLastCurrentPointIndex).getDistance())) {
                 break;
             }
-            if (currentPosition.distance(getPathPoint(i)) < distance) {
+
+            double distanceFromCurrentPosition = currentPosition.distance(getPathPoint(i));
+            if (distanceFromCurrentPosition < distance) {
                 index = i;
-                distance = currentPosition.distance(getPathPoint(i));
+                distance = distanceFromCurrentPosition;
             }
         }
 
@@ -360,28 +440,33 @@ public class Path {
      * @return the index of the look ahead point
      */
     public int getLookAheadPointIndex(Pose2d currentPosition) {
+        return getLookAheadPointIndex(currentPosition, getClosestPointIndex(currentPosition));
+    }
+
+    public int getLookAheadPointIndex(Pose2d currentPosition, int closest) {
         if (mPath == null || mPath.size() == 0) return -1;
 
-        int closest = getClosestPointIndex(currentPosition);
+        if(0 <= closest && closest < mPath.size()) {
+            PathPoint closestPoint = getPathPoint(closest);
+            double pathDistance = closestPoint.getDistance();
 
-        for (int i = getClosestPointIndex(currentPosition); i < getPath().size(); i++) {
-            mCurvature = Math.abs(getCurvatureFromPathPoint(i, currentPosition));
+            for (int i = closest; i < getPath().size(); i++) {
+                mCurvature = Math.abs(getCurvatureFromPathPoint(i, currentPosition));
 
-            double correction = range(mCurvature, 1, 5);
+                double curvature = 0;
 
-            double curvature = 0;
+                for (int p = closest; p <= i; p++) {
+                    curvature += getPathPoint(p).getCurvature();
+                }
 
-            for (int p = closest; p <= i; p++) {
-                curvature += getPointCurvature(closest);
+                if (getPathPoint(i).getDistance() - pathDistance > getLookAheadDistance(pathDistance) / range(curvature / 3, 1, 2)) {
+                    mLastPointIndex = i;
+                    return i;
+                }
             }
 
-            if (getPointDistance(i) - getPointDistance(closest) > mLookAheadDistance / range(curvature / 3, 1, 2)) {
-                mLastPointIndex = i;
-                return i;
-            }
+            if (closest != getPath().size() - 1) return getPath().size() - 1;
         }
-
-        if (closest != getPath().size() - 1) return getPath().size() - 1;
 
         return -1;
     }
@@ -441,6 +526,13 @@ public class Path {
      * Turns all the waypoints (fPoints) into a path (fPath).
      */
     public void build() {
+        turnSpeedInterpolator = new ValueInterpolator(getTurnSpeed(), getDeviations().stream().filter(PathDeviationConfig::hasTurnSpeed).map(deviation -> new ValueInterpolator.ValueDeviation(deviation.getTurnSpeed(), deviation.getStart(), deviation.getEnd(), deviation.getStartRamp(), deviation.getEndRamp())).collect(Collectors.toList()));
+        maxAccelerationInterpolator = new ValueInterpolator(getMaxAcceleration(), getDeviations().stream().filter(PathDeviationConfig::hasMaxAcceleration).map(deviation -> new ValueInterpolator.ValueDeviation(deviation.getMaxAcceleration(), deviation.getStart(), deviation.getEnd(), deviation.getStartRamp(), deviation.getEndRamp())).collect(Collectors.toList()));
+        maxDecelerationInterpolator = new ValueInterpolator(getMaxDeceleration(), getDeviations().stream().filter(PathDeviationConfig::hasMaxDeceleration).map(deviation -> new ValueInterpolator.ValueDeviation(deviation.getMaxDeceleration(), deviation.getStart(), deviation.getEnd(), deviation.getStartRamp(), deviation.getEndRamp())).collect(Collectors.toList()));
+        minSpeedInterpolator = new ValueInterpolator(getMinSpeed(), getDeviations().stream().filter(PathDeviationConfig::hasMinSpeed).map(deviation -> new ValueInterpolator.ValueDeviation(deviation.getMinSpeed(), deviation.getStart(), deviation.getEnd(), deviation.getStartRamp(), deviation.getEndRamp())).collect(Collectors.toList()));
+        maxSpeedInterpolator = new ValueInterpolator(getMaxSpeed(), getDeviations().stream().filter(PathDeviationConfig::hasMaxSpeed).map(deviation -> new ValueInterpolator.ValueDeviation(deviation.getMaxSpeed(), deviation.getStart(), deviation.getEnd(), deviation.getStartRamp(), deviation.getEndRamp())).collect(Collectors.toList()));
+        lookAheadDistanceInterpolator = new ValueInterpolator(getLookAheadDistance(), getDeviations().stream().filter(PathDeviationConfig::hasLookAheadDistance).map(deviation -> new ValueInterpolator.ValueDeviation(deviation.getLookAheadDistance(), deviation.getStart(), deviation.getEnd(), deviation.getStartRamp(), deviation.getEndRamp())).collect(Collectors.toList()));
+        velocityLookAheadPointsInterpolator = new ValueInterpolator(getVelocityLookAheadPoints(), getDeviations().stream().filter(PathDeviationConfig::hasVelocityLookAheadPoints).map(deviation -> new ValueInterpolator.ValueDeviation(deviation.getVelocityLookAheadPoints(), deviation.getStart(), deviation.getEnd(), deviation.getStartRamp(), deviation.getEndRamp())).collect(Collectors.toList()));
 
         if (mPath != null) {
             return;
@@ -497,10 +589,6 @@ public class Path {
 
             for (int i = 1; i < mGeneratedPoints.size() - 1; i++) {
                 Point point = mGeneratedPoints.get(i);
-//
-//                if (point instanceof WayPathPoint) {
-//                    continue;
-//                }
 
                 Vector middle = new Vector(mGeneratedPoints.get(i + 1).subtract(mGeneratedPoints.get(i - 1)));
 
@@ -529,7 +617,11 @@ public class Path {
         mPath = new ArrayList<>();
 
         for (int p = 0; p < mGeneratedPoints.size(); p++) {
-            mPath.add(new PathPoint(mGeneratedPoints.get(p), getPointDistance(p), getPointCurvature(p), getPointVelocity(p)));
+            mPath.add(new PathPoint(mGeneratedPoints.get(p), getPointDistance(p), getPointCurvature(p)));
+        }
+
+        for (int p = 0; p < mGeneratedPoints.size(); p++) {
+            getPathPoint(p).setVelocity(getPointVelocity(p));
         }
 
         for (int p = mGeneratedPoints.size() - 2; p >= 0; p--) {
@@ -596,13 +688,11 @@ public class Path {
      * @return the first calculation of velocity
      */
     private double getPointVelocity(int p) {
-        if (p >= mGeneratedPoints.size() - 2) return mMinSpeed;
+        PathPoint point = getPathPoint(p);
 
-        double d = mGeneratedPoints.get(p).distance(mGeneratedPoints.get(p + 1));
+        if (p <= 0 || p >= mGeneratedPoints.size() - 2) return getMinSpeed(point.getDistance());
 
-        if (p <= 0) return Math.max(Math.min(2 * mMaxAcceleration * d, mTurnSpeed / getPointCurvature(p)), mMinSpeed);
-
-        return Math.max(Math.min(getPathPoint(p - 1).getVelocity() + 2 * mMaxAcceleration * d, Math.min(mTurnSpeed / getPointCurvature(p), mMaxSpeed)), mMinSpeed);
+        return Math.max(Math.min(getPathPoint(p - 1).getVelocity() + 2 * getMaxAcceleration(point.getDistance()) * mGeneratedPoints.get(p).distance(mGeneratedPoints.get(p + 1)), Math.min(getTurnSpeed(point.getDistance()) / point.getCurvature(), getMaxSpeed(point.getDistance()))), getMinSpeed(point.getDistance()));
     }
 
     /**
@@ -614,11 +704,11 @@ public class Path {
      * @return the second/final calculation of velocity
      */
     private double getPointNewVelocity(int p) {
-        if (p >= mGeneratedPoints.size() - 2) return mMinSpeed;
+        PathPoint point = getPathPoint(p);
 
-        double d = mGeneratedPoints.get(p).distance(mGeneratedPoints.get(p + 1));
+        if (p >= mGeneratedPoints.size() - 2) return getMinSpeed(point.getDistance());
 
-        return Math.min(getPathPoint(p).getVelocity(), Math.min(getPathPoint(p + 1).getVelocity() + 2 * mMaxDeceleration * d, mMaxSpeed));
+        return Math.min(getPathPoint(p).getVelocity(), Math.min(getPathPoint(p + 1).getVelocity() + 2 * getMaxDeceleration(point.getDistance()) * mGeneratedPoints.get(p).distance(mGeneratedPoints.get(p + 1)), getMaxSpeed(point.getDistance())));
     }
 
     /**

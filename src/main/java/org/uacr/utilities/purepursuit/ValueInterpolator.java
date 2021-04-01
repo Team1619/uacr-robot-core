@@ -79,15 +79,6 @@ public class ValueInterpolator {
 
         this.deviations.sort(Comparator.comparingDouble(ValueDeviation::getStart));
         Collections.reverse(this.deviations);
-
-        List<String> points = new ArrayList<>();
-        for (double d = 0; d < 100; d += 0.1) {
-            points.add("(" + d + ", " + getValue(d) + ")");
-        }
-
-        System.out.println(points.stream().collect(Collectors.joining(",")));
-
-        System.out.println(this.deviations);
     }
 
     public ValueInterpolator(double defaultValue, ValueDeviation... deviations) {
@@ -122,7 +113,6 @@ public class ValueInterpolator {
             this.end = end;
             this.startRampLength = startRampLength;
             this.endRampLength = endRampLength;
-
 
             if (this.end <= this.start) {
                 throw new RuntimeException("The start of a ValueDeviation must be before the end");
