@@ -14,17 +14,15 @@ public class PathPoint extends Point {
 
     private double mVelocity;
 
-    public PathPoint(double x, double y, double distance, double curvature, double velocity) {
+    public PathPoint(double x, double y, double distance, double curvature) {
         super(x, y);
 
         fDistance = distance;
         fCurvature = curvature;
-
-        mVelocity = velocity;
     }
 
-    public PathPoint(Point point, double distance, double curvature, double velocity) {
-        this(point.getX(), point.getY(), distance, curvature, velocity);
+    public PathPoint(Point point, double distance, double curvature) {
+        this(point.getX(), point.getY(), distance, curvature);
     }
 
     public double getDistance() {
